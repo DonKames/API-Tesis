@@ -1,4 +1,4 @@
-//const db = require('../config/db');
+// const db = require('../config/db');
 
 const db = require('../config/db');
 
@@ -58,10 +58,9 @@ const updateCountry = async (req, res) => {
 const deleteCountry = async (req, res) => {
     try {
         const { id } = req.params;
-        const response = await db.query(
-            'DELETE FROM "public".countries WHERE country_id = $1',
-            [id],
-        );
+        await db.query('DELETE FROM "public".countries WHERE country_id = $1', [
+            id,
+        ]);
         res.status(204).send();
     } catch (err) {
         console.error(err);
