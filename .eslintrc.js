@@ -11,7 +11,7 @@ module.exports = {
     },
     rules: {
         indent: ['error', 4, { SwitchCase: 1 }],
-        semi: 'off',
+        semi: ['error', 'always'],
         'comma-dangle': ['error', 'always-multiline'],
         'space-before-function-paren': 'off',
     },
