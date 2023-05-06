@@ -3,6 +3,7 @@ const router = express.Router();
 
 const productsController = require('../controllers/productsController');
 const countriesController = require('../controllers/countriesController');
+const regionsController = require('../controllers/regionsController');
 const addingCountries = require('../utilities/countryAdder');
 
 router.get('/products', productsController.getProducts);
@@ -16,6 +17,6 @@ router.post('/countries', countriesController.createCountry);
 router.put('/countries/:id', countriesController.updateCountry);
 router.delete('/countries/:id', countriesController.deleteCountry);
 
-router.get('/addAllCountries', addingCountries.insertCountries);
+router.get('/adding', addingCountries.insertRegions);
 
 module.exports = router;
