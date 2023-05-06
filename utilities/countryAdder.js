@@ -30,6 +30,8 @@ async function insertRegions() {
 
         const { country_id } = response.rows[0];
 
+        console.log(country_id);
+
         const regions = [
             { name: 'Arica y Parinacota', fk_country_id: country_id },
             { name: 'Tarapacá', fk_country_id: country_id },
@@ -60,8 +62,8 @@ async function insertRegions() {
 
         for (const region of regions) {
             await db.query(
-                'INSERT INTO regions (name, fk_region_id) VALUES ($1, $2)',
-                [region.name, region.fk_region_id],
+                'INSERT INTO regions (name, fk_country_id) VALUES ($1, $2)',
+                [region.name, region.fk_country_id],
             );
         }
         console.log('Regiones agregadas a la tabla regions');

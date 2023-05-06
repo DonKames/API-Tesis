@@ -7,6 +7,7 @@ const regionsController = require('../controllers/regionsController');
 const addingCountries = require('../utilities/countryAdder');
 
 router.get('/products', productsController.getProducts);
+router.get('/products/:id', productsController.getProductById);
 router.post('/products', productsController.createProduct);
 router.put('/products/:id', productsController.updateProduct);
 router.delete('/products/:id', productsController.deleteProduct);
@@ -16,6 +17,12 @@ router.get('/countries/:id', countriesController.getCountryById);
 router.post('/countries', countriesController.createCountry);
 router.put('/countries/:id', countriesController.updateCountry);
 router.delete('/countries/:id', countriesController.deleteCountry);
+
+router.get('/regions', regionsController.getRegions);
+router.get('/regions/:id', regionsController.getRegionById);
+router.post('/regions', regionsController.createRegion);
+router.put('/regions/:id', regionsController.updateRegion);
+router.delete('/regions/:id', regionsController.deleteRegion);
 
 router.get('/adding', addingCountries.insertRegions);
 
