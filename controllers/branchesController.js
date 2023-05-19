@@ -26,10 +26,10 @@ const getBranchById = async (req, res) => {
 
 const createBranch = async (req, res) => {
     try {
-        const { name, fk_region_id, address } = req.body;
+        const { branchName, region, address } = req.body;
         const response = await db.query(
             'INSERT INTO "public".branches (name, fk_region_id, address) VALUES ($1, $2, $3) RETURNING *',
-            [name, fk_region_id, address],
+            [branchName, region, address],
         );
         res.status(201).json(response.rows[0]);
     } catch (err) {
@@ -41,10 +41,10 @@ const createBranch = async (req, res) => {
 const updateBranch = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, fk_region_id, address } = req.body;
+        const { branchName, fk_region_id, address } = req.body;
         const response = await db.query(
             'UPDATE "public".branches SET name = $1, fk_region_id = $2, address = $3 WHERE branch_id = $4 RETURNING *',
-            [name, fk_region_id, address, id],
+            [branchName, fk_region_id, address, id],
         );
         res.status(200).json(response.rows[0]);
     } catch (err) {
