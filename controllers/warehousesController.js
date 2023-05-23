@@ -26,10 +26,10 @@ const getWarehouseById = async (req, res) => {
 
 const createWarehouse = async (req, res) => {
     try {
-        const { warehouse_name, location_id } = req.body;
+        const { name, capacity, fk_branch_id } = req.body;
         const response = await db.query(
-            'INSERT INTO warehouses (warehouse_name, location_id) VALUES ($1, $2) RETURNING *',
-            [warehouse_name, location_id],
+            'INSERT INTO warehouses (name, capacity, fk_branch_id) VALUES ($1, $2) RETURNING *',
+            [name, capacity, fk_branch_id],
         );
         res.status(201).json(response.rows[0]);
     } catch (err) {
