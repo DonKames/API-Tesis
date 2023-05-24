@@ -5,6 +5,7 @@ const productsController = require('../controllers/productsController');
 const countriesController = require('../controllers/countriesController');
 const regionsController = require('../controllers/regionsController');
 const branchesController = require('../controllers/branchesController');
+const branchLocationsController = require('../controllers/branchLocationsController');
 const warehousesController = require('../controllers/warehousesController');
 
 // DEV
@@ -16,6 +17,22 @@ router.get('/branches/:id', branchesController.getBranchById);
 router.post('/branches', branchesController.createBranch);
 router.put('/branches/:id', branchesController.updateBranch);
 router.delete('/branches/:id', branchesController.deleteBranch);
+
+// Branch Locations
+router.get('/branchLocations', branchLocationsController.getBranchLocations);
+router.get(
+    '/branchLocations/:id',
+    branchLocationsController.getBranchLocationById,
+);
+router.post('/branchLocations', branchLocationsController.createBranchLocation);
+router.put(
+    '/branchLocations/:id',
+    branchLocationsController.updateBranchLocation,
+);
+router.delete(
+    '/branchLocations/:id',
+    branchLocationsController.deleteBranchLocation,
+);
 
 // Countries
 router.get('/countries', countriesController.getCountries);
