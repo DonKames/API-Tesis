@@ -27,10 +27,10 @@ const getBranchLocationById = async (req, res) => {
 const createBranchLocation = async (req, res) => {
     try {
         console.log(req.body);
-        const { name, description, fk_branch_id } = req.body;
+        const { branchLocationName, description, branchId } = req.body;
         const response = await db.query(
             'INSERT INTO "public".branch_locations (name, description, fk_branch_id) VALUES ($1, $2, $3) RETURNING *',
-            [name, description, fk_branch_id],
+            [branchLocationName, description, branchId],
         );
         res.status(201).json(response.rows[0]);
     } catch (err) {
