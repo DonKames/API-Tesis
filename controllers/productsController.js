@@ -26,10 +26,10 @@ const getProductById = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        const { name, price, description } = req.body;
+        const { name, price, description, sku, lote, order } = req.body;
         const response = await db.query(
-            'INSERT INTO "public".products (name, price, description) VALUES ($1, $2, $3) RETURNING *',
-            [name, price, description],
+            'INSERT INTO "public".products (name, price, description, sku, lote, product_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [name, price, description, sku, lote, order],
         );
         res.status(201).json(response.rows[0]);
     } catch (err) {

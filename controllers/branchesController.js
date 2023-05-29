@@ -31,6 +31,14 @@ const createBranch = async (req, res) => {
             'INSERT INTO "public".branches (name, fk_region_id, address) VALUES ($1, $2, $3) RETURNING *',
             [branchName, region, address],
         );
+        const branchId = response.rows[0].branch_id;
+
+        // Ahora insertamos la bodega "RECEPCIÓN" para la sucursal recién creada
+        await db.query(
+            'INSERT INTO "public".warehouses (name, fk_branch_id) VALUES ($1, $2)',
+            ['RECEPCIÓN', branchId],
+        );
+
         res.status(201).json(response.rows[0]);
     } catch (err) {
         console.error(err);
