@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const productsController = require('../controllers/productsController');
-const countriesController = require('../controllers/countriesController');
-const regionsController = require('../controllers/regionsController');
 const branchesController = require('../controllers/branchesController');
 const branchLocationsController = require('../controllers/branchLocationsController');
+const countriesController = require('../controllers/countriesController');
+const productsController = require('../controllers/productsController');
+const regionsController = require('../controllers/regionsController');
+const skusController = require('../controllers/skusController');
 const warehousesController = require('../controllers/warehousesController');
 
 // DEV
@@ -54,6 +55,13 @@ router.get('/regions/:id', regionsController.getRegionById);
 router.post('/regions', regionsController.createRegion);
 router.put('/regions/:id', regionsController.updateRegion);
 router.delete('/regions/:id', regionsController.deleteRegion);
+
+// Skus
+router.get('/skus', skusController.getSkus);
+router.get('/skus/:id', skusController.getSkuById);
+router.post('/skus', skusController.createSku);
+router.put('/skus/:id', skusController.updateSku);
+router.delete('/skus/:id', skusController.deleteSku);
 
 // Warehouses
 router.get('/warehouses', warehousesController.getWarehouses);
