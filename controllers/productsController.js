@@ -40,19 +40,28 @@ const getProductBySku = async (req, res) => {
 
 const createProduct = async (req, res) => {
     try {
-        const { name, price, description, sku, lote, order, branchId } =
-            req.body;
+        const { fkSku, branchId, epc } = req.body;
+
+        console.log(req.body);
 
         const warehouseIdResponse = await db.query(
             'SELECT warehouse_id FROM "public".warehouses WHERE fk_branch_id = $1 AND name = $2',
             [branchId, 'RECEPCIÓN'],
         );
 
+        console.log(warehouseIdResponse);
         const warehouseId = warehouseIdResponse.rows[0].warehouse_id;
 
+        const skuResponse = await db.query(
+            'SELECT sku_id FROM "public".skus WHERE sku = $1',
+            [fkSku],
+        );
+
+        const skuId = skuResponse.rows[0].sku_id;
+
         const response = await db.query(
-            'INSERT INTO "public".products (name, price, description, sku, lote, product_order, fk_warehouse_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [name, price, description, sku, lote, order, warehouseId],
+            'INSERT INTO "public".products (epc, fk_warehouse_id, fk_sku_id) VALUES ($1, $2, $3) RETURNING *',
+            [epc, warehouseId, skuId],
         );
 
         res.status(201).json(response.rows[0]);
