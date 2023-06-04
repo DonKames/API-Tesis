@@ -7,6 +7,7 @@ const countriesController = require('../controllers/countriesController');
 const productsController = require('../controllers/productsController');
 const regionsController = require('../controllers/regionsController');
 const skusController = require('../controllers/skusController');
+const rolesController = require('../controllers/rolesController');
 const warehousesController = require('../controllers/warehousesController');
 
 // DEV
@@ -55,6 +56,13 @@ router.get('/regions/:id', regionsController.getRegionById);
 router.post('/regions', regionsController.createRegion);
 router.put('/regions/:id', regionsController.updateRegion);
 router.delete('/regions/:id', regionsController.deleteRegion);
+
+// Roles
+router.get('/roles', rolesController.getRoles);
+router.get('/roles/:id', rolesController.getRoleById);
+router.post('/roles', rolesController.createRole);
+router.put('/roles/:id', rolesController.updateRole);
+router.delete('/roles/:id', rolesController.deleteRole);
 
 // Skus
 router.get('/skus', skusController.getSkus);
