@@ -7,7 +7,7 @@ const getUsers = async (req, res) => {
         res.status(200).json(response.rows);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Error Get Users' });
     }
 };
 
@@ -21,24 +21,35 @@ const getUserById = async (req, res) => {
         res.status(200).json(response.rows[0]);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Error get Users by Id' });
     }
 };
 
 const createUser = async (req, res) => {
     try {
-        const { username, password, role, email } = req.body;
+        const { name, lastName, role, email, temporalPass } = req.body;
+
+        if (!temporalPass) {
+            throw new Error('Campo temporalPassword requerido');
+        }
+
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        if (!salt) {
+            throw new Error('Error al generar el salt');
+        }
+
+        const hashedPassword = await bcrypt.hash(temporalPass, salt);
 
         const response = await db.query(
-            'INSERT INTO users (username, password, role, email) VALUES ($1, $2, $3, $4) RETURNING *',
-            [username, hashedPassword, role, email],
+            'INSERT INTO users (first_name, last_name, email, fk_role_id, pass) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [name, lastName, email, role, hashedPassword],
         );
         res.status(201).json(response.rows[0]);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error('el error', err);
+        res.status(500).json({
+            error: err,
+        });
     }
 };
 
@@ -56,7 +67,7 @@ const updateUser = async (req, res) => {
         res.status(200).json(response.rows[0]);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Error Update User' });
     }
 };
 
@@ -67,7 +78,7 @@ const deleteUser = async (req, res) => {
         res.status(204).send();
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Error Delete User' });
     }
 };
 

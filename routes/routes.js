@@ -7,6 +7,7 @@ const countriesController = require('../controllers/countriesController');
 const productsController = require('../controllers/productsController');
 const regionsController = require('../controllers/regionsController');
 const skusController = require('../controllers/skusController');
+const usersController = require('../controllers/usersController');
 const rolesController = require('../controllers/rolesController');
 const warehousesController = require('../controllers/warehousesController');
 
@@ -70,6 +71,13 @@ router.get('/skus/:id', skusController.getSkuById);
 router.post('/skus', skusController.createSku);
 router.put('/skus/:id', skusController.updateSku);
 router.delete('/skus/:id', skusController.deleteSku);
+
+// Users
+router.get('/users', usersController.getUsers);
+router.get('/users/:id', usersController.getUserById);
+router.post('/users', usersController.createUser);
+router.put('/users/:id', usersController.updateUser);
+router.delete('/users/:id', usersController.deleteUser);
 
 // Warehouses
 router.get('/warehouses', warehousesController.getWarehouses);
