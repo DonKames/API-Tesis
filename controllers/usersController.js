@@ -27,22 +27,16 @@ const getUserById = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
+        console.log(req.body);
         const { name, lastName, role, email, temporalPass } = req.body;
 
-        if (!temporalPass) {
-            throw new Error('Campo temporalPassword requerido');
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        if (!salt) {
-            throw new Error('Error al generar el salt');
-        }
-
-        const hashedPassword = await bcrypt.hash(temporalPass, salt);
+        // if (!temporalPass) {
+        //     throw new Error('Campo temporalPassword requerido');
+        // }
 
         const response = await db.query(
-            'INSERT INTO users (first_name, last_name, email, fk_role_id, pass) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [name, lastName, email, role, hashedPassword],
+            'INSERT INTO users (first_name, last_name, email, fk_role_id) VALUES ($1, $2, $3, $4) RETURNING *',
+            [name, lastName, email, role],
         );
         res.status(201).json(response.rows[0]);
     } catch (err) {
