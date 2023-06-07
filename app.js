@@ -18,6 +18,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api', routes);
 
+// Depurar
+app.use((req, res, next) => {
+    console.log('req.body', req.body);
+    next();
+});
+
+app.use(express.json());
+
 https.createServer(options, app).listen(3000, () => {
     console.log('Server is running on port 3000');
 });
