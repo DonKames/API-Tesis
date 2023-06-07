@@ -68,6 +68,7 @@ router.delete('/roles/:id', rolesController.deleteRole);
 // Skus
 router.get('/skus', skusController.getSkus);
 router.get('/skus/:id', skusController.getSkuById);
+router.get('/skus/sku/:sku', skusController.getSkuBySku);
 router.post('/skus', skusController.createSku);
 router.put('/skus/:id', skusController.updateSku);
 router.delete('/skus/:id', skusController.deleteSku);

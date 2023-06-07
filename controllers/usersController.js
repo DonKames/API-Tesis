@@ -31,7 +31,12 @@ const getUserByUid = async (req, res) => {
         const response = await db.query('SELECT * FROM users WHERE uid = $1', [
             uid,
         ]);
-        res.status(200).json(response.rows[0]);
+        if (response.rows.length > 0) {
+            res.status(200).json(response.rows[0]);
+        } else {
+            // Si no se encontró ningún usuario, envía una respuesta con un cuerpo vacío y un código de estado 204
+            res.status(204).send();
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error get Users by Id' });

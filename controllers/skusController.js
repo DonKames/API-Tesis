@@ -24,6 +24,20 @@ const getSkuById = async (req, res) => {
     }
 };
 
+const getSkuBySku = async (req, res) => {
+    try {
+        const { sku } = req.params;
+        const response = await db.query(
+            'SELECT * FROM "public".skus WHERE sku = $1',
+            [sku],
+        );
+        res.status(200).json(response.rows[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 const createSku = async (req, res) => {
     try {
         const { name, price, description, sku, lote, order } = req.body;
@@ -70,6 +84,7 @@ const deleteSku = async (req, res) => {
 module.exports = {
     getSkus,
     getSkuById,
+    getSkuBySku,
     createSku,
     updateSku,
     deleteSku,

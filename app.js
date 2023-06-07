@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const routes = require('./routes/routes');
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 
 const app = express();
@@ -26,6 +27,10 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-https.createServer(options, app).listen(3000, () => {
-    console.log('Server is running on port 3000');
-});
+// Create an HTTP service.
+http.createServer(app).listen(3000);
+console.log('HTTP Server is running on port 3000');
+
+// Create an HTTPS service identical to the HTTP service.
+https.createServer(options, app).listen(3001);
+console.log('HTTPS Server is running on port 3001');
