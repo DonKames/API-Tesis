@@ -42,14 +42,17 @@ const createProduct = async (req, res) => {
     try {
         const { fkSku, branchId, epc } = req.body;
 
-        console.log(req.body);
+        // console.log(req.body);
+        // console.log(fkSku);
+
+        // console.log(branchId);
 
         const warehouseIdResponse = await db.query(
             'SELECT warehouse_id FROM "public".warehouses WHERE fk_branch_id = $1 AND name = $2',
             [branchId, 'RECEPCIÓN'],
         );
 
-        console.log(warehouseIdResponse);
+        // console.log(warehouseIdResponse);
         const warehouseId = warehouseIdResponse.rows[0].warehouse_id;
 
         const skuResponse = await db.query(
