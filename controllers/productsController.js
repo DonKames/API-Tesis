@@ -1,18 +1,56 @@
 const db = require('../config/db');
 
-const getProducts = async (req, res) => {
+// const getProducts = async (req, res) => {
+//     try {
+//         const page = parseInt(req.query.page) || 1;
+
+//         const limit = parseInt(req.query.limit) || 50;
+
+//         const offset = (page - 1) * limit;
+
+//         const response = await db.query(
+//             'SELECT * FROM products ORDER BY product_id ASC LIMIT $1 OFFSET $2',
+//             [limit, offset],
+//         );
+//         res.status(200).json(response.rows);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// };
+
+const getProductQty = async (req, res) => {
+    try {
+        const response = await db.query('SELECT COUNT(*) FROM products');
+        const totalProducts = parseInt(response.rows[0].count);
+        res.status(200).json({ totalProducts: totalProducts });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const getPaginatedProducts = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-
         const limit = parseInt(req.query.limit) || 50;
-
         const offset = (page - 1) * limit;
 
-        const response = await db.query(
+        const productsResponse = await db.query(
             'SELECT * FROM products ORDER BY product_id ASC LIMIT $1 OFFSET $2',
             [limit, offset],
         );
-        res.status(200).json(response.rows);
+
+        let totalProducts = null;
+        if (req.query.includeTotal) {
+            const totalResponse = await getProductQty(req, res);
+            totalProducts = totalResponse.totalProducts;
+        }
+
+        res.status(200).json({
+            products: productsResponse.rows,
+            totalProducts: totalProducts,
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -113,7 +151,8 @@ const deleteProduct = async (req, res) => {
 };
 
 module.exports = {
-    getProducts,
+    getPaginatedProducts,
+    getProductQty,
     getProductById,
     getProductBySku,
     createProduct,
