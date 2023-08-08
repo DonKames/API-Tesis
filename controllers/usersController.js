@@ -1,5 +1,4 @@
 const db = require('../config/db');
-const bcrypt = require('bcrypt');
 
 const getUsers = async (req, res) => {
     try {
@@ -50,27 +49,29 @@ const getUserByEmail = async (req, res) => {
             'SELECT uid, first_name, fk_role_id FROM users WHERE email = $1',
             [email],
         );
+
+        // Se revisa si encontró un usuario con el email proporcionado
         if (response.rows.length > 0) {
+            // Si encontró un usuario, envía una respuesta con el usuario y un código de estado 200
             res.status(200).json(response.rows[0]);
         } else {
             // Si no se encontró ningún usuario, envía una respuesta con un cuerpo vacío y un código de estado 204
+            console.log(
+                'No se encontró ningún usuario con el email proporcionado',
+            );
             res.status(204).send();
         }
         // res.status(200).json(response.rows[0]);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Error get Users by Id' });
+        res.status(500).json({ error: 'Error get Users by Email' });
     }
 };
 
 const createUser = async (req, res) => {
     try {
         console.log(req.body);
-        const { name, lastName, role, email, temporalPass } = req.body;
-
-        // if (!temporalPass) {
-        //     throw new Error('Campo temporalPassword requerido');
-        // }
+        const { name, lastName, role, email } = req.body;
 
         const response = await db.query(
             'INSERT INTO users (first_name, last_name, email, fk_role_id) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -108,7 +109,7 @@ const updateUserUid = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const { username, password, role, email } = req.body;
+        const { username, role, email } = req.body;
 
         const response = await db.query(
             'UPDATE users SET first_name = $1, last_name = $2, email = $3, fk_role_id = $4, uid = $5 WHERE user_id = $5 RETURNING *',

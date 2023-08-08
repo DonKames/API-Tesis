@@ -2,7 +2,16 @@ const db = require('../config/db');
 
 const getProducts = async (req, res) => {
     try {
-        const response = await db.query('SELECT * FROM products');
+        const page = parseInt(req.query.page) || 1;
+
+        const limit = parseInt(req.query.limit) || 50;
+
+        const offset = (page - 1) * limit;
+
+        const response = await db.query(
+            'SELECT * FROM products ORDER BY product_id ASC LIMIT $1 OFFSET $2',
+            [limit, offset],
+        );
         res.status(200).json(response.rows);
     } catch (err) {
         console.error(err);
