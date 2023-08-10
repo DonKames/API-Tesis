@@ -45,10 +45,13 @@ const getUserByUid = async (req, res) => {
 const getUserByEmail = async (req, res) => {
     try {
         const { email } = req.params;
+
+        console.log(email);
         const response = await db.query(
             'SELECT uid, first_name, fk_role_id FROM users WHERE email = $1',
             [email],
         );
+        console.log(response.rows);
 
         // Se revisa si encontró un usuario con el email proporcionado
         if (response.rows.length > 0) {

@@ -19,14 +19,14 @@ const db = require('../config/db');
 //     }
 // };
 
-const getProductQty = async (req, res) => {
+const getProductQty = async () => {
     try {
         const response = await db.query('SELECT COUNT(*) FROM products');
         const totalProducts = parseInt(response.rows[0].count);
-        res.status(200).json({ totalProducts: totalProducts });
+        return totalProducts;
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        throw new Error('Internal server error');
     }
 };
 
@@ -43,8 +43,7 @@ const getPaginatedProducts = async (req, res) => {
 
         let totalProducts = null;
         if (req.query.includeTotal) {
-            const totalResponse = await getProductQty(req, res);
-            totalProducts = totalResponse.totalProducts;
+            totalProducts = await getProductQty(); // Get the total products without sending a response
         }
 
         res.status(200).json({
