@@ -33,7 +33,7 @@ const getProductQty = async () => {
 const getPaginatedProducts = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 50;
+        const limit = parseInt(req.query.limit) || 20;
         const offset = (page - 1) * limit;
 
         const productsResponse = await db.query(
@@ -41,14 +41,14 @@ const getPaginatedProducts = async (req, res) => {
             [limit, offset],
         );
 
-        let totalProducts = null;
+        let productsQty = null;
         if (req.query.includeTotal) {
-            totalProducts = await getProductQty(); // Get the total products without sending a response
+            productsQty = await getProductQty(); // Get the total products without sending a response
         }
 
         res.status(200).json({
             products: productsResponse.rows,
-            totalProducts: totalProducts,
+            productsQty,
         });
     } catch (err) {
         console.error(err);
