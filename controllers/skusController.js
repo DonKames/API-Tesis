@@ -11,8 +11,8 @@ const handleErrors = (fn) => async (req, res, next) => {
 
 const getSkusQty = async (req, res) => {
     const response = await db.query('SELECT COUNT(*) FROM skus');
-    const productsQty = parseInt(response.rows[0].count);
-    res.status(200).json({ productsQty });
+    const skusQty = parseInt(response.rows[0].count);
+    res.status(200).json({ skusQty });
 };
 
 const getSkus = async (req, res) => {
