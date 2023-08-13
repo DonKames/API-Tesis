@@ -15,8 +15,31 @@ const getSkusQty = async (req, res) => {
     res.status(200).json({ skusQty });
 };
 
+// const getPaginatedProducts = async (req, res) => {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 20;
+//     const offset = (page - 1) * limit;
+
+//     const productsResponse = await db.query(
+//         'SELECT * FROM products ORDER BY product_id ASC LIMIT $1 OFFSET $2',
+//         [limit, offset],
+//     );
+
+//     res.status(200).json({
+//         products: productsResponse.rows,
+//     });
+// };
+
 const getSkus = async (req, res) => {
-    const response = await db.query('SELECT * FROM Skus');
+    // Consts for pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    const response = await db.query(
+        'SELECT * FROM Skus ORDER BY sku_id ASC LIMIT $1 OFFSET $2',
+        [limit, offset],
+    );
     res.status(200).json(response.rows);
 };
 
