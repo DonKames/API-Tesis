@@ -1,13 +1,24 @@
 const db = require('../config/db');
+const handleErrors = require('../middlewares/errorHandler');
 
 const getBranches = async (req, res) => {
-    try {
-        const response = await db.query('SELECT * FROM branches');
-        res.status(200).json(response.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    console.log(req.query);
+
+    const response = await db.query(
+        'SELECT * FROM branches ORDER BY branch_id ASC LIMIT $1 OFFSET $2',
+        [limit, offset],
+    );
+    res.status(200).json(response.rows);
+};
+
+const getBranchesQty = async (req, res) => {
+    const response = await db.query('SELECT COUNT(*) FROM branches');
+    const branchesQty = parseInt(response.rows[0].count);
+    res.status(200).json({ branchesQty });
 };
 
 const getBranchById = async (req, res) => {
@@ -75,9 +86,10 @@ const deleteBranch = async (req, res) => {
 };
 
 module.exports = {
-    getBranches,
-    getBranchById,
-    createBranch,
-    updateBranch,
-    deleteBranch,
+    getBranches: handleErrors(getBranches),
+    getBranchesQty: handleErrors(getBranchesQty),
+    getBranchById: handleErrors(getBranchById),
+    createBranch: handleErrors(createBranch),
+    updateBranch: handleErrors(updateBranch),
+    deleteBranch: handleErrors(deleteBranch),
 };

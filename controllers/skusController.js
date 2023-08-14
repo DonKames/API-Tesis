@@ -1,18 +1,10 @@
 const db = require('../config/db');
-
-const handleErrors = (fn) => async (req, res, next) => {
-    try {
-        await fn(req, res, next);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
+const handleErrors = require('../middlewares/errorHandler');
 
 const getSkusQty = async (req, res) => {
     const response = await db.query('SELECT COUNT(*) FROM skus');
     const skusQty = parseInt(response.rows[0].count);
-    res.status(200).json({ skusQty });
+    res.status(200).json(skusQty);
 };
 
 // const getPaginatedProducts = async (req, res) => {

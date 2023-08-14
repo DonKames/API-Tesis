@@ -1,13 +1,14 @@
 const db = require('../config/db');
+const handleErrors = require('../middlewares/errorHandler');
 
-const handleErrors = (fn) => async (req, res, next) => {
-    try {
-        await fn(req, res, next);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
+// const handleErrors = (fn) => async (req, res, next) => {
+//     try {
+//         await fn(req, res, next);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// };
 
 const getProductsQty = async (req, res) => {
     const response = await db.query('SELECT COUNT(*) FROM products');
@@ -19,6 +20,8 @@ const getPaginatedProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const offset = (page - 1) * limit;
+
+    console.log(req.query);
 
     const productsResponse = await db.query(
         'SELECT * FROM products ORDER BY product_id ASC LIMIT $1 OFFSET $2',

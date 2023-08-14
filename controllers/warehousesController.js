@@ -1,13 +1,9 @@
 const db = require('../config/db');
+const handleErrors = require('../middlewares/errorHandler');
 
 const getWarehouses = async (req, res) => {
-    try {
-        const response = await db.query('SELECT * FROM warehouses');
-        res.status(200).json(response.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    const response = await db.query('SELECT * FROM warehouses');
+    res.status(200).json(response.rows);
 };
 
 const getWarehouseById = async (req, res) => {
@@ -67,9 +63,9 @@ const deleteWarehouse = async (req, res) => {
 };
 
 module.exports = {
-    getWarehouses,
-    getWarehouseById,
-    createWarehouse,
-    updateWarehouse,
-    deleteWarehouse,
+    getWarehouses: handleErrors(getWarehouses),
+    getWarehouseById: handleErrors(getWarehouseById),
+    createWarehouse: handleErrors(createWarehouse),
+    updateWarehouse: handleErrors(updateWarehouse),
+    deleteWarehouse: handleErrors(deleteWarehouse),
 };
