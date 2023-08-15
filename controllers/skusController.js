@@ -4,6 +4,7 @@ const handleErrors = require('../middlewares/errorHandler');
 const getSkusQty = async (req, res) => {
     const response = await db.query('SELECT COUNT(*) FROM skus');
     const skusQty = parseInt(response.rows[0].count);
+    console.log(skusQty);
     res.status(200).json(skusQty);
 };
 
@@ -27,6 +28,8 @@ const getSkus = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const offset = (page - 1) * limit;
+
+    console.log(req.query);
 
     const response = await db.query(
         'SELECT * FROM Skus ORDER BY sku_id ASC LIMIT $1 OFFSET $2',

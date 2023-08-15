@@ -25,6 +25,10 @@ router.delete('/branches/:id', branchesController.deleteBranch);
 // Branch Locations
 router.get('/branchLocations', branchLocationsController.getBranchLocations);
 router.get(
+    '/branchLocations/qty',
+    branchLocationsController.getBranchLocationsQty,
+);
+router.get(
     '/branchLocations/:id',
     branchLocationsController.getBranchLocationById,
 );
@@ -89,6 +93,7 @@ router.delete('/users/:id', usersController.deleteUser);
 
 // Warehouses
 router.get('/warehouses', warehousesController.getWarehouses);
+router.get('/warehouses/qty', warehousesController.getWarehousesQty);
 router.get('/warehouses/:id', warehousesController.getWarehouseById);
 router.post('/warehouses', warehousesController.createWarehouse);
 router.put('/warehouses/:id', warehousesController.updateWarehouse);

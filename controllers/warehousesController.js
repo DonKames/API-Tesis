@@ -2,8 +2,20 @@ const db = require('../config/db');
 const handleErrors = require('../middlewares/errorHandler');
 
 const getWarehouses = async (req, res) => {
-    const response = await db.query('SELECT * FROM warehouses');
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const response = await db.query(
+        'SELECT * FROM warehouses ORDER BY warehouse_id LIMIT $1 OFFSET $2',
+        [limit, offset],
+    );
     res.status(200).json(response.rows);
+};
+
+const getWarehousesQty = async (req, res) => {
+    const response = await db.query('SELECT COUNT(*) FROM warehouses');
+    res.status(200).json(parseInt(response.rows[0].count));
 };
 
 const getWarehouseById = async (req, res) => {
@@ -64,6 +76,7 @@ const deleteWarehouse = async (req, res) => {
 
 module.exports = {
     getWarehouses: handleErrors(getWarehouses),
+    getWarehousesQty: handleErrors(getWarehousesQty),
     getWarehouseById: handleErrors(getWarehouseById),
     createWarehouse: handleErrors(createWarehouse),
     updateWarehouse: handleErrors(updateWarehouse),
