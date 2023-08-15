@@ -16,7 +16,7 @@ const getProductsQty = async (req, res) => {
     res.status(200).json({ productsQty });
 };
 
-const getPaginatedProducts = async (req, res) => {
+const getProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const offset = (page - 1) * limit;
@@ -28,9 +28,7 @@ const getPaginatedProducts = async (req, res) => {
         [limit, offset],
     );
 
-    res.status(200).json({
-        products: productsResponse.rows,
-    });
+    res.status(200).json(productsResponse.rows);
 };
 
 const getProductById = async (req, res) => {
@@ -87,7 +85,7 @@ const deleteProduct = async (req, res) => {
 };
 
 module.exports = {
-    getPaginatedProducts: handleErrors(getPaginatedProducts),
+    getProducts: handleErrors(getProducts),
     getProductsQty: handleErrors(getProductsQty),
     getProductById: handleErrors(getProductById),
     getProductBySku: handleErrors(getProductBySku),
