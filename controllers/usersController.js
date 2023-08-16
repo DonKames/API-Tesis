@@ -1,13 +1,22 @@
 const db = require('../config/db');
+const handleErrors = require('../middlewares/errorHandler');
 
 const getUsers = async (req, res) => {
-    try {
-        const response = await db.query('SELECT * FROM users');
-        res.status(200).json(response.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error Get Users' });
-    }
+    const { page, limit } = req.query;
+    const offset = (page - 1) * limit;
+
+    const response = await db.query(
+        'SELECT * FROM users ORDER BY user_id ASC LIMIT $1 OFFSET $2',
+        [limit, offset],
+    );
+
+    res.status(200).json(response.rows);
+};
+
+const getUsersQty = async (req, res) => {
+    const response = await db.query('SELECT COUNT(*) FROM users');
+    const usersQty = parseInt(response.rows[0].count);
+    res.status(200).json(usersQty);
 };
 
 const getUserById = async (req, res) => {
@@ -137,12 +146,13 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-    getUsers,
-    getUserById,
-    getUserByUid,
-    getUserByEmail,
-    createUser,
-    updateUser,
-    updateUserUid,
-    deleteUser,
+    getUsers: handleErrors(getUsers),
+    getUsersQty: handleErrors(getUsersQty),
+    getUserById: handleErrors(getUserById),
+    getUserByUid: handleErrors(getUserByUid),
+    getUserByEmail: handleErrors(getUserByEmail),
+    createUser: handleErrors(createUser),
+    updateUser: handleErrors(updateUser),
+    updateUserUid: handleErrors(updateUserUid),
+    deleteUser: handleErrors(deleteUser),
 };

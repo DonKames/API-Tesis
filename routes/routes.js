@@ -83,6 +83,7 @@ router.delete('/skus/:id', skusController.deleteSku);
 
 // Users
 router.get('/users', usersController.getUsers);
+router.get('/users/qty', usersController.getUsersQty);
 router.get('/users/id/:id', usersController.getUserById);
 router.get('/users/uid/:uid', usersController.getUserByUid);
 router.get('/users/email/:email', usersController.getUserByEmail);
