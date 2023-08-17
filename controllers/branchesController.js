@@ -18,7 +18,7 @@ const getBranches = async (req, res) => {
 const getBranchesQty = async (req, res) => {
     const response = await db.query('SELECT COUNT(*) FROM branches');
     const branchesQty = parseInt(response.rows[0].count);
-    res.status(200).json({ branchesQty });
+    res.status(200).json(branchesQty);
 };
 
 const getBranchById = async (req, res) => {
