@@ -18,6 +18,11 @@ const getWarehousesQty = async (req, res) => {
     res.status(200).json(parseInt(response.rows[0].count));
 };
 
+const getWarehousesNames = handleErrors(async (req, res) => {
+    const response = await db.query('SELECT name FROM warehouses');
+    res.status(200).json(response.rows.map((row) => row.name));
+});
+
 const getWarehouseById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -77,6 +82,7 @@ const deleteWarehouse = async (req, res) => {
 module.exports = {
     getWarehouses: handleErrors(getWarehouses),
     getWarehousesQty: handleErrors(getWarehousesQty),
+    getWarehousesNames: handleErrors(getWarehousesNames),
     getWarehouseById: handleErrors(getWarehouseById),
     createWarehouse: handleErrors(createWarehouse),
     updateWarehouse: handleErrors(updateWarehouse),

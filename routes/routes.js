@@ -51,8 +51,12 @@ router.delete('/countries/:id', countriesController.deleteCountry);
 
 // Products
 // router.get('/products', productsController.getProducts);
-router.get('/products/qty', productsController.getProductsQty);
 router.get('/products', productsController.getProducts);
+router.get('/products/qty', productsController.getProductsQty);
+router.get(
+    '/products/countByWarehouse',
+    productsController.getProductCountByWarehouse,
+);
 router.get('/products/:id', productsController.getProductById);
 router.post('/products', productsController.createProduct);
 router.put('/products/:id', productsController.updateProduct);
@@ -95,6 +99,7 @@ router.delete('/users/:id', usersController.deleteUser);
 // Warehouses
 router.get('/warehouses', warehousesController.getWarehouses);
 router.get('/warehouses/qty', warehousesController.getWarehousesQty);
+router.get('/warehouses/names', warehousesController.getWarehousesNames);
 router.get('/warehouses/:id', warehousesController.getWarehouseById);
 router.post('/warehouses', warehousesController.createWarehouse);
 router.put('/warehouses/:id', warehousesController.updateWarehouse);

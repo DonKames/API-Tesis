@@ -1,21 +1,6 @@
 const db = require('../config/db');
 const handleErrors = require('../middlewares/errorHandler');
 
-// const handleErrors = (fn) => async (req, res, next) => {
-//     try {
-//         await fn(req, res, next);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// };
-
-const getProductsQty = async (req, res) => {
-    const response = await db.query('SELECT COUNT(*) FROM products');
-    const productsQty = parseInt(response.rows[0].count);
-    res.status(200).json({ productsQty });
-};
-
 const getProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
@@ -29,6 +14,23 @@ const getProducts = async (req, res) => {
     );
 
     res.status(200).json(productsResponse.rows);
+};
+
+const getProductCountByWarehouse = handleErrors(async (req, res) => {
+    const response = await db.query(
+        'SELECT w.warehouse_id, w.name AS warehouse_name, COUNT(p.product_id) AS product_count ' +
+            'FROM "public".warehouses w ' +
+            'LEFT JOIN "public".products p ON w.warehouse_id = p.fk_warehouse_id ' +
+            'GROUP BY w.warehouse_id, w.name ' +
+            'ORDER BY w.warehouse_id;',
+    );
+    res.status(200).json(response.rows);
+});
+
+const getProductsQty = async (req, res) => {
+    const response = await db.query('SELECT COUNT(*) FROM products');
+    const productsQty = parseInt(response.rows[0].count);
+    res.status(200).json({ productsQty });
 };
 
 const getProductById = async (req, res) => {
@@ -87,6 +89,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
     getProducts: handleErrors(getProducts),
     getProductsQty: handleErrors(getProductsQty),
+    getProductCountByWarehouse: handleErrors(getProductCountByWarehouse),
     getProductById: handleErrors(getProductById),
     getProductBySku: handleErrors(getProductBySku),
     createProduct: handleErrors(createProduct),
