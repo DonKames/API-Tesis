@@ -19,8 +19,10 @@ const getWarehousesQty = async (req, res) => {
 };
 
 const getWarehousesNames = handleErrors(async (req, res) => {
-    const response = await db.query('SELECT name FROM warehouses');
-    res.status(200).json(response.rows.map((row) => row.name));
+    const response = await db.query(
+        'SELECT warehouse_id, name FROM warehouses',
+    );
+    res.status(200).json(response.rows);
 });
 
 const getWarehouseById = async (req, res) => {

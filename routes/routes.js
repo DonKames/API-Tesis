@@ -13,6 +13,7 @@ const warehousesController = require('../controllers/warehousesController');
 
 // DEV
 const addingCountries = require('../utilities/countryAdder');
+const settingsController = require('../controllers/settingsController');
 
 // Branches
 router.get('/branches', branchesController.getBranches);
@@ -84,6 +85,11 @@ router.get('/skus/sku/:sku', skusController.getSkuBySku);
 router.post('/skus', skusController.createSku);
 router.put('/skus/:id', skusController.updateSku);
 router.delete('/skus/:id', skusController.deleteSku);
+
+// Settings
+router.get('/global_settings', settingsController.getGlobalSettings);
+router.post('/global_settings', settingsController.createGlobalSettings);
+router.put('/global_settings', settingsController.updateGlobalSettings);
 
 // Users
 router.get('/users', usersController.getUsers);
