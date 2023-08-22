@@ -22,7 +22,12 @@ const getWarehousesNames = handleErrors(async (req, res) => {
     const response = await db.query(
         'SELECT warehouse_id, name FROM warehouses',
     );
-    res.status(200).json(response.rows);
+    const formattedResponse = response.rows.map((row) => ({
+        id: row.warehouse_id,
+        name: row.name,
+    }));
+    console.log(formattedResponse);
+    res.status(200).json(formattedResponse);
 });
 
 const getWarehouseById = async (req, res) => {

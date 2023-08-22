@@ -17,10 +17,10 @@ const createGlobalSettings = async (req, res) => {
 };
 
 const updateGlobalSettings = async (req, res) => {
-    const { mainWarehouse, id } = req.body;
+    const { mainWarehouseId, globalSettingsId } = req.body;
     const response = await db.query(
-        'UPDATE global_settings SET main_warehouse = $1, WHERE id = $2 RETURNING *',
-        [mainWarehouse, id],
+        'UPDATE global_settings SET main_warehouse = $1 WHERE global_settings_id = $2 RETURNING *',
+        [mainWarehouseId, globalSettingsId],
     );
     res.status(200).json(response.rows[0]);
 };
