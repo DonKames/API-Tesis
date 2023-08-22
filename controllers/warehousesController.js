@@ -26,7 +26,6 @@ const getWarehousesNames = handleErrors(async (req, res) => {
         id: row.warehouse_id,
         name: row.name,
     }));
-    console.log(formattedResponse);
     res.status(200).json(formattedResponse);
 });
 
