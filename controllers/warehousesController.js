@@ -36,7 +36,15 @@ const getWarehouseById = async (req, res) => {
             'SELECT * FROM warehouses WHERE warehouse_id = $1',
             [id],
         );
-        res.status(200).json(response.rows[0]);
+
+        const formattedResponse = {
+            id: response.rows[0].warehouse_id,
+            name: response.rows[0].name,
+            capacity: response.rows[0].capacity,
+            branchId: response.rows[0].fk_branch_id,
+        };
+
+        res.status(200).json(formattedResponse);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });

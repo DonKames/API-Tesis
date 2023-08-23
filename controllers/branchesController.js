@@ -21,6 +21,15 @@ const getBranchesQty = async (req, res) => {
     res.status(200).json(branchesQty);
 };
 
+const getBranchesNames = handleErrors(async (req, res) => {
+    const response = await db.query('SELECT branch_id, name FROM branches');
+    const formattedResponse = response.rows.map((row) => ({
+        id: row.branch_id,
+        name: row.name,
+    }));
+    res.status(200).json(formattedResponse);
+});
+
 const getBranchById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -88,6 +97,7 @@ const deleteBranch = async (req, res) => {
 module.exports = {
     getBranches: handleErrors(getBranches),
     getBranchesQty: handleErrors(getBranchesQty),
+    getBranchesNames: handleErrors(getBranchesNames),
     getBranchById: handleErrors(getBranchById),
     createBranch: handleErrors(createBranch),
     updateBranch: handleErrors(updateBranch),

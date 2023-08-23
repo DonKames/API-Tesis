@@ -18,6 +18,7 @@ const settingsController = require('../controllers/settingsController');
 // Branches
 router.get('/branches', branchesController.getBranches);
 router.get('/branches/qty', branchesController.getBranchesQty);
+router.get('/branches/names', branchesController.getBranchesNames);
 router.get('/branches/:id', branchesController.getBranchById);
 router.post('/branches', branchesController.createBranch);
 router.put('/branches/:id', branchesController.updateBranch);
