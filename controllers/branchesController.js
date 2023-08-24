@@ -1,25 +1,21 @@
-const branchRepository = require('../repositories/branchRepository');
+const branchService = require('../services/branchService');
 const handleErrors = require('../middlewares/errorHandler');
 
-// TODO el review de abajo.
-// REVIEW Verificar que todo lo que sigue funcione
 const getBranches = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const offset = (page - 1) * limit;
-
-    const response = await branchRepository.getBranches(limit, offset);
+    const response = await branchService.getBranches(page, limit);
     res.status(200).json(response.rows);
 });
 
 const getBranchesQty = handleErrors(async (req, res) => {
-    const response = await branchRepository.getBranchesQty();
+    const response = await branchService.getBranchesQty();
     const branchesQty = parseInt(response.rows[0].count);
     res.status(200).json(branchesQty);
 });
 
 const getBranchesNames = handleErrors(async (req, res) => {
-    const response = await branchRepository.getBranchesNames();
+    const response = await branchService.getBranchesNames();
     const formattedResponse = response.rows.map((row) => ({
         id: row.branch_id,
         name: row.name,
@@ -29,32 +25,24 @@ const getBranchesNames = handleErrors(async (req, res) => {
 
 const getBranchById = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const response = await branchRepository.getBranchById(id);
+    const response = await branchService.getBranchById(id);
     res.status(200).json(response.rows[0]);
 });
 
 const createBranch = handleErrors(async (req, res) => {
     const { branchName, region, address } = req.body;
-    const response = await branchRepository.createBranch(
+    const response = await branchService.createBranch(
         branchName,
         region,
         address,
     );
-    const branchId = response.rows[0].branch_id;
-
-    // Ahora insertamos la bodega "RECEPCIÓN" para la sucursal recién creada
-    // await db.query(
-    //     'INSERT INTO "public".warehouses (name, fk_branch_id) VALUES ($1, $2)',
-    //     ['RECEPCIÓN', branchId],
-    // );
-
     res.status(201).json(response.rows[0]);
 });
 
 const updateBranch = handleErrors(async (req, res) => {
     const { id } = req.params;
     const { branchName, fk_region_id, address } = req.body;
-    const response = await branchRepository.updateBranch(
+    const response = await branchService.updateBranch(
         branchName,
         fk_region_id,
         address,
@@ -65,7 +53,7 @@ const updateBranch = handleErrors(async (req, res) => {
 
 const deleteBranch = handleErrors(async (req, res) => {
     const { id } = req.params;
-    await branchRepository.deleteBranch(id);
+    await branchService.deleteBranch(id);
     res.status(204).send();
 });
 

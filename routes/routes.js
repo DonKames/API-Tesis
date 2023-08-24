@@ -13,7 +13,7 @@ const warehousesController = require('../controllers/warehousesController');
 
 // DEV
 const addingCountries = require('../utilities/countryAdder');
-const settingsController = require('../controllers/settingsController');
+const settingsController = require('../controllers/globalSettingsController');
 
 // Branches
 router.get('/branches', branchesController.getBranches);
