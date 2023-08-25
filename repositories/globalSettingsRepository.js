@@ -11,14 +11,21 @@ const createGlobalSettings = async (idWarehouse) => {
     );
 };
 
-const updateGlobalSettings = async (params) => {
-    const keys = Object.keys(params);
-    const values = Object.values(params);
-    const setQuery = keys
-        .map((key, index) => `${key} = $${index + 1}`)
-        .join(', ');
-    const query = `UPDATE global_settings SET ${setQuery} WHERE id = $${values.length} RETURNING *`;
-    return await db.query(query, values);
+const updateGlobalSettings = async (
+    idMainBranch,
+    idMainWarehouse,
+    idGlobalSettings,
+) => {
+    console.log(
+        'GlobalSettingsRepo: ',
+        idMainBranch,
+        idMainWarehouse,
+        idGlobalSettings,
+    );
+    return await db.query(
+        'UPDATE global_settings SET main_branch = $1, main_warehouse = $2 WHERE global_settings_id = $3 RETURNING *',
+        [idMainBranch, idMainWarehouse, idGlobalSettings],
+    );
 };
 
 module.exports = {

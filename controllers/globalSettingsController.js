@@ -15,7 +15,13 @@ const createGlobalSettings = handleErrors(async (req, res) => {
 });
 
 const updateGlobalSettings = handleErrors(async (req, res) => {
-    const response = await globalSettingsService.updateGlobalSettings(req.body);
+    const { mainWarehouseId, mainBranchId, globalSettingsId } = req.body;
+    console.log(req.body);
+    const response = await globalSettingsService.updateGlobalSettings(
+        mainWarehouseId,
+        mainBranchId,
+        globalSettingsId,
+    );
     res.status(200).json(response.rows[0]);
 });
 
