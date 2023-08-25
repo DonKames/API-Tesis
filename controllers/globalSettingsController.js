@@ -18,8 +18,8 @@ const updateGlobalSettings = handleErrors(async (req, res) => {
     const { mainWarehouseId, mainBranchId, globalSettingsId } = req.body;
     console.log(req.body);
     const response = await globalSettingsService.updateGlobalSettings(
-        mainWarehouseId,
         mainBranchId,
+        mainWarehouseId,
         globalSettingsId,
     );
     res.status(200).json(response.rows[0]);
