@@ -42,9 +42,15 @@ const updateSku = async (id, name, price, description) => {
     return response.rows[0];
 };
 
-const deleteSku = async (id) => {
-    await skuRepository.deleteSku(id);
+const changeActiveStateSku = async (id, isActive) => {
+    const response = await skuRepository.changeActiveStateSku(id, isActive);
+    return response.rows[0];
 };
+
+// *** NOTA: No se eliminaran cosas, se manejaran con cambios de estado. ***
+// const deleteSku = async (id) => {
+//     await skuRepository.deleteSku(id);
+// };
 
 module.exports = {
     getSkusQty,
@@ -53,5 +59,5 @@ module.exports = {
     getSkuBySku,
     createSku,
     updateSku,
-    deleteSku,
+    changeActiveStateSku,
 };

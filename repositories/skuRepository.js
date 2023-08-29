@@ -35,9 +35,17 @@ const updateSku = async (id, name, price, description) => {
     );
 };
 
-const deleteSku = async (id) => {
-    return await db.query('DELETE FROM "public".skus WHERE sku_id = $1', [id]);
+const changeActiveStateSku = async (id, isActive) => {
+    return await db.query(
+        'UPDATE "public".skus SET active = $1 WHERE sku_id = $2 RETURNING *',
+        [isActive, id],
+    );
 };
+
+// *** NOTA: No se eliminaran cosas, se manejaran con cambios de estado. ***
+// const deleteSku = async (id) => {
+//     return await db.query('DELETE FROM "public".skus WHERE sku_id = $1', [id]);
+// };
 
 module.exports = {
     getSkusQty,
@@ -46,5 +54,5 @@ module.exports = {
     getSkuBySku,
     createSku,
     updateSku,
-    deleteSku,
+    changeActiveStateSku,
 };
