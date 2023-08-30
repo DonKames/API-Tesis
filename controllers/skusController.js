@@ -47,11 +47,20 @@ const updateSku = handleErrors(async (req, res) => {
     res.status(200).json(updatedSku);
 });
 
-const deleteSku = handleErrors(async (req, res) => {
+const changeActiveStateSku = handleErrors(async (req, res) => {
     const { id } = req.params;
-    await skuService.deleteSku(id);
-    res.status(204).send();
+    const { isActive } = req.body;
+
+    const updatedSku = await skuService.changeActiveStateSku(id, isActive);
+    res.status(200).json(updatedSku);
 });
+
+// *** NOTA: No se eliminaran cosas, se manejaran con cambios de estado. ***
+// const deleteSku = handleErrors(async (req, res) => {
+//     const { id } = req.params;
+//     await skuService.deleteSku(id);
+//     res.status(204).send();
+// });
 
 module.exports = {
     getSkusQty,
@@ -60,5 +69,5 @@ module.exports = {
     getSkuBySku,
     createSku,
     updateSku,
-    deleteSku,
+    changeActiveStateSku,
 };

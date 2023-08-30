@@ -85,7 +85,7 @@ router.get('/skus/:id', skusController.getSkuById);
 router.get('/skus/sku/:sku', skusController.getSkuBySku);
 router.post('/skus', skusController.createSku);
 router.put('/skus/:id', skusController.updateSku);
-router.delete('/skus/:id', skusController.deleteSku);
+router.put('/skus/active/:id', skusController.changeActiveStateSku);
 
 // Settings
 router.get('/global_settings', settingsController.getGlobalSettings);
