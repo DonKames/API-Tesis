@@ -22,6 +22,8 @@ app.use('/api', routes);
 // Depurar
 app.use((req, res, next) => {
     console.log('req.body', req.body);
+    console.log('req.params', req.params);
+    console.log(`[${new Date().toISOString()}] ${req.method} a ${req.url}`);
     next();
 });
 

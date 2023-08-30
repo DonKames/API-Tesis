@@ -1,4 +1,5 @@
 const handleErrors = require('../middlewares/errorHandler');
+const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 const skuService = require('../services/skuService');
 
 const getSkusQty = handleErrors(async (req, res) => {
@@ -48,11 +49,24 @@ const updateSku = handleErrors(async (req, res) => {
 });
 
 const changeActiveStateSku = handleErrors(async (req, res) => {
-    const { id } = req.params;
-    const { isActive } = req.body;
+    try {
+        const { id } = req.params;
+        const { active } = req.body;
 
-    const updatedSku = await skuService.changeActiveStateSku(id, isActive);
-    res.status(200).json(updatedSku);
+        console.log(id, active);
+
+        const updatedSku = await skuService.changeActiveStateSku(id, active);
+
+        console.log(updatedSku);
+
+        if (updatedSku) {
+            sendSuccess(res, 'SKU status updated successfully', updatedSku);
+        } else {
+            sendError(res, 'SKU not found', 404);
+        }
+    } catch (error) {
+        sendError(res, 'An error occurred while updating SKU status');
+    }
 });
 
 // *** NOTA: No se eliminaran cosas, se manejaran con cambios de estado. ***
