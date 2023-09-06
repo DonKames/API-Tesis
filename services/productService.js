@@ -6,7 +6,8 @@ const getProducts = async (page, limit) => {
 };
 
 const getProductsQty = async () => {
-    return await productRepository.getProductsQty();
+    const response = await productRepository.getProductsQty();
+    return parseInt(await response.rows[0].count);
 };
 
 const getProductCountByWarehouse = async () => {

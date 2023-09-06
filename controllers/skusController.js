@@ -4,7 +4,7 @@ const skuService = require('../services/skuService');
 
 const getSkusQty = handleErrors(async (req, res) => {
     const skusQty = await skuService.getSkusQty();
-    res.status(200).json(skusQty);
+    res.status(200).json({ skusQty });
 });
 
 const getSkus = handleErrors(async (req, res) => {
