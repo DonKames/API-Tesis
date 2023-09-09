@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 const getProducts = async (limit, offset) => {
     const response = await db.query(
-        'SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active, w.name AS warehouse_name FROM products p JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id ORDER BY p.product_id ASC LIMIT $1 OFFSET $2',
+        'SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active, w.name AS warehouse_name, s.sku AS sku, b.name AS branch_name FROM products p JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id JOIN skus s ON p.fk_sku_id = s.sku_id JOIN branches b ON w.fk_branch_id = b.branch_id ORDER BY p.product_id ASC LIMIT $1 OFFSET $2',
         [limit, offset],
     );
     return response.rows;
