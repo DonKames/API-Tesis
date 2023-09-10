@@ -4,11 +4,24 @@ const getSkusQty = async () => {
     return await db.query('SELECT COUNT(*) FROM skus');
 };
 
-const getSkus = async (limit, offset) => {
-    return await db.query(
-        'SELECT * FROM Skus ORDER BY sku_id ASC LIMIT $1 OFFSET $2',
-        [limit, offset],
-    );
+// const getSkus = async (limit, offset, showInactive) => {
+//     return await db.query(
+//         'SELECT * FROM Skus ORDER BY sku_id ASC LIMIT $1 OFFSET $2',
+//         [limit, offset, showInactive],
+//     );
+// };
+
+const getSkus = async (limit, offset, showInactive) => {
+    let query = 'SELECT * FROM Skus';
+    const params = [limit, offset];
+
+    if (!showInactive) {
+        query += ' WHERE active = true';
+    }
+
+    query += ' ORDER BY sku_id ASC LIMIT $1 OFFSET $2';
+
+    return await db.query(query, params);
 };
 
 const getSkuById = async (id) => {

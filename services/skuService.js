@@ -5,8 +5,8 @@ const getSkusQty = async () => {
     return parseInt(response.rows[0].count);
 };
 
-const getSkus = async (limit, offset) => {
-    const response = await skuRepository.getSkus(limit, offset);
+const getSkus = async (limit, offset, showInactive) => {
+    const response = await skuRepository.getSkus(limit, offset, showInactive);
     return response.rows;
 };
 
