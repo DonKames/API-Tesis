@@ -1,11 +1,29 @@
 const db = require('../config/db');
 
-const getProducts = async (limit, offset) => {
-    const response = await db.query(
-        'SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active, w.name AS warehouse_name, s.sku AS sku, b.name AS branch_name FROM products p JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id JOIN skus s ON p.fk_sku_id = s.sku_id JOIN branches b ON w.fk_branch_id = b.branch_id ORDER BY p.product_id ASC LIMIT $1 OFFSET $2',
-        [limit, offset],
-    );
-    return response.rows;
+const getProducts = async (limit, offset, showInactive) => {
+    let query = `
+        SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active,
+        w.name AS warehouse_name, s.sku AS sku, b.name AS branch_name
+        FROM products p JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id
+        JOIN skus s ON p.fk_sku_id = s.sku_id
+        JOIN branches b ON w.fk_branch_id = b.branch_id`;
+
+    if (!showInactive) {
+        query += ' WHERE p.active = true';
+    }
+
+    query += `
+        ORDER BY p.product_id ASC
+        LIMIT $1 OFFSET $2
+        `;
+
+    const params = [limit, offset];
+
+    // const response = await db.query(
+    //     'SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active, w.name AS warehouse_name, s.sku AS sku, b.name AS branch_name FROM products p JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id JOIN skus s ON p.fk_sku_id = s.sku_id JOIN branches b ON w.fk_branch_id = b.branch_id ORDER BY p.product_id ASC LIMIT $1 OFFSET $2',
+    //     [limit, offset],
+    // );
+    return await db.query(query, params);
 };
 
 const getProductsQty = async () => {
@@ -68,6 +86,13 @@ const deleteProduct = async (id) => {
     await db.query('DELETE FROM "public".products WHERE product_id = $1', [id]);
 };
 
+const changeActiveStateProduct = async (id, isActive) => {
+    return await db.query(
+        'UPDATE "public".products SET active = $1 WHERE product_id = $2 RETURNING *',
+        [isActive, id],
+    );
+};
+
 module.exports = {
     getProducts,
     getProductsQty,
@@ -78,4 +103,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    changeActiveStateProduct,
 };

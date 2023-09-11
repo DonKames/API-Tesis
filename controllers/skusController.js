@@ -14,6 +14,7 @@ const getSkus = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+
     const offset = (page - 1) * limit;
 
     const response = await skuService.getSkus(limit, offset, showInactive);
@@ -112,7 +113,7 @@ const changeActiveStateSku = handleErrors(async (req, res) => {
             sendError(res, 'SKU not found', 404);
         }
     } catch (error) {
-        sendError(res, 'An error occurred while updating SKU status');
+        sendError(res, 'An error occurred while updating SKU status', 500);
     }
 });
 

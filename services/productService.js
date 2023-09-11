@@ -1,8 +1,13 @@
 const productRepository = require('../repositories/productRepository');
 
-const getProducts = async (page, limit) => {
-    const offset = (page - 1) * limit;
-    return await productRepository.getProducts(limit, offset);
+const getProducts = async (limit, offset, showInactive) => {
+    const response = await productRepository.getProducts(
+        limit,
+        offset,
+        showInactive,
+    );
+
+    return response.rows;
 };
 
 const getProductsQty = async () => {
@@ -34,6 +39,14 @@ const deleteProduct = async (id) => {
     return await productRepository.deleteProduct(id);
 };
 
+const changeActiveStateProduct = async (id, isActive) => {
+    const response = await productRepository.changeActiveStateProduct(
+        id,
+        isActive,
+    );
+    return response.rows[0];
+};
+
 module.exports = {
     getProducts,
     getProductsQty,
@@ -43,4 +56,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    changeActiveStateProduct,
 };

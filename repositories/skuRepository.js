@@ -29,7 +29,6 @@ const getSkus = async (limit, offset, showInactive) => {
         FROM Skus
         LEFT JOIN products ON Skus.sku_id = products.fk_sku_id
     `;
-    const params = [limit, offset];
 
     if (!showInactive) {
         query += ' WHERE Skus.active = true';
@@ -39,7 +38,9 @@ const getSkus = async (limit, offset, showInactive) => {
         GROUP BY Skus.sku_id
         ORDER BY Skus.sku_id ASC
         LIMIT $1 OFFSET $2
-    `;
+        `;
+
+    const params = [limit, offset];
 
     return await db.query(query, params);
 };

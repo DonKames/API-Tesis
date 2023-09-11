@@ -63,6 +63,7 @@ router.get('/products/:id', productsController.getProductById);
 router.post('/products', productsController.createProduct);
 router.put('/products/:id', productsController.updateProduct);
 router.delete('/products/:id', productsController.deleteProduct);
+router.patch('/products/:id', productsController.changeActiveStateProduct);
 
 // Regions
 router.get('/regions', regionsController.getRegions);
