@@ -3,8 +3,11 @@ const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 const skuService = require('../services/skuService');
 
 const getSkusQty = handleErrors(async (req, res) => {
-    const skusQty = await skuService.getSkusQty();
-    res.status(200).json({ skusQty });
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    const skusQty = await skuService.getSkusQty(showInactive);
+    console.log(skusQty);
+    res.status(200).json(skusQty);
 });
 
 const getSkus = handleErrors(async (req, res) => {
@@ -13,8 +16,21 @@ const getSkus = handleErrors(async (req, res) => {
     const showInactive = req.query.showInactive === 'true' || false;
     const offset = (page - 1) * limit;
 
-    const skus = await skuService.getSkus(limit, offset, showInactive);
-    res.status(200).json(skus);
+    const response = await skuService.getSkus(limit, offset, showInactive);
+
+    const formattedResponse = response.map((row) => ({
+        id: row.sku_id,
+        name: row.name,
+        description: row.description,
+        minimumStock: row.minimum_stock,
+        sku: row.sku,
+        lote: row.lote,
+        order: row.product_order,
+        active: row.active,
+        stock: row.product_count,
+    }));
+
+    res.status(200).json(formattedResponse);
 });
 
 const getSkuById = handleErrors(async (req, res) => {
@@ -44,9 +60,27 @@ const createSku = handleErrors(async (req, res) => {
 
 const updateSku = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { name, price, description } = req.body;
-    const updatedSku = await skuService.updateSku(id, name, price, description);
-    res.status(200).json(updatedSku);
+    const { name, price, description, minimumStock } = req.body;
+    const response = await skuService.updateSku(
+        id,
+        name,
+        price,
+        description,
+        minimumStock,
+    );
+
+    const formattedResponse = {
+        active: response.active,
+        description: response.description,
+        id: response.sku_id,
+        lote: response.lote,
+        minimumStock: response.minimum_stock,
+        name: response.name,
+        order: response.product_order,
+        sku: response.sku,
+    };
+
+    res.status(200).json(formattedResponse);
 });
 
 const changeActiveStateSku = handleErrors(async (req, res) => {
@@ -56,12 +90,24 @@ const changeActiveStateSku = handleErrors(async (req, res) => {
 
         console.log(id, active);
 
-        const updatedSku = await skuService.changeActiveStateSku(id, active);
+        const response = await skuService.changeActiveStateSku(id, active);
 
-        console.log(updatedSku);
-
-        if (updatedSku) {
-            sendSuccess(res, 'SKU status updated successfully', updatedSku);
+        if (response) {
+            const formattedResponse = {
+                active: response.active,
+                description: response.description,
+                id: response.sku_id,
+                lote: response.lote,
+                minimumStock: response.minimum_stock,
+                name: response.name,
+                order: response.product_order,
+                sku: response.sku,
+            };
+            sendSuccess(
+                res,
+                'SKU status updated successfully',
+                formattedResponse,
+            );
         } else {
             sendError(res, 'SKU not found', 404);
         }

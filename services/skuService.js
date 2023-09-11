@@ -1,7 +1,7 @@
 const skuRepository = require('../repositories/skuRepository');
 
-const getSkusQty = async () => {
-    const response = await skuRepository.getSkusQty();
+const getSkusQty = async (showInactive) => {
+    const response = await skuRepository.getSkusQty(showInactive);
     return parseInt(response.rows[0].count);
 };
 
@@ -32,12 +32,13 @@ const createSku = async (name, price, description, sku, lote, order) => {
     return response.rows[0];
 };
 
-const updateSku = async (id, name, price, description) => {
+const updateSku = async (id, name, price, description, minimumStock) => {
     const response = await skuRepository.updateSku(
         id,
         name,
         price,
         description,
+        minimumStock,
     );
     return response.rows[0];
 };
