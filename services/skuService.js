@@ -1,13 +1,13 @@
 const skuRepository = require('../repositories/skuRepository');
 
-const getSkusQty = async (showInactive) => {
-    const response = await skuRepository.getSkusQty(showInactive);
-    return parseInt(response.rows[0].count);
-};
-
 const getSkus = async (limit, offset, showInactive) => {
     const response = await skuRepository.getSkus(limit, offset, showInactive);
     return response.rows;
+};
+
+const getSkusQty = async (showInactive) => {
+    const response = await skuRepository.getSkusQty(showInactive);
+    return parseInt(response.rows[0].count);
 };
 
 const getSkuById = async (id) => {

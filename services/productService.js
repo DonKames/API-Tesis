@@ -10,8 +10,8 @@ const getProducts = async (limit, offset, showInactive) => {
     return response.rows;
 };
 
-const getProductsQty = async () => {
-    const response = await productRepository.getProductsQty();
+const getProductsQty = async (showInactive) => {
+    const response = await productRepository.getProductsQty(showInactive);
     return parseInt(await response.rows[0].count);
 };
 

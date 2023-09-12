@@ -28,8 +28,12 @@ const getProducts = handleErrors(async (req, res) => {
 });
 
 const getProductsQty = handleErrors(async (req, res) => {
-    const productsQty = await productService.getProductsQty();
-    res.status(200).json({ productsQty });
+    console.log(req.query.showInactive);
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    const productsQty = await productService.getProductsQty(showInactive);
+
+    res.status(200).json(productsQty);
 });
 
 const getProductCountByWarehouse = handleErrors(async (req, res) => {

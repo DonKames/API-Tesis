@@ -2,14 +2,6 @@ const handleErrors = require('../middlewares/errorHandler');
 const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 const skuService = require('../services/skuService');
 
-const getSkusQty = handleErrors(async (req, res) => {
-    const showInactive = req.query.showInactive === 'true' || false;
-
-    const skusQty = await skuService.getSkusQty(showInactive);
-    console.log(skusQty);
-    res.status(200).json(skusQty);
-});
-
 const getSkus = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
@@ -32,6 +24,14 @@ const getSkus = handleErrors(async (req, res) => {
     }));
 
     res.status(200).json(formattedResponse);
+});
+
+const getSkusQty = handleErrors(async (req, res) => {
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    const skusQty = await skuService.getSkusQty(showInactive);
+
+    res.status(200).json(skusQty);
 });
 
 const getSkuById = handleErrors(async (req, res) => {

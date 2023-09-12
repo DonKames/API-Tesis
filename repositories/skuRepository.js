@@ -1,28 +1,5 @@
 const db = require('../config/db');
 
-const getSkusQty = async (showInactive) => {
-    let query = 'SELECT COUNT(*) FROM Skus';
-
-    if (!showInactive) {
-        query += ' WHERE active = true';
-    }
-
-    return await db.query(query);
-};
-
-// const getSkus = async (limit, offset, showInactive) => {
-//     let query = 'SELECT * FROM Skus';
-//     const params = [limit, offset];
-
-//     if (!showInactive) {
-//         query += ' WHERE active = true';
-//     }
-
-//     query += ' ORDER BY sku_id ASC LIMIT $1 OFFSET $2';
-
-//     return await db.query(query, params);
-// };
-
 const getSkus = async (limit, offset, showInactive) => {
     let query = `
         SELECT Skus.*, COUNT(products.product_id) AS product_count
@@ -43,6 +20,16 @@ const getSkus = async (limit, offset, showInactive) => {
     const params = [limit, offset];
 
     return await db.query(query, params);
+};
+
+const getSkusQty = async (showInactive) => {
+    let query = 'SELECT COUNT(*) FROM Skus';
+
+    if (!showInactive) {
+        query += ' WHERE active = true';
+    }
+
+    return await db.query(query);
 };
 
 const getSkuById = async (id) => {
