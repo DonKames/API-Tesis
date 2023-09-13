@@ -1,12 +1,16 @@
 const db = require('../config/db');
 
 const getProducts = async (limit, offset, showInactive) => {
+    console.log(limit, offset, showInactive);
     let query = `
         SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active,
-        w.name AS warehouse_name, s.sku AS sku, b.name AS branch_name
-        FROM products p JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id
+        w.name AS warehouse_name, w.fk_branch_id AS branch_id, s.sku AS sku, 
+        b.name AS branch_name, p.fk_warehouse_id AS warehouse_id
+        FROM products p 
+        JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id
         JOIN skus s ON p.fk_sku_id = s.sku_id
-        JOIN branches b ON w.fk_branch_id = b.branch_id`;
+        JOIN branches b ON w.fk_branch_id = b.branch_id
+    `;
 
     if (!showInactive) {
         query += ' WHERE p.active = true';

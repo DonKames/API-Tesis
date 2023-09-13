@@ -19,7 +19,9 @@ const getProducts = handleErrors(async (req, res) => {
         id: row.product_id,
         epc: row.epc,
         warehouseName: row.warehouse_name,
+        warehouseId: row.warehouse_id,
         branchName: row.branch_name,
+        branchId: row.branch_id,
         active: row.active,
         sku: row.sku,
     }));

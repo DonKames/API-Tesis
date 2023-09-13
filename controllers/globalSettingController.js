@@ -1,4 +1,4 @@
-const globalSettingsService = require('../services/globalSettingsService');
+const globalSettingsService = require('../services/globalSettingService');
 const handleErrors = require('../middlewares/errorHandler');
 
 const getGlobalSettings = handleErrors(async (req, res) => {
@@ -8,9 +8,8 @@ const getGlobalSettings = handleErrors(async (req, res) => {
 
 const createGlobalSettings = handleErrors(async (req, res) => {
     const idWarehouse = req.body.warehouse_id;
-    const response = await globalSettingsService.createGlobalSettings(
-        idWarehouse,
-    );
+    const response =
+        await globalSettingsService.createGlobalSettings(idWarehouse);
     res.status(201).json(response.rows[0]);
 });
 

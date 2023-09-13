@@ -1,4 +1,4 @@
-const globalSettingsRepository = require('../repositories/globalSettingsRepository');
+const globalSettingsRepository = require('../repositories/globalSettingRepository');
 
 const getGlobalSettings = async () => {
     return await globalSettingsRepository.getGlobalSettings();

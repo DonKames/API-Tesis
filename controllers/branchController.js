@@ -1,4 +1,4 @@
-const branchService = require('../services/branchesService');
+const branchService = require('../services/branchService');
 const handleErrors = require('../middlewares/errorHandler');
 
 const getBranches = handleErrors(async (req, res) => {

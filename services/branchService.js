@@ -1,4 +1,4 @@
-const branchRepository = require('../repositories/branchesRepository');
+const branchRepository = require('../repositories/branchRepository');
 
 const getBranches = async (page, limit) => {
     const offset = (page - 1) * limit;

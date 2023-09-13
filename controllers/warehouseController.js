@@ -15,7 +15,11 @@ const getWarehousesQty = handleErrors(async (req, res) => {
 
 const getWarehousesNames = handleErrors(async (req, res) => {
     const response = await warehouseService.getWarehousesNames();
-    res.status(200).json(response);
+    const formattedResponse = response.rows.map((row) => ({
+        id: row.warehouse_id,
+        name: row.name,
+    }));
+    res.status(200).json(formattedResponse);
 });
 
 const getWarehouseById = handleErrors(async (req, res) => {

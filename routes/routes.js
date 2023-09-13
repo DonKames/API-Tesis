@@ -1,19 +1,19 @@
 const express = require('express');
 const router = express.Router();
 
-const branchesController = require('../controllers/branchesController');
+const branchesController = require('../controllers/branchController');
 const branchLocationsController = require('../controllers/branchLocationsController');
 const countriesController = require('../controllers/countriesController');
-const productsController = require('../controllers/productsController');
+const productsController = require('../controllers/productController');
 const regionsController = require('../controllers/regionsController');
-const skusController = require('../controllers/skusController');
+const skusController = require('../controllers/skuController');
 const usersController = require('../controllers/usersController');
 const rolesController = require('../controllers/rolesController');
-const warehousesController = require('../controllers/warehousesController');
+const warehousesController = require('../controllers/warehouseController');
 
 // DEV
 const addingCountries = require('../utilities/countryAdder');
-const settingsController = require('../controllers/globalSettingsController');
+const settingsController = require('../controllers/globalSettingController');
 
 // Branches
 router.get('/branches', branchesController.getBranches);
