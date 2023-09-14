@@ -46,6 +46,17 @@ const getSkuBySku = handleErrors(async (req, res) => {
     res.status(200).json(skuData);
 });
 
+const getSkusNames = handleErrors(async (req, res) => {
+    const response = await skuService.getSkusNames();
+
+    const formattedResponse = response.rows.map((row) => ({
+        id: row.sku_id,
+        name: row.sku_name,
+    }));
+
+    res.status(200).json(formattedResponse);
+});
+
 const createSku = handleErrors(async (req, res) => {
     const { name, price, description, sku, lote, order } = req.body;
     const newSku = await skuService.createSku(
@@ -129,6 +140,7 @@ module.exports = {
     getSkus,
     getSkuById,
     getSkuBySku,
+    getSkusNames,
     createSku,
     updateSku,
     changeActiveStateSku,

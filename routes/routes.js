@@ -84,6 +84,7 @@ router.get('/skus/qty', skusController.getSkusQty);
 router.get('/skus', skusController.getSkus);
 router.get('/skus/:id', skusController.getSkuById);
 router.get('/skus/sku/:sku', skusController.getSkuBySku);
+router.get('/skus/names', skusController.getSkusNames);
 router.post('/skus', skusController.createSku);
 router.put('/skus/:id', skusController.updateSku);
 router.patch('/skus/:id', skusController.changeActiveStateSku);

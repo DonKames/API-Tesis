@@ -42,6 +42,10 @@ const getSkuBySku = async (sku) => {
     return await db.query('SELECT * FROM "public".skus WHERE sku = $1', [sku]);
 };
 
+const getSkusNames = async () => {
+    return await db.query('SELECT sku_id, sku FROM "public".skus');
+};
+
 const createSku = async (name, price, description, sku, lote, order) => {
     return await db.query(
         'INSERT INTO "public".skus (name, price, description, sku, lote, product_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
@@ -73,6 +77,7 @@ module.exports = {
     getSkus,
     getSkuById,
     getSkuBySku,
+    getSkusNames,
     createSku,
     updateSku,
     changeActiveStateSku,

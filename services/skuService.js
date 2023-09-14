@@ -20,6 +20,11 @@ const getSkuBySku = async (sku) => {
     return response.rows[0];
 };
 
+const getSkusNames = async () => {
+    const response = await skuRepository.getSkusNames();
+    return response.rows[0];
+};
+
 const createSku = async (name, price, description, sku, lote, order) => {
     const response = await skuRepository.createSku(
         name,
@@ -58,6 +63,7 @@ module.exports = {
     getSkus,
     getSkuById,
     getSkuBySku,
+    getSkusNames,
     createSku,
     updateSku,
     changeActiveStateSku,
