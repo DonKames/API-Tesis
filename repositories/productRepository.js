@@ -5,7 +5,7 @@ const getProducts = async (limit, offset, showInactive) => {
     let query = `
         SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active,
         w.name AS warehouse_name, w.fk_branch_id AS branch_id, s.sku AS sku, 
-        b.name AS branch_name, p.fk_warehouse_id AS warehouse_id
+        b.name AS branch_name, p.fk_warehouse_id AS warehouse_id, p.fk_sku_id AS sku_id
         FROM products p 
         JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id
         JOIN skus s ON p.fk_sku_id = s.sku_id

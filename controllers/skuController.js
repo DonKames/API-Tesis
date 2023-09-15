@@ -47,11 +47,12 @@ const getSkuBySku = handleErrors(async (req, res) => {
 });
 
 const getSkusNames = handleErrors(async (req, res) => {
+    console.log('entra a getSkusNames');
     const response = await skuService.getSkusNames();
 
     const formattedResponse = response.rows.map((row) => ({
         id: row.sku_id,
-        name: row.sku_name,
+        name: row.sku,
     }));
 
     res.status(200).json(formattedResponse);

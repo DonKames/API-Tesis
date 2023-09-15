@@ -21,8 +21,7 @@ const getSkuBySku = async (sku) => {
 };
 
 const getSkusNames = async () => {
-    const response = await skuRepository.getSkusNames();
-    return response.rows[0];
+    return await skuRepository.getSkusNames();
 };
 
 const createSku = async (name, price, description, sku, lote, order) => {

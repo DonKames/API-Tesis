@@ -24,6 +24,7 @@ const getProducts = handleErrors(async (req, res) => {
         branchId: row.branch_id,
         active: row.active,
         sku: row.sku,
+        skuId: row.sku_id,
     }));
 
     res.status(200).json(formattedResponse);

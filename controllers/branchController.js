@@ -15,6 +15,7 @@ const getBranchesQty = handleErrors(async (req, res) => {
 
 const getBranchesNames = handleErrors(async (req, res) => {
     const response = await branchService.getBranchesNames();
+
     const formattedResponse = response.rows.map((row) => ({
         id: row.branch_id,
         name: row.name,
