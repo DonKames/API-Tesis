@@ -12,7 +12,9 @@ const getWarehousesQty = async () => {
 };
 
 const getWarehousesNames = async () => {
-    return await db.query('SELECT warehouse_id, name FROM warehouses');
+    return await db.query(
+        'SELECT warehouse_id, name, fk_branch_id FROM warehouses',
+    );
 };
 
 const getWarehouseById = async (id) => {

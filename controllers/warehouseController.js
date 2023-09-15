@@ -18,6 +18,7 @@ const getWarehousesNames = handleErrors(async (req, res) => {
     const formattedResponse = response.rows.map((row) => ({
         id: row.warehouse_id,
         name: row.name,
+        branchId: row.fk_branch_id,
     }));
     res.status(200).json(formattedResponse);
 });
