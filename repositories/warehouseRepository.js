@@ -1,10 +1,20 @@
 const db = require('../config/db');
 
-const getWarehouses = async (limit, offset) => {
-    return await db.query(
-        'SELECT * FROM warehouses ORDER BY warehouse_id ASC LIMIT $1 OFFSET $2',
-        [limit, offset],
-    );
+const getWarehouses = async (limit, offset, showInactive) => {
+    let query = `SELECT * FROM warehouses`;
+
+    if (!showInactive) {
+        query += ' WHERE active = true';
+    }
+
+    query += `
+        ORDER BY warehouse_id ASC
+        LIMIT $1 OFFSET $2
+        `;
+
+    const params = [limit, offset];
+
+    return await db.query(query, params);
 };
 
 const getWarehousesQty = async () => {

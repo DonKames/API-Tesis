@@ -1,8 +1,12 @@
 const warehouseRepository = require('../repositories/warehouseRepository');
 
-const getWarehouses = async (page, limit) => {
-    const offset = (page - 1) * limit;
-    return await warehouseRepository.getWarehouses(limit, offset);
+const getWarehouses = async (limit, offset, showInactive) => {
+    const response = await warehouseRepository.getWarehouses(
+        limit,
+        offset,
+        showInactive,
+    );
+    return response.rows;
 };
 
 const getWarehousesQty = async () => {

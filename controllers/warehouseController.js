@@ -4,8 +4,24 @@ const handleErrors = require('../middlewares/errorHandler');
 const getWarehouses = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const response = await warehouseService.getWarehouses(page, limit);
-    res.status(200).json(response);
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    const offset = (page - 1) * limit;
+
+    const response = await warehouseService.getWarehouses(
+        limit,
+        offset,
+        showInactive,
+    );
+
+    const formattedResponse = response.map((row) => ({
+        id: row.warehouse_id,
+        name: row.name,
+        capacity: row.capacity,
+        branchId: row.fk_branch_id,
+    }));
+
+    res.status(200).json(formattedResponse);
 });
 
 const getWarehousesQty = handleErrors(async (req, res) => {
