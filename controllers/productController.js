@@ -64,13 +64,16 @@ const createProduct = handleErrors(async (req, res) => {
 
 const updateProduct = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { name, price, description } = req.body;
-    const updatedProduct = await productService.updateProduct(
-        id,
-        name,
-        price,
-        description,
-    );
+    const { active, warehouseId, epc, skuId } = req.body;
+    console.log(req.params);
+    console.log('body: ', req.body);
+
+    const updatedProduct = await productService.updateProduct(id, {
+        active,
+        warehouseId,
+        epc,
+        skuId,
+    });
     res.status(200).json(updatedProduct);
 });
 

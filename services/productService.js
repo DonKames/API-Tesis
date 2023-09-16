@@ -31,8 +31,13 @@ const createProduct = async (fkSku, branchId, epc) => {
     return await productRepository.createProduct(fkSku, branchId, epc);
 };
 
-const updateProduct = async (id, name, price, description) => {
-    return await productRepository.updateProduct(id, name, price, description);
+const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {
+    return await productRepository.updateProduct(id, {
+        active,
+        warehouseId,
+        epc,
+        skuId,
+    });
 };
 
 const deleteProduct = async (id) => {

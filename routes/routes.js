@@ -52,7 +52,6 @@ router.put('/countries/:id', countriesController.updateCountry);
 router.delete('/countries/:id', countriesController.deleteCountry);
 
 // Products
-// router.get('/products', productsController.getProducts);
 router.get('/products', productsController.getProducts);
 router.get('/products/qty', productsController.getProductsQty);
 router.get(
