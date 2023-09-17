@@ -4,8 +4,29 @@ const handleErrors = require('../middlewares/errorHandler');
 const getBranches = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const response = await branchService.getBranches(page, limit);
-    res.status(200).json(response.rows);
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    const offset = (page - 1) * limit;
+
+    const response = await branchService.getBranches(
+        limit,
+        offset,
+        showInactive,
+    );
+
+    console.log(response);
+
+    const formattedResponse = response.map((row) => ({
+        id: row.branch_id,
+        name: row.name,
+        regionId: row.fk_region_id,
+        address: row.address,
+        regionName: row.region_name,
+        countryName: row.country_name,
+        countryId: row.country_id,
+    }));
+
+    res.status(200).json(formattedResponse);
 });
 
 const getBranchesQty = handleErrors(async (req, res) => {

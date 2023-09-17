@@ -17,15 +17,16 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api', routes);
-
-// Depurar
+// Depurar (colocado antes de las rutas)
 app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} a ${req.url}`);
+    console.log(`Ruta: ${req.path}`);
     console.log('req.body', req.body);
     console.log('req.params', req.params);
-    console.log(`[${new Date().toISOString()}] ${req.method} a ${req.url}`);
     next();
 });
+
+app.use('/api', routes); // Ahora colocado después del middleware de depuración
 
 app.use(express.json());
 

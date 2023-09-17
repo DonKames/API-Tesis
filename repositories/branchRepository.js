@@ -1,10 +1,25 @@
 const db = require('../config/db');
 
-const getBranches = async (limit, offset) => {
-    return await db.query(
-        'SELECT * FROM branches ORDER BY branch_id ASC LIMIT $1 OFFSET $2',
-        [limit, offset],
-    );
+const getBranches = async (limit, offset, showInactive) => {
+    let query = `
+        SELECT branches.*, regions.name AS region_name, countries.country_id, countries.name AS country_name
+        FROM branches
+        LEFT JOIN regions ON branches.fk_region_id = regions.region_id
+        LEFT JOIN countries ON regions.fk_country_id = countries.country_id
+    `;
+
+    if (!showInactive) {
+        query += ' WHERE branches.active = true';
+    }
+
+    query += `
+        ORDER BY branches.branch_id ASC
+        LIMIT $1 OFFSET $2
+        `;
+
+    const params = [limit, offset];
+
+    return await db.query(query, params);
 };
 
 const getBranchesQty = async () => {

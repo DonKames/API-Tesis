@@ -1,8 +1,12 @@
 const branchRepository = require('../repositories/branchRepository');
 
-const getBranches = async (page, limit) => {
-    const offset = (page - 1) * limit;
-    return await branchRepository.getBranches(limit, offset);
+const getBranches = async (limit, offset, showInactive) => {
+    const response = await branchRepository.getBranches(
+        limit,
+        offset,
+        showInactive,
+    );
+    return response.rows;
 };
 
 const getBranchesQty = async () => {
