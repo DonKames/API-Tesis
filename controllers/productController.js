@@ -77,11 +77,11 @@ const updateProduct = handleErrors(async (req, res) => {
     res.status(200).json(updatedProduct);
 });
 
-const deleteProduct = handleErrors(async (req, res) => {
-    const { id } = req.params;
-    await productService.deleteProduct(id);
-    res.status(204).send();
-});
+// const deleteProduct = handleErrors(async (req, res) => {
+//     const { id } = req.params;
+//     await productService.deleteProduct(id);
+//     res.status(204).send();
+// });
 
 const changeActiveStateProduct = handleErrors(async (req, res) => {
     try {
@@ -126,5 +126,4 @@ module.exports = {
     getProductBySku,
     createProduct,
     updateProduct,
-    deleteProduct,
 };

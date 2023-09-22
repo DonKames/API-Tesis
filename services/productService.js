@@ -40,9 +40,9 @@ const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {
     });
 };
 
-const deleteProduct = async (id) => {
-    return await productRepository.deleteProduct(id);
-};
+// const deleteProduct = async (id) => {
+//     return await productRepository.deleteProduct(id);
+// };
 
 const changeActiveStateProduct = async (id, isActive) => {
     const response = await productRepository.changeActiveStateProduct(
@@ -60,6 +60,6 @@ module.exports = {
     getProductBySku,
     createProduct,
     updateProduct,
-    deleteProduct,
+    // deleteProduct,
     changeActiveStateProduct,
 };

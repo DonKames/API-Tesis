@@ -1,72 +1,57 @@
-// const db = require('../config/db');
+const countryService = require('../services/countryService');
+const handleErrors = require('../middlewares/errorHandler');
+const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 
-const db = require('../config/db');
+const getCountries = handleErrors(async (req, res) => {
+    const response = await countryService.getCountries();
+    const formattedResponse = response.map((row) => ({
+        id: row.country_id,
+        name: row.name,
+        isoCode: row.iso_code,
+    }));
 
-const getCountries = async (req, res) => {
-    try {
-        const response = await db.query('SELECT * FROM countries');
-        res.status(200).json(response.rows);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+    sendSuccess(res, 'Países Recuperados', formattedResponse);
+    // res.status(200).json(formattedResponse);
+});
+
+const getCountryById = handleErrors(async (req, res) => {
+    const { id } = req.params;
+    const response = await countryService.getCountryById(id);
+    if (response) {
+        const formattedResponse = {
+            id: response.country_id,
+            name: response.name,
+            isoCode: response.iso_code,
+        };
+
+        sendSuccess(res, 'País Recuperado', formattedResponse);
+    } else {
+        sendError(res, 'Country not found', 404);
     }
-};
+});
 
-const getCountryById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const response = await db.query(
-            'SELECT * FROM "public".countries WHERE country_id = $1',
-            [id],
-        );
-        res.status(200).json(response.rows[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
+const createCountry = handleErrors(async (req, res) => {
+    const { name, isoCode } = req.body;
+    const response = await countryService.createCountry(name, isoCode);
+    res.status(201).json(response);
+});
 
-const createCountry = async (req, res) => {
-    try {
-        const { name, iso_code } = req.body;
-        const response = await db.query(
-            'INSERT INTO "public".countries (name, iso_code) VALUES ($1, $2) RETURNING *',
-            [name, iso_code],
-        );
-        res.status(201).json(response.rows[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+const updateCountry = handleErrors(async (req, res) => {
+    const { id } = req.params;
+    const { name, isoCode } = req.body;
+    const response = await countryService.updateCountry(name, isoCode, id);
+    if (response) {
+        res.status(200).json(response);
+    } else {
+        sendError(res, 'Country not found', 404);
     }
-};
+});
 
-const updateCountry = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { name, iso_code } = req.body;
-        const response = await db.query(
-            'UPDATE "public".countries SET name = $1, iso_code = $2 WHERE country_id = $3 RETURNING *',
-            [name, iso_code, id],
-        );
-        res.status(200).json(response.rows[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
-const deleteCountry = async (req, res) => {
-    try {
-        const { id } = req.params;
-        await db.query('DELETE FROM "public".countries WHERE country_id = $1', [
-            id,
-        ]);
-        res.status(204).send();
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
+const deleteCountry = handleErrors(async (req, res) => {
+    const { id } = req.params;
+    await countryService.deleteCountry(id);
+    res.status(204).send();
+});
 
 module.exports = {
     getCountries,

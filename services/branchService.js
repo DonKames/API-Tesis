@@ -9,9 +9,8 @@ const getBranches = async (limit, offset, showInactive) => {
     return response.rows;
 };
 
-const getBranchesQty = async () => {
-    const response = await branchRepository.getBranchesQty();
-    console.log('getBranchesQty: ', response.rows[0].count);
+const getBranchesQty = async (showInactive) => {
+    const response = await branchRepository.getBranchesQty(showInactive);
     return parseInt(response.rows[0].count);
 };
 
@@ -31,8 +30,16 @@ const updateBranch = async (branchName, region, address, id) => {
     return await branchRepository.updateBranch(branchName, region, address, id);
 };
 
-const deleteBranch = async (id) => {
-    return await branchRepository.deleteBranch(id);
+// const deleteBranch = async (id) => {
+//     return await branchRepository.deleteBranch(id);
+// };
+
+const changeActiveStateBranch = async (id, isActive) => {
+    const response = await branchRepository.changeActiveStateBranch(
+        id,
+        isActive,
+    );
+    return response.rows[0];
 };
 
 module.exports = {
@@ -42,5 +49,6 @@ module.exports = {
     getBranchById,
     createBranch,
     updateBranch,
-    deleteBranch,
+    // deleteBranch,
+    changeActiveStateBranch,
 };

@@ -1,5 +1,6 @@
 const branchService = require('../services/branchService');
 const handleErrors = require('../middlewares/errorHandler');
+const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 
 const getBranches = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -17,6 +18,7 @@ const getBranches = handleErrors(async (req, res) => {
     console.log(response);
 
     const formattedResponse = response.map((row) => ({
+        active: row.active,
         id: row.branch_id,
         name: row.name,
         regionId: row.fk_region_id,
@@ -30,7 +32,9 @@ const getBranches = handleErrors(async (req, res) => {
 });
 
 const getBranchesQty = handleErrors(async (req, res) => {
-    const branchesQty = await branchService.getBranchesQty();
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    const branchesQty = await branchService.getBranchesQty(showInactive);
     res.status(200).json(branchesQty);
 });
 
@@ -84,6 +88,42 @@ const deleteBranch = handleErrors(async (req, res) => {
     res.status(204).send();
 });
 
+const changeActiveStateBranch = handleErrors(async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { active } = req.body;
+        const response = await branchService.changeActiveStateBranch(
+            id,
+            active,
+        );
+
+        if (response) {
+            const formattedResponse = {
+                id: response.branch_id,
+                name: response.name,
+                regionId: response.fk_region_id,
+                address: response.address,
+                active: response.active,
+            };
+
+            sendSuccess(
+                res,
+                'Estado activo de la Sucursal actualizado exitosamente',
+                formattedResponse,
+            );
+        } else {
+            sendError(res, 'Sucursal no encontrada', 404);
+        }
+    } catch (error) {
+        console.log(error);
+        sendError(
+            res,
+            'Error al actualizar el estado activo de la Sucursal',
+            500,
+        );
+    }
+});
+
 module.exports = {
     getBranches,
     getBranchesQty,
@@ -92,4 +132,5 @@ module.exports = {
     createBranch,
     updateBranch,
     deleteBranch,
+    changeActiveStateBranch,
 };

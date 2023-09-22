@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const branchesController = require('../controllers/branchController');
+const branchController = require('../controllers/branchController');
 const branchLocationsController = require('../controllers/branchLocationsController');
 const countriesController = require('../controllers/countriesController');
 const productsController = require('../controllers/productController');
@@ -16,13 +16,14 @@ const addingCountries = require('../utilities/countryAdder');
 const settingsController = require('../controllers/globalSettingController');
 
 // Branches
-router.get('/branches', branchesController.getBranches);
-router.get('/branches/qty', branchesController.getBranchesQty);
-router.get('/branches/names', branchesController.getBranchesNames);
-router.get('/branches/:id', branchesController.getBranchById);
-router.post('/branches', branchesController.createBranch);
-router.put('/branches/:id', branchesController.updateBranch);
-router.delete('/branches/:id', branchesController.deleteBranch);
+router.get('/branches', branchController.getBranches);
+router.get('/branches/qty', branchController.getBranchesQty);
+router.get('/branches/names', branchController.getBranchesNames);
+router.get('/branches/:id', branchController.getBranchById);
+router.post('/branches', branchController.createBranch);
+router.put('/branches/:id', branchController.updateBranch);
+router.patch('/branches/:id', branchController.changeActiveStateBranch);
+router.delete('/branches/:id', branchController.deleteBranch);
 
 // Branch Locations
 router.get('/branchLocations', branchLocationsController.getBranchLocations);
@@ -61,7 +62,7 @@ router.get(
 router.get('/products/:id', productsController.getProductById);
 router.post('/products', productsController.createProduct);
 router.put('/products/:id', productsController.updateProduct);
-router.delete('/products/:id', productsController.deleteProduct);
+// router.delete('/products/:id', productsController.deleteProduct);
 router.patch('/products/:id', productsController.changeActiveStateProduct);
 
 // Regions

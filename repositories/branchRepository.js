@@ -22,8 +22,13 @@ const getBranches = async (limit, offset, showInactive) => {
     return await db.query(query, params);
 };
 
-const getBranchesQty = async () => {
-    return await db.query('SELECT COUNT(*) FROM branches');
+const getBranchesQty = async (showInactive) => {
+    let query = 'SELECT COUNT(*) FROM branches';
+
+    if (!showInactive) {
+        query += ' WHERE active = true';
+    }
+    return await db.query(query);
 };
 
 // TODO: Terminar de exportar los métodos necesarios
@@ -52,10 +57,17 @@ const updateBranch = async (branchName, region, address, id) => {
     );
 };
 
-const deleteBranch = async (id) => {
+// const deleteBranch = async (id) => {
+//     return await db.query(
+//         'DELETE FROM "public".branches WHERE branch_id = $1',
+//         [id],
+//     );
+// };
+
+const changeActiveStateBranch = async (id, isActive) => {
     return await db.query(
-        'DELETE FROM "public".branches WHERE branch_id = $1',
-        [id],
+        'UPDATE "public".branches SET active = $1 WHERE branch_id = $2 RETURNING *',
+        [isActive, id],
     );
 };
 
@@ -66,5 +78,6 @@ module.exports = {
     getBranchById,
     createBranch,
     updateBranch,
-    deleteBranch,
+    // deleteBranch,
+    changeActiveStateBranch,
 };

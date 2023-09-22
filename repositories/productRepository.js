@@ -87,9 +87,9 @@ const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {
     return response.rows[0];
 };
 
-const deleteProduct = async (id) => {
-    await db.query('DELETE FROM "public".products WHERE product_id = $1', [id]);
-};
+// const deleteProduct = async (id) => {
+//     await db.query('DELETE FROM "public".products WHERE product_id = $1', [id]);
+// };
 
 const changeActiveStateProduct = async (id, isActive) => {
     return await db.query(
@@ -107,6 +107,6 @@ module.exports = {
     getProductsByWarehouse,
     createProduct,
     updateProduct,
-    deleteProduct,
+    // deleteProduct,
     changeActiveStateProduct,
 };
