@@ -72,4 +72,39 @@ async function insertRegions() {
     }
 }
 
-module.exports = { insertCountries, insertRegions };
+async function insertMunicipalities() {
+    const regionId = 19;
+
+    const municipalityNames = [
+        'Antártica',
+        'Cabo de Hornos',
+        'Laguna Blanca',
+        'Punta Arenas',
+        'Río Verde',
+        'San Gregorio',
+        'Porvenir',
+        'Primavera',
+        'Timaukel',
+        'Natales',
+        'Torres del Paine',
+    ];
+
+    try {
+        for (const name of municipalityNames) {
+            await db.query(
+                'INSERT INTO "public".municipalities (name, fk_region_id) VALUES ($1, $2)',
+                [name, regionId],
+            );
+        }
+        console.log(
+            `Comunas agregadas a la tabla municipalities para la región con ID ${regionId}`,
+        );
+    } catch (error) {
+        console.error(
+            `Error al agregar comunas para la región con ID ${regionId}:`,
+            error,
+        );
+    }
+}
+
+module.exports = { insertCountries, insertRegions, insertMunicipalities };

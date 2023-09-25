@@ -15,7 +15,7 @@ const getBranches = handleErrors(async (req, res) => {
         showInactive,
     );
 
-    console.log(response);
+    // console.log(response);
 
     const formattedResponse = response.map((row) => ({
         active: row.active,

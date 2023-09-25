@@ -4,6 +4,7 @@ const router = express.Router();
 const branchController = require('../controllers/branchController');
 const branchLocationsController = require('../controllers/branchLocationsController');
 const countriesController = require('../controllers/countriesController');
+const municipalityController = require('../controllers/municipalityController');
 const productsController = require('../controllers/productController');
 const regionsController = require('../controllers/regionsController');
 const skusController = require('../controllers/skuController');
@@ -12,7 +13,7 @@ const rolesController = require('../controllers/rolesController');
 const warehousesController = require('../controllers/warehouseController');
 
 // DEV
-const addingCountries = require('../utilities/countryAdder');
+// const addingCountries = require('../utilities/countryAdder');
 const settingsController = require('../controllers/globalSettingController');
 
 // Branches
@@ -52,6 +53,9 @@ router.post('/countries', countriesController.createCountry);
 router.put('/countries/:id', countriesController.updateCountry);
 router.delete('/countries/:id', countriesController.deleteCountry);
 
+// Municipalities
+router.get('/municipalities', municipalityController.getMunicipalities);
+
 // Products
 router.get('/products', productsController.getProducts);
 router.get('/products/qty', productsController.getProductsQty);
@@ -67,10 +71,10 @@ router.patch('/products/:id', productsController.changeActiveStateProduct);
 
 // Regions
 router.get('/regions', regionsController.getRegions);
-router.get('/regions/:id', regionsController.getRegionById);
-router.post('/regions', regionsController.createRegion);
-router.put('/regions/:id', regionsController.updateRegion);
-router.delete('/regions/:id', regionsController.deleteRegion);
+// router.get('/regions/:id', regionsController.getRegionById);
+// router.post('/regions', regionsController.createRegion);
+// router.put('/regions/:id', regionsController.updateRegion);
+// router.delete('/regions/:id', regionsController.deleteRegion);
 
 // Roles
 router.get('/roles', rolesController.getRoles);
@@ -115,6 +119,6 @@ router.put('/warehouses/:id', warehousesController.updateWarehouse);
 router.delete('/warehouses/:id', warehousesController.deleteWarehouse);
 
 // DEV Functions
-router.get('/adding', addingCountries.insertRegions);
+// router.get('/adding', addingCountries.insertRegions);
 
 module.exports = router;
