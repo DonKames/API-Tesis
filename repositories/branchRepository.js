@@ -2,9 +2,14 @@ const db = require('../config/db');
 
 const getBranches = async (limit, offset, showInactive) => {
     let query = `
-        SELECT branches.*, regions.name AS region_name, countries.country_id, countries.name AS country_name
+        SELECT 
+            branches.*, 
+            municipalities.municipalities_id, municipalities.name AS municipality_name,
+            regions.region_id, regions.name AS region_name, 
+            countries.country_id, countries.name AS country_name
         FROM branches
-        LEFT JOIN regions ON branches.fk_region_id = regions.region_id
+        LEFT JOIN municipalities ON branches.fk_municipality_id = municipalities.municipalities_id
+        LEFT JOIN regions ON municipalities.fk_region_id = regions.region_id
         LEFT JOIN countries ON regions.fk_country_id = countries.country_id
     `;
 
