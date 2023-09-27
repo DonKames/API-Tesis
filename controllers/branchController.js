@@ -15,17 +15,19 @@ const getBranches = handleErrors(async (req, res) => {
         showInactive,
     );
 
-    // console.log(response);
+    console.log(response);
 
     const formattedResponse = response.map((row) => ({
         active: row.active,
         id: row.branch_id,
         name: row.name,
-        regionId: row.fk_region_id,
+        regionId: row.region_id,
         address: row.address,
         regionName: row.region_name,
         countryName: row.country_name,
         countryId: row.country_id,
+        municipalityName: row.municipality_name,
+        municipalityId: row.fk_municipality_id,
     }));
 
     res.status(200).json(formattedResponse);

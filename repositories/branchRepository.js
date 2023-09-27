@@ -1,10 +1,16 @@
 const db = require('../config/db');
 
 const getBranches = async (limit, offset, showInactive) => {
+    // let query = `
+    //     SELECT
+    //         branches.*
+    //     FROM branches
+    // `;
+
     let query = `
         SELECT 
-            branches.*, 
-            municipalities.municipalities_id, municipalities.name AS municipality_name,
+            branches.branch_id, branches.name, branches.address, branches.active, 
+            municipalities.municipalities_id AS fk_municipality_id, municipalities.name AS municipality_name,
             regions.region_id, regions.name AS region_name, 
             countries.country_id, countries.name AS country_name
         FROM branches
