@@ -10,11 +10,11 @@ const getBranches = async (limit, offset, showInactive) => {
     let query = `
         SELECT 
             branches.branch_id, branches.name, branches.address, branches.active, 
-            municipalities.municipalities_id AS fk_municipality_id, municipalities.name AS municipality_name,
+            municipalities.municipality_id AS fk_municipality_id, municipalities.name AS municipality_name,
             regions.region_id, regions.name AS region_name, 
             countries.country_id, countries.name AS country_name
         FROM branches
-        LEFT JOIN municipalities ON branches.fk_municipality_id = municipalities.municipalities_id
+        LEFT JOIN municipalities ON branches.fk_municipality_id = municipalities.municipality_id
         LEFT JOIN regions ON municipalities.fk_region_id = regions.region_id
         LEFT JOIN countries ON regions.fk_country_id = countries.country_id
     `;
