@@ -26,8 +26,17 @@ const createBranch = async (branchName, region, address) => {
     return await branchRepository.createBranch(branchName, region, address);
 };
 
-const updateBranch = async (branchName, region, address, id) => {
-    return await branchRepository.updateBranch(branchName, region, address, id);
+const updateBranch = async (
+    id,
+    { branchName, municipality, address, active },
+) => {
+    return await branchRepository.updateBranch(
+        branchName,
+        municipality,
+        address,
+        active,
+        id,
+    );
 };
 
 // const deleteBranch = async (id) => {

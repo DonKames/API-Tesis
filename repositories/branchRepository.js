@@ -61,10 +61,10 @@ const createBranch = async (branchName, region, address) => {
     );
 };
 
-const updateBranch = async (branchName, region, address, id) => {
+const updateBranch = async (branchName, municipality, address, active, id) => {
     return await db.query(
-        'UPDATE "public".branches SET name = $1, fk_region_id = $2, address = $3 WHERE branch_id = $4 RETURNING *',
-        [branchName, region, address, id],
+        'UPDATE "public".branches SET name = $1, fk_municipality_id = $2, address = $3, active = $4 WHERE branch_id = $5 RETURNING *',
+        [branchName, municipality, address, active, id],
     );
 };
 

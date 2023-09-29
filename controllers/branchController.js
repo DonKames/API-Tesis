@@ -74,13 +74,15 @@ const createBranch = handleErrors(async (req, res) => {
 
 const updateBranch = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { branchName, fk_region_id: fkRegionId, address } = req.body;
-    const response = await branchService.updateBranch(
-        branchName,
-        fkRegionId,
+    const { name, country, region, address, municipality, active } = req.body;
+    const response = await branchService.updateBranch(id, {
+        name,
+        country,
+        region,
         address,
-        id,
-    );
+        municipality,
+        active,
+    });
     res.status(200).json(response.rows[0]);
 });
 
