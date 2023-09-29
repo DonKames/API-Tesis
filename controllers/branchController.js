@@ -15,7 +15,7 @@ const getBranches = handleErrors(async (req, res) => {
         showInactive,
     );
 
-    console.log(response);
+    // console.log(response);
 
     const formattedResponse = response.map((row) => ({
         active: row.active,
@@ -74,16 +74,31 @@ const createBranch = handleErrors(async (req, res) => {
 
 const updateBranch = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { name, country, region, address, municipality, active } = req.body;
+    const { name, address, municipality, active } = req.body;
+
+    console.log(req.body, req.params);
     const response = await branchService.updateBranch(id, {
         name,
-        country,
-        region,
         address,
         municipality,
         active,
     });
-    res.status(200).json(response.rows[0]);
+
+    if (response) {
+        const formattedResponse = {
+            id: response.branch_id,
+            name: response.name,
+            regionId: response.fk_region_id,
+            address: response.address,
+            active: response.active,
+        };
+
+        sendSuccess(
+            res,
+            'Sucursal actualizada exitosamente',
+            formattedResponse,
+        );
+    }
 });
 
 const deleteBranch = handleErrors(async (req, res) => {

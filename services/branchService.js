@@ -1,3 +1,4 @@
+const { response } = require('express');
 const branchRepository = require('../repositories/branchRepository');
 
 const getBranches = async (limit, offset, showInactive) => {
@@ -26,17 +27,15 @@ const createBranch = async (branchName, region, address) => {
     return await branchRepository.createBranch(branchName, region, address);
 };
 
-const updateBranch = async (
-    id,
-    { branchName, municipality, address, active },
-) => {
-    return await branchRepository.updateBranch(
-        branchName,
-        municipality,
+const updateBranch = async (id, { name, address, municipality, active }) => {
+    const response = await branchRepository.updateBranch(id, {
+        name,
         address,
+        municipality,
         active,
-        id,
-    );
+    });
+
+    return response.rows[0];
 };
 
 // const deleteBranch = async (id) => {
