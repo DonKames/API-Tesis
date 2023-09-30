@@ -1,10 +1,12 @@
 const db = require('../config/db');
 
 const getWarehouses = async (limit, offset, showInactive) => {
-    let query = `SELECT * FROM warehouses`;
+    let query = `SELECT w.warehouse_id, w.name AS warehouse_name, w.capacity, w.fk_branch_id, w.active, b.name AS branch_name
+        FROM "public".warehouses AS w
+        JOIN "public".branches AS b ON w.fk_branch_id = b.branch_id`;
 
     if (!showInactive) {
-        query += ' WHERE active = true';
+        query += ' WHERE w.active = true';
     }
 
     query += `
