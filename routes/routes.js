@@ -24,7 +24,6 @@ router.get('/branches/:id', branchController.getBranchById);
 router.post('/branches', branchController.createBranch);
 router.put('/branches/:id', branchController.updateBranch);
 router.patch('/branches/:id', branchController.changeActiveStateBranch);
-router.delete('/branches/:id', branchController.deleteBranch);
 
 // Branch Locations
 router.get('/branchLocations', branchLocationsController.getBranchLocations);
@@ -40,10 +39,6 @@ router.post('/branchLocations', branchLocationsController.createBranchLocation);
 router.put(
     '/branchLocations/:id',
     branchLocationsController.updateBranchLocation,
-);
-router.delete(
-    '/branchLocations/:id',
-    branchLocationsController.deleteBranchLocation,
 );
 
 // Countries
@@ -116,7 +111,10 @@ router.get('/warehouses/names', warehousesController.getWarehousesNames);
 router.get('/warehouses/:id', warehousesController.getWarehouseById);
 router.post('/warehouses', warehousesController.createWarehouse);
 router.put('/warehouses/:id', warehousesController.updateWarehouse);
-router.delete('/warehouses/:id', warehousesController.deleteWarehouse);
+router.patch(
+    '/warehouses/:id',
+    warehousesController.changeActiveStateWarehouse,
+);
 
 // DEV Functions
 // router.get('/adding', addingCountries.insertRegions);

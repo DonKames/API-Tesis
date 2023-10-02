@@ -1,4 +1,3 @@
-const { response } = require('express');
 const branchRepository = require('../repositories/branchRepository');
 
 const getBranches = async (limit, offset, showInactive) => {

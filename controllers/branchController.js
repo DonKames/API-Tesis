@@ -101,12 +101,6 @@ const updateBranch = handleErrors(async (req, res) => {
     }
 });
 
-const deleteBranch = handleErrors(async (req, res) => {
-    const { id } = req.params;
-    await branchService.deleteBranch(id);
-    res.status(204).send();
-});
-
 const changeActiveStateBranch = handleErrors(async (req, res) => {
     try {
         const { id } = req.params;
@@ -150,6 +144,5 @@ module.exports = {
     getBranchById,
     createBranch,
     updateBranch,
-    deleteBranch,
     changeActiveStateBranch,
 };

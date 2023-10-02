@@ -1,6 +1,6 @@
 const warehouseService = require('../services/warehouseService');
 const handleErrors = require('../middlewares/errorHandler');
-const { sendSuccess } = require('../middlewares/responseHandler');
+const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 
 const getWarehouses = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -15,7 +15,7 @@ const getWarehouses = handleErrors(async (req, res) => {
         showInactive,
     );
 
-    console.log(response);
+    // console.log(response);
 
     const formattedResponse = response.map((row) => ({
         id: row.warehouse_id,
@@ -31,8 +31,14 @@ const getWarehouses = handleErrors(async (req, res) => {
 });
 
 const getWarehousesQty = handleErrors(async (req, res) => {
-    const warehousesQty = await warehouseService.getWarehousesQty();
-    res.status(200).json(warehousesQty);
+    const showInactive = req.query.showInactive === 'true' || false;
+    const warehousesQty = await warehouseService.getWarehousesQty(showInactive);
+    console.log(warehousesQty);
+    if (!warehousesQty) {
+        sendError(res, 'Warehouses qty not found', 404);
+    } else {
+        sendSuccess(res, 'Warehouses qty recovered correctly', warehousesQty);
+    }
 });
 
 const getWarehousesNames = handleErrors(async (req, res) => {
@@ -63,18 +69,67 @@ const createWarehouse = handleErrors(async (req, res) => {
 
 const updateWarehouse = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { warehouseName, locationId } = req.body;
+    const { name, capacity, branchId, active } = req.body;
+
+    console.log(req.body, req.params);
     const response = await warehouseService.updateWarehouse(id, {
-        warehouseName,
-        locationId,
+        name,
+        capacity,
+        branchId,
+        active,
     });
-    res.status(200).json(response);
+
+    if (response) {
+        const formattedResponse = {
+            id: response.warehouse_id,
+            name: response.name,
+            capacity: response.capacity,
+            branchId: response.fk_branch_id,
+            active: response.active,
+        };
+
+        sendSuccess(res, 'Warehouse updated correctly', formattedResponse);
+    } else {
+        sendError(res, 'Warehouse not found', 404);
+    }
+    // res.status(200).json(response);
 });
 
-const deleteWarehouse = handleErrors(async (req, res) => {
-    const { id } = req.params;
-    await warehouseService.deleteWarehouse(id);
-    res.status(204).send();
+const changeActiveStateWarehouse = handleErrors(async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { active } = req.body;
+
+        const response = await warehouseService.changeActiveStateWarehouse(
+            id,
+            active,
+        );
+
+        if (response) {
+            const formattedResponse = {
+                id: response.warehouse_id,
+                name: response.warehouse_name,
+                capacity: response.capacity,
+                branchId: response.fk_branch_id,
+                active: response.active,
+            };
+
+            sendSuccess(
+                res,
+                `Warehouse ${active ? 'activated' : 'deactivated'} correctly`,
+                formattedResponse,
+            );
+        } else {
+            sendError(res, 'Warehouse not found', 404);
+        }
+    } catch (error) {
+        console.log(error);
+        sendError(
+            res,
+            'Error al actualizar el estado activo de la Bodega',
+            500,
+        );
+    }
 });
 
 module.exports = {
@@ -84,5 +139,5 @@ module.exports = {
     getWarehouseById,
     createWarehouse,
     updateWarehouse,
-    deleteWarehouse,
+    changeActiveStateWarehouse,
 };

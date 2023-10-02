@@ -89,6 +89,5 @@ module.exports = {
     getBranchById,
     createBranch,
     updateBranch,
-    // deleteBranch,
     changeActiveStateBranch,
 };

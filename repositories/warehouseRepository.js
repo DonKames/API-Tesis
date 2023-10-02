@@ -10,7 +10,7 @@ const getWarehouses = async (limit, offset, showInactive) => {
     }
 
     query += `
-        ORDER BY warehouse_id ASC
+        ORDER BY w.active DESC, w.warehouse_id ASC
         LIMIT $1 OFFSET $2
         `;
 
@@ -19,8 +19,14 @@ const getWarehouses = async (limit, offset, showInactive) => {
     return await db.query(query, params);
 };
 
-const getWarehousesQty = async () => {
-    return await db.query('SELECT COUNT(*) FROM warehouses');
+const getWarehousesQty = async (showInactive) => {
+    let query = 'SELECT COUNT(*) FROM warehouses';
+
+    if (!showInactive) {
+        query += ' WHERE active = true';
+    }
+
+    return await db.query(query);
 };
 
 const getWarehousesNames = async () => {
@@ -38,22 +44,22 @@ const getWarehouseById = async (id) => {
 
 const createWarehouse = async ({ warehouseName, capacity, branchId }) => {
     return await db.query(
-        'INSERT INTO "public".warehouses (name, capacity, fk_branch_id) VALUES ($1, $2, $3) RETURNING *',
+        'INSERT INTO "public".warehouses (name, capacity, fk_branch_id, active) VALUES ($1, $2, $3, TRUE) RETURNING *',
         [warehouseName, capacity, branchId],
     );
 };
 
-const updateWarehouse = async (id, { warehouseName, locationId }) => {
+const updateWarehouse = async (id, { name, capacity, branchId, active }) => {
     return await db.query(
-        'UPDATE "public".warehouses SET warehouse_name = $1, location_id = $2 WHERE warehouse_id = $3 RETURNING *',
-        [warehouseName, locationId, id],
+        'UPDATE "public".warehouses SET name = $1, capacity = $2, fk_branch_id = $3, active = $4 WHERE warehouse_id = $5 RETURNING *',
+        [name, capacity, branchId, active, id],
     );
 };
 
-const deleteWarehouse = async (id) => {
+const changeActiveStateWarehouse = async (id, activeState) => {
     return await db.query(
-        'DELETE FROM "public".warehouses WHERE warehouse_id = $1',
-        [id],
+        'UPDATE "public".warehouses SET active = $1 WHERE warehouse_id = $2 RETURNING *',
+        [activeState, id],
     );
 };
 
@@ -64,5 +70,5 @@ module.exports = {
     getWarehouseById,
     createWarehouse,
     updateWarehouse,
-    deleteWarehouse,
+    changeActiveStateWarehouse,
 };
