@@ -11,7 +11,6 @@ const getWarehouses = async (limit, offset, showInactive) => {
 
 const getWarehousesQty = async (showInactive) => {
     const response = await warehouseRepository.getWarehousesQty(showInactive);
-    // console.log(response);
     return parseInt(response.rows[0].count);
 };
 

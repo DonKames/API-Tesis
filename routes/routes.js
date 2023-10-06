@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const branchController = require('../controllers/branchController');
-const branchLocationsController = require('../controllers/branchLocationsController');
+const branchLocationsController = require('../controllers/branchLocationController');
 const countriesController = require('../controllers/countriesController');
 const municipalityController = require('../controllers/municipalityController');
 const productsController = require('../controllers/productController');
@@ -39,6 +39,10 @@ router.post('/branchLocations', branchLocationsController.createBranchLocation);
 router.put(
     '/branchLocations/:id',
     branchLocationsController.updateBranchLocation,
+);
+router.patch(
+    '/branchLocations/:id',
+    branchLocationsController.changeActiveStateBranchLocation,
 );
 
 // Countries
