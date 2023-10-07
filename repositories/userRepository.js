@@ -3,7 +3,7 @@ const db = require('../config/db');
 const getUsers = async (limit, offset, showInactive) => {
     let query = `
         SELECT
-            u.first_name, u.last_name, u.fk_role_id, u.email, u.active,
+            u.user_id, u.first_name, u.last_name, u.fk_role_id, u.email, u.active,
             r.name AS role_name
         FROM users AS u
         LEFT JOIN roles AS r ON u.fk_role_id = r.role_id
