@@ -11,7 +11,8 @@ const getBranchLocations = async (limit, offset, showInactive) => {
         query += ' WHERE bl.active = true';
     }
 
-    query += ' ORDER BY branch_location_id ASC LIMIT $1 OFFSET $2';
+    query += ` ORDER BY bl.active ASC,
+        branch_location_id ASC LIMIT $1 OFFSET $2`;
 
     const params = [limit, offset];
 
