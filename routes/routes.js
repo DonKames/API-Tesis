@@ -106,7 +106,6 @@ router.get('/users/email/:email', usersController.getUserByEmail);
 router.post('/users', usersController.createUser);
 router.put('/users/id/:id', usersController.updateUser);
 router.put('/users/email/:email', usersController.updateUserUid);
-router.delete('/users/:id', usersController.deleteUser);
 
 // Warehouses
 router.get('/warehouses', warehousesController.getWarehouses);
