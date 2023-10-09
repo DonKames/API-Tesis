@@ -84,7 +84,7 @@ const updateUser = handleErrors(async (req, res) => {
     });
 
     if (response) {
-        console.log(response);
+        // console.log(response);
         sendSuccess(res, 'User updated successfully', response);
     } else {
         sendError(res, 'User not found', 404);
