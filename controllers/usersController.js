@@ -74,15 +74,17 @@ const updateUserUid = handleErrors(async (req, res) => {
 
 const updateUser = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { username, role, email } = req.body;
+    const { name, lastName, email, role } = req.body;
 
     const response = await userService.updateUser(id, {
-        username,
-        role,
+        name,
+        lastName,
         email,
+        role,
     });
 
     if (response) {
+        console.log(response);
         sendSuccess(res, 'User updated successfully', response);
     } else {
         sendError(res, 'User not found', 404);

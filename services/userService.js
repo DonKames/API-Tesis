@@ -44,11 +44,12 @@ const updateUserUid = async (email, uid) => {
     return response.rows[0];
 };
 
-const updateUser = async (id, { username, role, email }) => {
+const updateUser = async (id, { name, lastName, email, role }) => {
     const response = await usersRepository.updateUser(id, {
-        username,
-        role,
+        name,
+        lastName,
         email,
+        role,
     });
     return response.rows[0];
 };

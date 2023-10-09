@@ -51,10 +51,10 @@ const updateUserUid = async (email, uid) => {
     return await db.query(query, [uid, email]);
 };
 
-const updateUser = async (id, { username, role, email }) => {
+const updateUser = async (id, { name, lastName, email, role }) => {
     const query =
         'UPDATE users SET first_name = $1, last_name = $2, email = $3, fk_role_id = $4 WHERE user_id = $5 RETURNING *';
-    return await db.query(query, [username, role, email, id]);
+    return await db.query(query, [name, lastName, email, role, id]);
 };
 
 const changeActiveStateUser = async (id, isActive) => {
