@@ -77,6 +77,7 @@ router.get('/regions', regionsController.getRegions);
 
 // Roles
 router.get('/roles', rolesController.getRoles);
+router.get('/roles/select', rolesController.getRolesSelect);
 router.get('/roles/:id', rolesController.getRoleById);
 router.post('/roles', rolesController.createRole);
 router.put('/roles/:id', rolesController.updateRole);
@@ -106,6 +107,7 @@ router.get('/users/email/:email', usersController.getUserByEmail);
 router.post('/users', usersController.createUser);
 router.put('/users/id/:id', usersController.updateUser);
 router.put('/users/email/:email', usersController.updateUserUid);
+router.patch('/users/:id', usersController.changeActiveStateUser);
 
 // Warehouses
 router.get('/warehouses', warehousesController.getWarehouses);

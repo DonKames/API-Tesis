@@ -68,6 +68,7 @@ const updateUserUid = handleErrors(async (req, res) => {
     const { email } = req.params;
     const { uid } = req.body;
     const response = await userService.updateUserUid(email, uid);
+
     res.status(200).json(response);
 });
 
@@ -99,6 +100,19 @@ const deleteUser = handleErrors(async (req, res) => {
     }
 });
 
+const changeActiveStateUser = handleErrors(async (req, res) => {
+    const { id } = req.params;
+    const { state } = req.body;
+
+    const response = await userService.changeActiveStateUser(id, state);
+
+    if (response) {
+        sendSuccess(res, 'User updated successfully', response);
+    } else {
+        sendError(res, 'User not found', 404);
+    }
+});
+
 module.exports = {
     getUsers,
     getUsersQty,
@@ -109,4 +123,5 @@ module.exports = {
     updateUser,
     updateUserUid,
     deleteUser,
+    changeActiveStateUser,
 };

@@ -53,6 +53,11 @@ const updateUser = async (id, { username, role, email }) => {
     return response.rows[0];
 };
 
+const changeActiveStateUser = async (id, isActive) => {
+    const response = await usersRepository.changeActiveStateUser(id, isActive);
+    return response.rows[0];
+};
+
 module.exports = {
     getUsers,
     getUsersQty,
@@ -62,4 +67,5 @@ module.exports = {
     createUser,
     updateUser,
     updateUserUid,
+    changeActiveStateUser,
 };

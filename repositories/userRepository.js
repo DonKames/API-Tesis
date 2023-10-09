@@ -57,6 +57,11 @@ const updateUser = async (id, { username, role, email }) => {
     return await db.query(query, [username, role, email, id]);
 };
 
+const changeActiveStateUser = async (id, isActive) => {
+    const query = 'UPDATE users SET active = $1 WHERE user_id = $2 RETURNING *';
+    return await db.query(query, [isActive, id]);
+};
+
 module.exports = {
     getUsers,
     getUsersQty,
@@ -66,4 +71,5 @@ module.exports = {
     createUser,
     updateUser,
     updateUserUid,
+    changeActiveStateUser,
 };

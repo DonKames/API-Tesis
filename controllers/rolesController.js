@@ -1,5 +1,10 @@
 const db = require('../config/db');
 
+const roleService = require('../services/roleService');
+
+const handleErrors = require('../middlewares/errorHandler');
+const { sendSuccess, sendError } = require('../middlewares/responseHandler');
+
 const getRoles = async (req, res) => {
     try {
         const response = await db.query('SELECT * FROM roles');
@@ -9,6 +14,21 @@ const getRoles = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+const getRolesSelect = handleErrors(async (req, res) => {
+    const response = await roleService.getRolesSelect();
+
+    if (!response) {
+        sendError(res, 'Roles not found', 404);
+    } else {
+        const formattedResponse = response.map((row) => ({
+            id: row.role_id,
+            name: row.name,
+        }));
+
+        sendSuccess(res, 'Roles retrieved successfully', formattedResponse);
+    }
+});
 
 const getRoleById = async (req, res) => {
     try {
@@ -66,6 +86,7 @@ const deleteRole = async (req, res) => {
 
 module.exports = {
     getRoles,
+    getRolesSelect,
     getRoleById,
     createRole,
     updateRole,
