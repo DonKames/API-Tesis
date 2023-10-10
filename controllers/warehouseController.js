@@ -31,13 +31,22 @@ const getWarehouses = handleErrors(async (req, res) => {
 });
 
 const getWarehousesQty = handleErrors(async (req, res) => {
-    const showInactive = req.query.showInactive === 'true' || false;
-    const warehousesQty = await warehouseService.getWarehousesQty(showInactive);
-    console.log(warehousesQty);
-    if (!warehousesQty) {
-        sendError(res, 'Warehouses qty not found', 404);
-    } else {
-        sendSuccess(res, 'Warehouses qty recovered correctly', warehousesQty);
+    const branchId = req.query.branchId || null;
+
+    let qty;
+
+    try {
+        if (branchId) {
+            qty = await warehouseService.getWarehousesQtyByBranchId(branchId);
+        } else {
+            qty = await warehouseService.getWarehousesQty();
+        }
+
+        qty
+            ? sendSuccess(res, 'Warehouses qty recovered correctly', qty)
+            : sendError(res, 'Warehouses qty not found', 404);
+    } catch (error) {
+        sendError(res, 'Error al obtener la cantidad de Bodegas', 500);
     }
 });
 
@@ -54,7 +63,19 @@ const getWarehousesNames = handleErrors(async (req, res) => {
 const getWarehouseById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await warehouseService.getWarehouseById(id);
-    res.status(200).json(response);
+
+    console.log(response.rows[0]);
+
+    const formattedResponse = {
+        id: response.rows[0].warehouse_id,
+        name: response.rows[0].name,
+        capacity: response.rows[0].capacity,
+        branchId: response.rows[0].fk_branch_id,
+        active: response.rows[0].active,
+        branchName: response.rows[0].branch_name,
+    };
+
+    sendSuccess(res, 'Warehouse recovered correctly', formattedResponse);
 });
 
 const createWarehouse = handleErrors(async (req, res) => {

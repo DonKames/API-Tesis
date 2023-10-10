@@ -29,6 +29,13 @@ const getWarehousesQty = async (showInactive) => {
     return await db.query(query);
 };
 
+const getWarehousesQtyByBranchId = async (branchId) => {
+    return await db.query(
+        'SELECT COUNT(*) FROM warehouses WHERE fk_branch_id = $1',
+        [branchId],
+    );
+};
+
 const getWarehousesNames = async () => {
     return await db.query(
         'SELECT warehouse_id, name, fk_branch_id FROM warehouses',
@@ -66,6 +73,7 @@ const changeActiveStateWarehouse = async (id, activeState) => {
 module.exports = {
     getWarehouses,
     getWarehousesQty,
+    getWarehousesQtyByBranchId,
     getWarehousesNames,
     getWarehouseById,
     createWarehouse,

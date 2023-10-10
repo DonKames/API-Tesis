@@ -29,11 +29,11 @@ const getUserByEmail = async (email) => {
     return response.rows[0];
 };
 
-const createUser = async ({ name, lastName, role, email }) => {
+const createUser = async ({ name, lastName, roleId, email }) => {
     const response = await usersRepository.createUser({
         name,
         lastName,
-        role,
+        roleId,
         email,
     });
     return response.rows[0];
@@ -44,12 +44,12 @@ const updateUserUid = async (email, uid) => {
     return response.rows[0];
 };
 
-const updateUser = async (id, { name, lastName, email, role }) => {
+const updateUser = async (id, { name, lastName, email, roleId }) => {
     const response = await usersRepository.updateUser(id, {
         name,
         lastName,
         email,
-        role,
+        roleId,
     });
     return response.rows[0];
 };

@@ -53,13 +53,15 @@ const getBranchesNames = handleErrors(async (req, res) => {
 const getBranchById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await branchService.getBranchById(id);
+    console.log(response.rows[0]);
     const formattedResponse = {
         id: response.rows[0].branch_id,
         name: response.rows[0].name,
-        regionId: response.rows[0].fk_region_id,
+        municipalityId: response.rows[0].fk_municipality_id,
         address: response.rows[0].address,
     };
-    res.status(200).json(formattedResponse);
+
+    sendSuccess(res, 'Sucursal encontrada exitosamente', formattedResponse);
 });
 
 const createBranch = handleErrors(async (req, res) => {

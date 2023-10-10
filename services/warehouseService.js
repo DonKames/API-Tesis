@@ -14,6 +14,12 @@ const getWarehousesQty = async (showInactive) => {
     return parseInt(response.rows[0].count);
 };
 
+const getWarehousesQtyByBranchId = async (branchId) => {
+    const response =
+        await warehouseRepository.getWarehousesQtyByBranchId(branchId);
+    return parseInt(response.rows[0].count);
+};
+
 const getWarehousesNames = async () => {
     return await warehouseRepository.getWarehousesNames();
 };

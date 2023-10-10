@@ -17,7 +17,7 @@ const getUsers = handleErrors(async (req, res) => {
         id: row.user_id,
         name: row.first_name,
         lastName: row.last_name,
-        role: row.fk_role_id,
+        roleId: row.fk_role_id,
         email: row.email,
         active: row.active,
         roleName: row.role_name,
@@ -74,13 +74,13 @@ const updateUserUid = handleErrors(async (req, res) => {
 
 const updateUser = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { name, lastName, email, role } = req.body;
+    const { name, lastName, email, roleId } = req.body;
 
     const response = await userService.updateUser(id, {
         name,
         lastName,
         email,
-        role,
+        roleId,
     });
 
     if (response) {
