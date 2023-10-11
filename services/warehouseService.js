@@ -59,6 +59,7 @@ const changeActiveStateWarehouse = async (id, activeState) => {
 module.exports = {
     getWarehouses,
     getWarehousesQty,
+    getWarehousesQtyByBranchId,
     getWarehousesNames,
     getWarehouseById,
     createWarehouse,

@@ -35,9 +35,16 @@ const getWarehousesQty = handleErrors(async (req, res) => {
 
     let qty;
 
+    console.log(req.query);
+
+    console.log(req.params);
+
+    console.log(branchId);
+
     try {
         if (branchId) {
             qty = await warehouseService.getWarehousesQtyByBranchId(branchId);
+            console.log(qty);
         } else {
             qty = await warehouseService.getWarehousesQty();
         }
