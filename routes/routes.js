@@ -104,6 +104,7 @@ router.get('/users/qty', usersController.getUsersQty);
 router.get('/users/id/:id', usersController.getUserById);
 router.get('/users/uid/:uid', usersController.getUserByUid);
 router.get('/users/email/:email', usersController.getUserByEmail);
+router.get('/users/names', usersController.getUsersNames);
 router.post('/users', usersController.createUser);
 router.put('/users/id/:id', usersController.updateUser);
 router.put('/users/email/:email', usersController.updateUserUid);

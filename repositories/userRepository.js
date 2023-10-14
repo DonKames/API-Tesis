@@ -40,6 +40,10 @@ const getUserByEmail = async (email) => {
     return await db.query(query, [email]);
 };
 
+const getUsersNames = async () => {
+    return await db.query('SELECT user_id, first_name FROM users');
+};
+
 const createUser = async ({ name, lastName, role, email }) => {
     const query =
         'INSERT INTO users (first_name, last_name, email, fk_role_id) VALUES ($1, $2, $3, $4) RETURNING *';
@@ -68,6 +72,7 @@ module.exports = {
     getUserById,
     getUserByUid,
     getUserByEmail,
+    getUsersNames,
     createUser,
     updateUser,
     updateUserUid,

@@ -53,6 +53,25 @@ const getUserByEmail = handleErrors(async (req, res) => {
     res.status(200).json(response);
 });
 
+const getUsersNames = handleErrors(async (req, res) => {
+    const response = await userService.getUsersNames();
+
+    if (response) {
+        const formattedResponse = response.rows.map((row) => ({
+            id: row.user_id,
+            name: row.first_name,
+        }));
+
+        sendSuccess(
+            res,
+            'Users names retrieved successfully',
+            formattedResponse,
+        );
+    } else {
+        sendError(res, 'UsersNames not found', 404);
+    }
+});
+
 const createUser = handleErrors(async (req, res) => {
     const { name, lastName, role, email } = req.body;
     const response = await userService.createUser({
@@ -121,6 +140,7 @@ module.exports = {
     getUserById,
     getUserByUid,
     getUserByEmail,
+    getUsersNames,
     createUser,
     updateUser,
     updateUserUid,

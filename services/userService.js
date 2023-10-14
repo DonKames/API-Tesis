@@ -29,6 +29,10 @@ const getUserByEmail = async (email) => {
     return response.rows[0];
 };
 
+const getUsersNames = async () => {
+    return await usersRepository.getUsersNames();
+};
+
 const createUser = async ({ name, lastName, roleId, email }) => {
     const response = await usersRepository.createUser({
         name,
@@ -65,6 +69,7 @@ module.exports = {
     getUserById,
     getUserByUid,
     getUserByEmail,
+    getUsersNames,
     createUser,
     updateUser,
     updateUserUid,
