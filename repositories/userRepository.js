@@ -25,7 +25,11 @@ const getUsersQty = async () => {
 };
 
 const getUserById = async (id) => {
-    const query = 'SELECT * FROM users WHERE user_id = $1';
+    const query = `
+    SELECT users.*, roles.name AS role_name
+    FROM users
+    LEFT JOIN roles ON users.fk_role_id = roles.role_id
+    WHERE user_id = $1`;
     return await db.query(query, [id]);
 };
 
@@ -41,7 +45,7 @@ const getUserByEmail = async (email) => {
 };
 
 const getUsersNames = async () => {
-    return await db.query('SELECT user_id, first_name FROM users');
+    return await db.query('SELECT user_id, first_name, last_name FROM users');
 };
 
 const createUser = async ({ name, lastName, role, email }) => {

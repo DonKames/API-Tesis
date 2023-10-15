@@ -75,6 +75,7 @@ const getUsersNames = handleErrors(async (req, res) => {
         const formattedResponse = response.rows.map((row) => ({
             id: row.user_id,
             name: row.first_name,
+            lastName: row.last_name,
         }));
 
         sendSuccess(
