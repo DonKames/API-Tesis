@@ -38,7 +38,22 @@ const getUsersQty = handleErrors(async (req, res) => {
 const getUserById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await userService.getUserById(id);
-    res.status(200).json(response);
+
+    console.log(response);
+
+    const formattedResponse = {
+        id: response.user_id,
+        name: response.first_name,
+        lastName: response.last_name,
+        roleId: response.fk_role_id,
+        email: response.email,
+        active: response.active,
+        roleName: response.role_name,
+    };
+
+    formattedResponse
+        ? sendSuccess(res, 'User retrieved successfully', formattedResponse)
+        : sendError(res, 'User not found', 404);
 });
 
 const getUserByUid = handleErrors(async (req, res) => {
