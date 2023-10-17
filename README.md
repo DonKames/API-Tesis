@@ -25,7 +25,6 @@ Este proyecto es una API construida con Node.js y Express, diseñada para gestio
 Es necesario crear un archivo `db.js` en la carpeta config encontrada en la raíz del proyecto con el siguiente contenido para establecer la conexión con la base de datos:
 
 <pre>
-```
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -41,7 +40,6 @@ module.exports = {
 };
 
 const { Pool } = require('pg');
-```
 </pre>
 
 4. Ejecuta `npm start` para iniciar el servidor.
