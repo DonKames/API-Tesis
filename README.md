@@ -46,10 +46,6 @@ const { Pool } = require('pg');
 
 4. Ejecuta `npm start` para iniciar el servidor.
 
-## Configuración
-
-Crea un archivo `.env` en la raíz del proyecto y configura las variables de entorno necesarias.
-
 ## Características
 
 -   Gestión de usuarios
