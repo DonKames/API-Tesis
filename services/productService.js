@@ -15,6 +15,9 @@ const getProductsQty = async (showInactive) => {
     return parseInt(await response.rows[0].count);
 };
 
+const searchProducts = async (query, limit) => {
+    return await productRepository.searchProducts(query, limit);
+};
 const getProductCountByWarehouse = async () => {
     return await productRepository.getProductCountByWarehouse();
 };
@@ -55,6 +58,7 @@ const changeActiveStateProduct = async (id, isActive) => {
 module.exports = {
     getProducts,
     getProductsQty,
+    searchProducts,
     getProductCountByWarehouse,
     getProductById,
     getProductBySku,

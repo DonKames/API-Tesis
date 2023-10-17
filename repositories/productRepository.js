@@ -36,6 +36,22 @@ const getProductsQty = async (showInactive) => {
     return await db.query(query);
 };
 
+const searchProducts = async (query, limit) => {
+    const searchTerm = `%${query}%`;
+    const queryStr = `
+        SELECT p.product_id, s.sku AS name
+        FROM products p
+        JOIN skus s ON p.fk_sku_id = s.sku_id
+        WHERE s.sku LIKE $1
+        LIMIT $2
+    `;
+
+    const params = [searchTerm, limit];
+
+    const response = await db.query(queryStr, params);
+    return response.rows;
+};
+
 const getProductCountByWarehouse = async () => {
     const response = await db.query(
         'SELECT w.warehouse_id, w.name AS warehouse_name, COUNT(p.product_id) AS product_count ' +
@@ -49,7 +65,16 @@ const getProductCountByWarehouse = async () => {
 
 const getProductById = async (id) => {
     const response = await db.query(
-        'SELECT * FROM "public".products WHERE product_id = $1',
+        `
+        SELECT p.product_id, p.epc, p.fk_warehouse_id, p.fk_sku_id, p.active,
+        w.name AS warehouse_name, w.fk_branch_id AS branch_id, s.sku AS sku, 
+        b.name AS branch_name, p.fk_warehouse_id AS warehouse_id, p.fk_sku_id AS sku_id
+        FROM products p 
+        JOIN warehouses w ON p.fk_warehouse_id = w.warehouse_id
+        JOIN skus s ON p.fk_sku_id = s.sku_id
+        JOIN branches b ON w.fk_branch_id = b.branch_id
+        WHERE p.product_id = $1
+    `,
         [id],
     );
     return response.rows[0];
@@ -101,6 +126,7 @@ const changeActiveStateProduct = async (id, isActive) => {
 module.exports = {
     getProducts,
     getProductsQty,
+    searchProducts,
     getProductCountByWarehouse,
     getProductById,
     getProductBySku,

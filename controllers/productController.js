@@ -39,6 +39,25 @@ const getProductsQty = handleErrors(async (req, res) => {
     res.status(200).json(productsQty);
 });
 
+const searchProducts = handleErrors(async (req, res) => {
+    const query = req.query.query || '';
+    const limit = parseInt(req.query.limit) || 20; // Limitar el número de resultados
+
+    const response = await productService.searchProducts(query, limit);
+
+    if (response) {
+        // Formatear la respuesta
+        const formattedResponse = response.map((row) => ({
+            id: row.product_id,
+            name: row.sku,
+        }));
+
+        sendSuccess(res, 'Búsqueda Exitosa', formattedResponse);
+    } else {
+        sendError(res, 'No se encontraron resultados.', 404);
+    }
+});
+
 const getProductCountByWarehouse = handleErrors(async (req, res) => {
     const counts = await productService.getProductCountByWarehouse();
     res.status(200).json(counts);
@@ -47,7 +66,24 @@ const getProductCountByWarehouse = handleErrors(async (req, res) => {
 const getProductById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const product = await productService.getProductById(id);
-    res.status(200).json(product);
+
+    if (product) {
+        const formattedResponse = {
+            id: product.product_id,
+            epc: product.epc,
+            warehouseName: product.warehouse_name,
+            warehouseId: product.warehouse_id,
+            branchName: product.branch_name,
+            branchId: product.branch_id,
+            active: product.active,
+            sku: product.sku,
+            skuId: product.sku_id,
+        };
+
+        sendSuccess(res, 'Producto encontrado', formattedResponse);
+    } else {
+        sendError(res, 'Producto no encontrado.', 404);
+    }
 });
 
 const getProductBySku = handleErrors(async (req, res) => {
@@ -121,6 +157,7 @@ module.exports = {
     changeActiveStateProduct,
     getProducts,
     getProductsQty,
+    searchProducts,
     getProductCountByWarehouse,
     getProductById,
     getProductBySku,
