@@ -53,15 +53,19 @@ const getBranchesNames = handleErrors(async (req, res) => {
 const getBranchById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await branchService.getBranchById(id);
-    console.log(response.rows[0]);
-    const formattedResponse = {
-        id: response.rows[0].branch_id,
-        name: response.rows[0].name,
-        municipalityId: response.rows[0].fk_municipality_id,
-        address: response.rows[0].address,
-    };
+    // console.log(response.rows[0]);
 
-    sendSuccess(res, 'Sucursal encontrada exitosamente', formattedResponse);
+    if (response) {
+        const formattedResponse = {
+            id: response.rows[0].branch_id,
+            name: response.rows[0].name,
+            municipalityId: response.rows[0].fk_municipality_id,
+            address: response.rows[0].address,
+        };
+        sendSuccess(res, 'Sucursal encontrada exitosamente', formattedResponse);
+    } else {
+        sendError(res, 'Sucursal no encontrada', 404);
+    }
 });
 
 const createBranch = handleErrors(async (req, res) => {
@@ -100,6 +104,8 @@ const updateBranch = handleErrors(async (req, res) => {
             'Sucursal actualizada exitosamente',
             formattedResponse,
         );
+    } else {
+        sendError(res, 'No se pudo actualizar la sucursal', 404);
     }
 });
 

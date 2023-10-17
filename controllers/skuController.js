@@ -36,8 +36,27 @@ const getSkusQty = handleErrors(async (req, res) => {
 
 const getSkuById = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const sku = await skuService.getSkuById(id);
-    res.status(200).json(sku);
+    const response = await skuService.getSkuById(id);
+
+    console.log(response);
+
+    if (response) {
+        const formattedResponse = {
+            id: response.sku_id,
+            name: response.name,
+            description: response.description,
+            minimumStock: response.minimum_stock,
+            sku: response.sku,
+            lote: response.lote,
+            order: response.product_order,
+            active: response.active,
+            stock: response.product_count,
+        };
+
+        sendSuccess(res, 'Sku encontrada', formattedResponse);
+    } else {
+        sendError(res, 'No se encontró el Sku', 404);
+    }
 });
 
 const getSkuBySku = handleErrors(async (req, res) => {
