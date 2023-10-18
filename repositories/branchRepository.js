@@ -24,7 +24,7 @@ const getBranches = async (limit, offset, showInactive) => {
     }
 
     query += `
-        ORDER BY branches.branch_id ASC
+        ORDER BY branches.active ASC, branches.branch_id ASC
         LIMIT $1 OFFSET $2
         `;
 
@@ -34,6 +34,7 @@ const getBranches = async (limit, offset, showInactive) => {
 };
 
 const getBranchesQty = async (showInactive) => {
+    console.log(showInactive);
     let query = 'SELECT COUNT(*) FROM branches';
 
     if (!showInactive) {
@@ -54,10 +55,10 @@ const getBranchById = async (id) => {
     );
 };
 
-const createBranch = async (branchName, region, address) => {
+const createBranch = async (branchName, municipality, address) => {
     return await db.query(
-        'INSERT INTO "public".branches (name, fk_region_id, address) VALUES ($1, $2, $3) RETURNING *',
-        [branchName, region, address],
+        'INSERT INTO "public".branches (name, fk_municipality_id, address, active) VALUES ($1, $2, $3, $4) RETURNING *',
+        [branchName, municipality, address, true],
     );
 };
 

@@ -39,7 +39,7 @@ const getUserById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await userService.getUserById(id);
 
-    console.log(response);
+    // console.log(response);
 
     const formattedResponse = {
         id: response.user_id,

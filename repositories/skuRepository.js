@@ -33,9 +33,18 @@ const getSkusQty = async (showInactive) => {
 };
 
 const getSkuById = async (id) => {
-    return await db.query('SELECT * FROM "public".skus WHERE sku_id = $1', [
-        id,
-    ]);
+    const query = `
+        SELECT s.*, COUNT(p.product_id) as product_count
+        FROM "public".skus s
+        LEFT JOIN "public".products p ON s.sku_id = p.fk_sku_id
+        WHERE s.sku_id = $1
+        GROUP BY s.sku_id
+    `;
+    return await db.query(query, [id]);
+
+    // return await db.query('SELECT * FROM "public".skus WHERE sku_id = $1', [
+    //     id,
+    // ]);
 };
 
 const getSkuBySku = async (sku) => {

@@ -34,8 +34,11 @@ const getBranches = handleErrors(async (req, res) => {
 });
 
 const getBranchesQty = handleErrors(async (req, res) => {
+    console.log(req.query.showInactive);
+    console.log(req.body);
     const showInactive = req.query.showInactive === 'true' || false;
 
+    console.log(showInactive);
     const branchesQty = await branchService.getBranchesQty(showInactive);
     res.status(200).json(branchesQty);
 });
@@ -53,7 +56,7 @@ const getBranchesNames = handleErrors(async (req, res) => {
 const getBranchById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await branchService.getBranchById(id);
-    // console.log(response.rows[0]);
+    console.log(response.rows[0]);
 
     if (response) {
         const formattedResponse = {
@@ -69,13 +72,18 @@ const getBranchById = handleErrors(async (req, res) => {
 });
 
 const createBranch = handleErrors(async (req, res) => {
-    const { branchName, region, address } = req.body;
+    const { branchName, municipality, address } = req.body;
     const response = await branchService.createBranch(
         branchName,
-        region,
+        municipality,
         address,
     );
-    res.status(201).json(response.rows[0]);
+
+    if (response) {
+        sendSuccess(res, 'Sucursal creada con éxito.', response);
+    } else {
+        sendError(res, 'Error al crear Sucursal', 404);
+    }
 });
 
 const updateBranch = handleErrors(async (req, res) => {
