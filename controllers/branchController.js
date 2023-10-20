@@ -17,20 +17,24 @@ const getBranches = handleErrors(async (req, res) => {
 
     // console.log(response);
 
-    const formattedResponse = response.map((row) => ({
-        active: row.active,
-        id: row.branch_id,
-        name: row.name,
-        regionId: row.region_id,
-        address: row.address,
-        regionName: row.region_name,
-        countryName: row.country_name,
-        countryId: row.country_id,
-        municipalityName: row.municipality_name,
-        municipalityId: row.fk_municipality_id,
-    }));
+    if (response) {
+        const formattedResponse = response.map((row) => ({
+            active: row.active,
+            id: row.branch_id,
+            name: row.name,
+            regionId: row.region_id,
+            address: row.address,
+            regionName: row.region_name,
+            countryName: row.country_name,
+            countryId: row.country_id,
+            municipalityName: row.municipality_name,
+            municipalityId: row.fk_municipality_id,
+        }));
 
-    res.status(200).json(formattedResponse);
+        sendSuccess(res, 'Sucursales recuperadas con éxito', formattedResponse);
+    } else {
+        sendError(res, 'Sucursales no encontradas', 404);
+    }
 });
 
 const getBranchesQty = handleErrors(async (req, res) => {
@@ -60,10 +64,12 @@ const getBranchById = handleErrors(async (req, res) => {
 
     if (response) {
         const formattedResponse = {
-            id: response.rows[0].branch_id,
-            name: response.rows[0].name,
-            municipalityId: response.rows[0].fk_municipality_id,
             address: response.rows[0].address,
+            id: response.rows[0].branch_id,
+            municipalityId: response.rows[0].fk_municipality_id,
+            name: response.rows[0].name,
+            regionId: response.rows[0].region_id,
+            countryId: response.rows[0].country_id,
         };
         sendSuccess(res, 'Sucursal encontrada exitosamente', formattedResponse);
     } else {

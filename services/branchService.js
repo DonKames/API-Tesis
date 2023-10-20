@@ -23,11 +23,13 @@ const getBranchById = async (id) => {
 };
 
 const createBranch = async (branchName, municipality, address) => {
-    return await branchRepository.createBranch(
+    const response = await branchRepository.createBranch(
         branchName,
         municipality,
         address,
     );
+
+    return response.rows[0];
 };
 
 const updateBranch = async (id, { name, address, municipality, active }) => {

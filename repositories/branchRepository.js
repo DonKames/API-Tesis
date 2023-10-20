@@ -50,7 +50,14 @@ const getBranchesNames = async () => {
 
 const getBranchById = async (id) => {
     return await db.query(
-        'SELECT * FROM "public".branches WHERE branch_id = $1',
+        `
+        SELECT branches.*, municipalities.fk_region_id AS region_id, regions.fk_country_id AS country_id
+        FROM "public".branches
+        LEFT JOIN "public".municipalities ON branches.fk_municipality_id = municipalities.municipality_id
+        LEFT JOIN "public".regions ON municipalities.fk_region_id = regions.region_id
+        LEFT JOIN "public".countries ON regions.fk_country_id = countries.country_id
+        WHERE branches.branch_id = $1
+    `,
         [id],
     );
 };

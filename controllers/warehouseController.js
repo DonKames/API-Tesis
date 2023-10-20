@@ -17,17 +17,20 @@ const getWarehouses = handleErrors(async (req, res) => {
 
     // console.log(response);
 
-    const formattedResponse = response.map((row) => ({
-        id: row.warehouse_id,
-        name: row.warehouse_name,
-        capacity: row.capacity,
-        branchId: row.fk_branch_id,
-        active: row.active,
-        branchName: row.branch_name,
-    }));
+    if (response) {
+        const formattedResponse = response.map((row) => ({
+            id: row.warehouse_id,
+            name: row.warehouse_name,
+            capacity: row.capacity,
+            branchId: row.fk_branch_id,
+            active: row.active,
+            branchName: row.branch_name,
+        }));
 
-    sendSuccess(res, 'Warehouses recovered correctly ', formattedResponse);
-    // res.status(200).json(formattedResponse);
+        sendSuccess(res, 'Bodegas recuperadas exitosamente', formattedResponse);
+    } else {
+        sendError(res, 'Bodegas no encontradas', 404);
+    }
 });
 
 const getWarehousesQty = handleErrors(async (req, res) => {
