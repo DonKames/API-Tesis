@@ -94,11 +94,13 @@ const createBranch = handleErrors(async (req, res) => {
 
 const updateBranch = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { name, address, municipality, active } = req.body;
+    const { branchName, address, municipality, active } = req.body;
 
-    console.log(req.body, req.params);
+    console.log('branchController', req.body, req.params);
+
+    console.log('branchController', branchName, address, municipality, active);
     const response = await branchService.updateBranch(id, {
-        name,
+        branchName,
         address,
         municipality,
         active,

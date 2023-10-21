@@ -32,9 +32,9 @@ const createBranch = async (branchName, municipality, address) => {
     return response.rows[0];
 };
 
-const updateBranch = async (id, { name, address, municipality, active }) => {
+const updateBranch = async (id, branchName, address, municipality, active) => {
     const response = await branchRepository.updateBranch(id, {
-        name,
+        branchName,
         address,
         municipality,
         active,

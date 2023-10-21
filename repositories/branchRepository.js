@@ -43,7 +43,6 @@ const getBranchesQty = async (showInactive) => {
     return await db.query(query);
 };
 
-// TODO: Terminar de exportar los métodos necesarios
 const getBranchesNames = async () => {
     return await db.query('SELECT branch_id, name FROM branches');
 };
@@ -69,19 +68,16 @@ const createBranch = async (branchName, municipality, address) => {
     );
 };
 
-const updateBranch = async (id, { name, address, municipality, active }) => {
+const updateBranch = async (
+    id,
+    { branchName, address, municipality, active },
+) => {
+    console.log('updateBranch Repo', branchName, address, municipality, active);
     return await db.query(
         'UPDATE "public".branches SET name = $1, fk_municipality_id = $2, address = $3, active = $4 WHERE branch_id = $5 RETURNING *',
-        [name, municipality, address, active, id],
+        [branchName, municipality, address, active, id],
     );
 };
-
-// const deleteBranch = async (id) => {
-//     return await db.query(
-//         'DELETE FROM "public".branches WHERE branch_id = $1',
-//         [id],
-//     );
-// };
 
 const changeActiveStateBranch = async (id, isActive) => {
     return await db.query(
