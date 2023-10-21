@@ -2,6 +2,17 @@ const warehouseService = require('../services/warehouseService');
 const handleErrors = require('../middlewares/errorHandler');
 const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 
+/**
+ * Retrieves a list of warehouses with optional pagination and filtering.
+ *
+ * @function
+ * @async
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} - A Promise that resolves when the response has been sent.
+ */
+/* The `getWarehouses` function is an asynchronous function that retrieves a list of warehouses with
+optional pagination and filtering. */
 const getWarehouses = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;

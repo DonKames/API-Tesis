@@ -38,13 +38,39 @@ const getBranches = handleErrors(async (req, res) => {
 });
 
 const getBranchesQty = handleErrors(async (req, res) => {
-    console.log(req.query.showInactive);
-    console.log(req.body);
+    const warehouseId = req.query.warehouseId || null;
+
     const showInactive = req.query.showInactive === 'true' || false;
 
-    console.log(showInactive);
-    const branchesQty = await branchService.getBranchesQty(showInactive);
-    res.status(200).json(branchesQty);
+    let qty;
+
+    try {
+        if (warehouseId) {
+            qty = await branchService.getBranchesQtyByWarehouseId(warehouseId);
+        } else {
+            qty = await branchService.getBranchesQty(showInactive);
+        }
+
+        /* eslint-disable indent */
+        qty
+            ? sendSuccess(
+                  res,
+                  'Cantidad de sucursales recuperadas correctamente',
+                  qty,
+              )
+            : sendError(res, 'Sucursales qty no encontradas', 404);
+        /* eslint-enable indent */
+    } catch (error) {
+        sendError(res, 'Error al obtener la cantidad de sucursales', 500);
+    }
+
+    // console.log(req.query.showInactive);
+    // console.log(req.body);
+    // const showInactive = req.query.showInactive === 'true' || false;
+
+    // console.log(showInactive);
+    // const branchesQty = await branchService.getBranchesQty(showInactive);
+    // res.status(200).json(branchesQty);
 });
 
 const getBranchesNames = handleErrors(async (req, res) => {
