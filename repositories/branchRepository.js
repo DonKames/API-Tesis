@@ -68,15 +68,20 @@ const createBranch = async (branchName, municipality, address) => {
     );
 };
 
-const updateBranch = async (
-    id,
-    { branchName, address, municipality, active },
-) => {
-    console.log('updateBranch Repo', branchName, address, municipality, active);
-    return await db.query(
-        'UPDATE "public".branches SET name = $1, fk_municipality_id = $2, address = $3, active = $4 WHERE branch_id = $5 RETURNING *',
-        [branchName, municipality, address, active, id],
-    );
+const updateBranch = async (id, { branchName, address, municipality }) => {
+    const query = `
+        UPDATE "public".branches
+        SET name = $1, address = $2, fk_municipality_id = $3
+        WHERE branch_id = $4
+        RETURNING *,
+            (SELECT municipalities.name FROM municipalities WHERE municipalities.municipality_id = $3) AS municipality_name,
+            (SELECT regions.name FROM regions WHERE regions.region_id = (SELECT municipalities.fk_region_id FROM municipalities WHERE municipalities.municipality_id = $3)) AS region_name,
+            (SELECT countries.name FROM countries WHERE countries.country_id = (SELECT regions.fk_country_id FROM regions WHERE regions.region_id = (SELECT municipalities.fk_region_id FROM municipalities WHERE municipalities.municipality_id = $3))) AS country_name
+    `;
+
+    const params = [branchName, address, municipality, id];
+
+    return await db.query(query, params);
 };
 
 const changeActiveStateBranch = async (id, isActive) => {

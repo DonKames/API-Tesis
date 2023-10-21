@@ -94,25 +94,27 @@ const createBranch = handleErrors(async (req, res) => {
 
 const updateBranch = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { branchName, address, municipality, active } = req.body;
+    const { branchName, address, municipality } = req.body;
 
     console.log('branchController', req.body, req.params);
 
-    console.log('branchController', branchName, address, municipality, active);
+    console.log('branchController', branchName, address, municipality);
     const response = await branchService.updateBranch(id, {
         branchName,
         address,
         municipality,
-        active,
     });
+    console.log('branchController response: ', response);
 
     if (response) {
         const formattedResponse = {
             id: response.branch_id,
             name: response.name,
-            regionId: response.fk_region_id,
+            municipalityId: response.fk_municipality_id,
+            municipalityName: response.municipality_name,
+            regionName: response.region_name,
+            countryName: response.country_name,
             address: response.address,
-            active: response.active,
         };
 
         sendSuccess(
