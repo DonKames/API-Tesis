@@ -110,7 +110,20 @@ const createWarehouse = handleErrors(async (req, res) => {
         capacity,
         branchId,
     });
-    res.status(201).json(response);
+    if (response) {
+        console.log(response);
+        const formattedResponse = {
+            id: response.warehouse_id,
+            name: response.name,
+            capacity: response.capacity,
+            branchId: response.fk_branch_id,
+            active: response.active,
+        };
+
+        sendSuccess(res, 'Warehouse created correctly', formattedResponse);
+    } else {
+        sendError(res, 'No se pudo crear la bodega', 404);
+    }
 });
 
 const updateWarehouse = handleErrors(async (req, res) => {
