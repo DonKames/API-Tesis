@@ -120,7 +120,7 @@ const createWarehouse = handleErrors(async (req, res) => {
             active: response.active,
         };
 
-        sendSuccess(res, 'Warehouse created correctly', formattedResponse);
+        sendSuccess(res, 'Bodega Creada Exitosamente', formattedResponse);
     } else {
         sendError(res, 'No se pudo crear la bodega', 404);
     }
