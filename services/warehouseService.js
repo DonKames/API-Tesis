@@ -36,9 +36,12 @@ const createWarehouse = async ({ warehouseName, capacity, branchId }) => {
     });
 };
 
-const updateWarehouse = async (id, { name, capacity, branchId, active }) => {
+const updateWarehouse = async (
+    id,
+    { warehouseName, capacity, branchId, active },
+) => {
     const response = await warehouseRepository.updateWarehouse(id, {
-        name,
+        warehouseName,
         capacity,
         branchId,
         active,

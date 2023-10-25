@@ -1,12 +1,6 @@
 const db = require('../config/db');
 
 const getBranches = async (limit, offset, showInactive) => {
-    // let query = `
-    //     SELECT
-    //         branches.*
-    //     FROM branches
-    // `;
-
     let query = `
         SELECT 
             branches.branch_id, branches.name, branches.address, branches.active, 

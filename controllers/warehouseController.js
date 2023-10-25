@@ -128,15 +128,17 @@ const createWarehouse = handleErrors(async (req, res) => {
 
 const updateWarehouse = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { name, capacity, branchId, active } = req.body;
+    const { warehouseName, capacity, branchId, active } = req.body;
 
     console.log(req.body, req.params);
     const response = await warehouseService.updateWarehouse(id, {
-        name,
+        warehouseName,
         capacity,
         branchId,
         active,
     });
+
+    console.log(response);
 
     if (response) {
         const formattedResponse = {
@@ -145,6 +147,7 @@ const updateWarehouse = handleErrors(async (req, res) => {
             capacity: response.capacity,
             branchId: response.fk_branch_id,
             active: response.active,
+            branchName: response.branch_name,
         };
 
         sendSuccess(res, 'Warehouse updated correctly', formattedResponse);

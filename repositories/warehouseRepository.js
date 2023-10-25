@@ -1,7 +1,8 @@
 const db = require('../config/db');
 
 const getWarehouses = async (limit, offset, showInactive) => {
-    let query = `SELECT w.warehouse_id, w.name AS warehouse_name, w.capacity, w.fk_branch_id, w.active, b.name AS branch_name
+    let query = `
+        SELECT w.warehouse_id, w.name AS warehouse_name, w.capacity, w.fk_branch_id, w.active, b.name AS branch_name
         FROM "public".warehouses AS w
         JOIN "public".branches AS b ON w.fk_branch_id = b.branch_id`;
 
@@ -10,7 +11,7 @@ const getWarehouses = async (limit, offset, showInactive) => {
     }
 
     query += `
-        ORDER BY w.active DESC, w.warehouse_id ASC
+        ORDER BY w.active ASC, w.warehouse_id ASC
         LIMIT $1 OFFSET $2
         `;
 
@@ -56,10 +57,17 @@ const createWarehouse = async ({ warehouseName, capacity, branchId }) => {
     );
 };
 
-const updateWarehouse = async (id, { name, capacity, branchId, active }) => {
+const updateWarehouse = async (
+    id,
+    { warehouseName, capacity, branchId, active },
+) => {
     return await db.query(
-        'UPDATE "public".warehouses SET name = $1, capacity = $2, fk_branch_id = $3, active = $4 WHERE warehouse_id = $5 RETURNING *',
-        [name, capacity, branchId, active, id],
+        `UPDATE "public".warehouses 
+        SET name = $1, capacity = $2, fk_branch_id = $3, active = $4 
+        WHERE warehouse_id = $5 
+        RETURNING *, (SELECT name FROM "public".branches WHERE branch_id = $3) AS branch_name;
+`,
+        [warehouseName, capacity, branchId, active, id],
     );
 };
 
