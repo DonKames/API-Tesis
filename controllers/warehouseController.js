@@ -47,9 +47,9 @@ const getWarehouses = handleErrors(async (req, res) => {
 const getWarehousesQty = handleErrors(async (req, res) => {
     const branchId = req.query.branchId || null;
 
-    let qty;
-
     const showInactive = req.query.showInactive === 'true' || false;
+
+    let qty;
 
     console.log('getWarehousesQty query', req.query);
 

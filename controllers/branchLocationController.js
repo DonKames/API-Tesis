@@ -32,17 +32,48 @@ const getBranchLocations = handleErrors(async (req, res) => {
 });
 
 const getBranchLocationsQty = handleErrors(async (req, res) => {
-    const branchLocationsQty =
-        await branchLocationService.getBranchLocationsQty();
-    if (!branchLocationsQty) {
-        sendError(res, 'Branch locations quantity not found', 404);
-    } else {
-        sendSuccess(
-            res,
-            'Branch locations quantity retrieved successfully',
-            branchLocationsQty,
-        );
+    const branchId = req.query.branchLocationId || null;
+
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    let qty;
+
+    try {
+        if (branchId) {
+            qty =
+                await branchLocationService.getBranchLocationsQtyByWarehouseId(
+                    branchId,
+                );
+        } else {
+            qty =
+                await branchLocationService.getBranchLocationsQty(showInactive);
+        }
+
+        /* eslint-disable indent */
+
+        qty
+            ? sendSuccess(
+                  res,
+                  'Cantidad de Sucursales recuperadas correctamente',
+                  qty,
+              )
+            : sendError(res, 'No se pudo recuperar la cantidad', 404);
+
+        /* eslint-enable indent */
+    } catch (error) {
+        sendError(res, 'Error al obtener la cantidad', 500);
     }
+    // const branchLocationsQty =
+    //     await branchLocationService.getBranchLocationsQty();
+    // if (!branchLocationsQty) {
+    //     sendError(res, 'Branch locations quantity not found', 404);
+    // } else {
+    //     sendSuccess(
+    //         res,
+    //         'Branch locations quantity retrieved successfully',
+    //         branchLocationsQty,
+    //     );
+    // }
 });
 
 const getBranchLocationById = handleErrors(async (req, res) => {
