@@ -65,7 +65,8 @@ const updateWarehouse = async (
         `UPDATE "public".warehouses 
         SET name = $1, capacity = $2, fk_branch_id = $3, active = $4 
         WHERE warehouse_id = $5 
-        RETURNING *, (SELECT name FROM "public".branches WHERE branch_id = $3) AS branch_name;
+        RETURNING *,
+        (SELECT name FROM "public".branches WHERE branch_id = $3) AS branch_name;
 `,
         [warehouseName, capacity, branchId, active, id],
     );

@@ -120,7 +120,18 @@ const updateBranchLocation = handleErrors(async (req, res) => {
     });
 
     if (response) {
-        sendSuccess(res, 'Branch location updated successfully', response);
+        console.log(response);
+
+        const formattedResponse = {
+            id: response.branch_location_id,
+            name: response.name,
+            description: response.description,
+            branchId: response.fk_branch_id,
+            active: response.active,
+            branchName: response.branch_name,
+        };
+
+        sendSuccess(res, 'Lugar actualizado correctamente', formattedResponse);
     } else {
         sendError(res, 'Branch location not found', 404);
     }

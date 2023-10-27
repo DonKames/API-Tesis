@@ -48,7 +48,7 @@ const updateBranchLocation = async (id, { name, description, branchId }) => {
     const query = `
         UPDATE "public".branch_locations
         SET name = $1, description = $2, fk_branch_id = $3
-        WHERE branch_location_id = $4 RETURNING *
+        WHERE branch_location_id = $4 RETURNING *, (SELECT name FROM "public".branches WHERE branch_id = $3) AS branch_name
     `;
     return await db.query(query, [name, description, branchId, id]);
 };
