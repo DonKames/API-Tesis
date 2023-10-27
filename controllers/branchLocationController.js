@@ -79,7 +79,24 @@ const getBranchLocationsQty = handleErrors(async (req, res) => {
 const getBranchLocationById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await branchLocationService.getBranchLocationById(id);
-    res.status(200).json(response);
+
+    if (response) {
+        const formattedResponse = {
+            id: response.branch_location_id,
+            name: response.name,
+            description: response.description,
+            branchId: response.fk_branch_id,
+            active: response.active,
+            branchName: response.branch_name,
+        };
+        sendSuccess(
+            res,
+            'Branch location retrieved successfully',
+            formattedResponse,
+        );
+    } else {
+        sendError(res, 'Branch location not found', 404);
+    }
 });
 
 const createBranchLocation = handleErrors(async (req, res) => {
