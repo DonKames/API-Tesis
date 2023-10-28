@@ -150,9 +150,9 @@ const updateWarehouse = handleErrors(async (req, res) => {
             branchName: response.branch_name,
         };
 
-        sendSuccess(res, 'Warehouse updated correctly', formattedResponse);
+        sendSuccess(res, 'Bodega actualizada correctamente', formattedResponse);
     } else {
-        sendError(res, 'Warehouse not found', 404);
+        sendError(res, 'Bodega no encontrada para actualizar', 404);
     }
     // res.status(200).json(response);
 });
@@ -182,7 +182,7 @@ const changeActiveStateWarehouse = handleErrors(async (req, res) => {
                 formattedResponse,
             );
         } else {
-            sendError(res, 'Warehouse not found', 404);
+            sendError(res, 'Bodega no encontrada para actualizar', 404);
         }
     } catch (error) {
         console.log(error);

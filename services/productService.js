@@ -15,6 +15,12 @@ const getProductsQty = async (showInactive) => {
     return parseInt(await response.rows[0].count);
 };
 
+const getProductsQtyByWarehouseId = async (warehouseId) => {
+    const response =
+        await productRepository.getProductsQtyByWarehouseId(warehouseId);
+    return parseInt(response.rows[0].count);
+};
+
 const searchProducts = async (query, limit) => {
     return await productRepository.searchProducts(query, limit);
 };

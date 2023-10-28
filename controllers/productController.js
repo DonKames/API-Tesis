@@ -31,12 +31,31 @@ const getProducts = handleErrors(async (req, res) => {
 });
 
 const getProductsQty = handleErrors(async (req, res) => {
-    console.log(req.query.showInactive);
+    const warehouseId = req.query.warehouseId || null;
+
     const showInactive = req.query.showInactive === 'true' || false;
 
-    const productsQty = await productService.getProductsQty(showInactive);
+    let qty;
 
-    res.status(200).json(productsQty);
+    try {
+        if (warehouseId) {
+            qty = await productService.getProductQtyByWarehouse(warehouseId);
+        } else {
+            qty = await productService.getProductsQty(showInactive);
+        }
+
+        console.log(qty);
+
+        /* eslint-disable indent */
+        qty
+            ? sendSuccess(
+                  res,
+                  'Cantidad de productos recuperadas correctamente',
+                  qty,
+              )
+            : sendError(res, 'Cantidad de Productos no encontrada');
+        /* eslint-enable indent */
+    } catch (error) {}
 });
 
 const searchProducts = handleErrors(async (req, res) => {
