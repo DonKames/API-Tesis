@@ -47,6 +47,13 @@ const getSkuById = async (id) => {
     // ]);
 };
 
+const getSkusQtyByWarehouseId = async (warehouseId) => {
+    return await db.query(
+        'SELECT COUNT(*) FROM "public".skus WHERE fk_warehouse_id = $1',
+        [warehouseId],
+    );
+};
+
 const getSkuBySku = async (sku) => {
     return await db.query('SELECT * FROM "public".skus WHERE sku = $1', [sku]);
 };
@@ -83,6 +90,7 @@ const changeActiveStateSku = async (id, isActive) => {
 
 module.exports = {
     getSkusQty,
+    getSkusQtyByWarehouseId,
     getSkus,
     getSkuById,
     getSkuBySku,

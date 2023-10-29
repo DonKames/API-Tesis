@@ -11,27 +11,46 @@ const getSkus = handleErrors(async (req, res) => {
 
     const response = await skuService.getSkus(limit, offset, showInactive);
 
-    const formattedResponse = response.map((row) => ({
-        id: row.sku_id,
-        name: row.name,
-        description: row.description,
-        minimumStock: row.minimum_stock,
-        sku: row.sku,
-        lote: row.lote,
-        order: row.product_order,
-        active: row.active,
-        stock: row.product_count,
-    }));
+    if (response) {
+        const formattedResponse = response.map((row) => ({
+            id: row.sku_id,
+            name: row.name,
+            description: row.description,
+            minimumStock: row.minimum_stock,
+            sku: row.sku,
+            lote: row.lote,
+            order: row.product_order,
+            active: row.active,
+            stock: row.product_count,
+        }));
 
-    res.status(200).json(formattedResponse);
+        sendSuccess(res, 'Skus recuperadas exitosamente', formattedResponse);
+    }
 });
 
 const getSkusQty = handleErrors(async (req, res) => {
+    const warehouseId = req.query.warehouseId || null;
+
     const showInactive = req.query.showInactive === 'true' || false;
 
-    const skusQty = await skuService.getSkusQty(showInactive);
+    let qty;
 
-    res.status(200).json(skusQty);
+    try {
+        if (warehouseId) {
+            qty = await skuService.getSkusQtyByWarehouseId(warehouseId);
+        } else {
+            qty = await skuService.getSkusQty(showInactive);
+        }
+
+        qty
+            ? sendSuccess(res, 'Cantidad de Skus recuperada correctamente', qty)
+            : sendError(res, 'Cantidad no encontrada', 404);
+    } catch (error) {
+        sendError(res, 'Error al obtener la cantidad de Skus', 500);
+    }
+    // const skusQty = await skuService.getSkusQty(showInactive);
+
+    // res.status(200).json(skusQty);
 });
 
 const getSkuById = handleErrors(async (req, res) => {

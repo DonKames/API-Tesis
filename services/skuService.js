@@ -10,6 +10,11 @@ const getSkusQty = async (showInactive) => {
     return parseInt(response.rows[0].count);
 };
 
+const getSkusQtyByWarehouseId = async (warehouseId) => {
+    const response = await skuRepository.getSkusQtyByWarehouseId(warehouseId);
+    return parseInt(response.rows[0].count);
+};
+
 const getSkuById = async (id) => {
     const response = await skuRepository.getSkuById(id);
     return response.rows[0];
@@ -59,6 +64,7 @@ const changeActiveStateSku = async (id, isActive) => {
 
 module.exports = {
     getSkusQty,
+    getSkusQtyByWarehouseId,
     getSkus,
     getSkuById,
     getSkuBySku,
