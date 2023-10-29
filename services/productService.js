@@ -64,6 +64,7 @@ const changeActiveStateProduct = async (id, isActive) => {
 module.exports = {
     getProducts,
     getProductsQty,
+    getProductsQtyByWarehouseId,
     searchProducts,
     getProductCountByWarehouse,
     getProductById,

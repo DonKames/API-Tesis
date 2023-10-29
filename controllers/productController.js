@@ -35,27 +35,32 @@ const getProductsQty = handleErrors(async (req, res) => {
 
     const showInactive = req.query.showInactive === 'true' || false;
 
+    console.log('getProductsQty', warehouseId, showInactive);
     let qty;
 
     try {
         if (warehouseId) {
-            qty = await productService.getProductQtyByWarehouse(warehouseId);
+            qty = await productService.getProductsQtyByWarehouseId(warehouseId);
         } else {
             qty = await productService.getProductsQty(showInactive);
         }
 
-        console.log(qty);
+        console.log('product qty', qty);
 
         /* eslint-disable indent */
-        qty
-            ? sendSuccess(
-                  res,
-                  'Cantidad de productos recuperadas correctamente',
-                  qty,
-              )
-            : sendError(res, 'Cantidad de Productos no encontrada');
+        if (qty !== null && qty !== undefined) {
+            sendSuccess(
+                res,
+                'Cantidad de productos recuperadas correctamente',
+                qty,
+            );
+        } else {
+            sendError(res, 'Cantidad de Productos no encontrada');
+        }
         /* eslint-enable indent */
-    } catch (error) {}
+    } catch (error) {
+        sendError(res, 'Error al obtener la cantidad de productos', 500);
+    }
 });
 
 const searchProducts = handleErrors(async (req, res) => {

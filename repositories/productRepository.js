@@ -36,6 +36,13 @@ const getProductsQty = async (showInactive) => {
     return await db.query(query);
 };
 
+const getProductsQtyByWarehouseId = async (warehouseId) => {
+    return await db.query(
+        'SELECT COUNT (*) FROM products WHERE fk_warehouse_id = $1',
+        [warehouseId],
+    );
+};
+
 const searchProducts = async (query, limit) => {
     const searchTerm = `%${query}%`;
     const queryStr = `
@@ -126,6 +133,7 @@ const changeActiveStateProduct = async (id, isActive) => {
 module.exports = {
     getProducts,
     getProductsQty,
+    getProductsQtyByWarehouseId,
     searchProducts,
     getProductCountByWarehouse,
     getProductById,

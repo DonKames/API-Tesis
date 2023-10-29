@@ -56,8 +56,8 @@ router.delete('/countries/:id', countriesController.deleteCountry);
 router.get('/municipalities', municipalityController.getMunicipalities);
 
 // Products
-router.get('/products', productsController.getProducts);
 router.get('/products/qty', productsController.getProductsQty);
+router.get('/products', productsController.getProducts);
 router.get('/products/search', productsController.searchProducts);
 router.get(
     '/products/countByWarehouse',
