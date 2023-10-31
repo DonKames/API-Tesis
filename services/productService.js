@@ -36,8 +36,8 @@ const getProductBySku = async (sku) => {
     return await productRepository.getProductBySku(sku);
 };
 
-const createProduct = async (fkSku, branchId, epc) => {
-    return await productRepository.createProduct(fkSku, branchId, epc);
+const createProduct = async ({ skuId, warehouseId, epc }) => {
+    return await productRepository.createProduct({ skuId, warehouseId, epc });
 };
 
 const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {

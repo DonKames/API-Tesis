@@ -9,25 +9,37 @@ const getProducts = handleErrors(async (req, res) => {
 
     const offset = (page - 1) * limit;
 
-    const response = await productService.getProducts(
-        limit,
-        offset,
-        showInactive,
-    );
+    try {
+        const response = await productService.getProducts(
+            limit,
+            offset,
+            showInactive,
+        );
 
-    const formattedResponse = response.map((row) => ({
-        id: row.product_id,
-        epc: row.epc,
-        warehouseName: row.warehouse_name,
-        warehouseId: row.warehouse_id,
-        branchName: row.branch_name,
-        branchId: row.branch_id,
-        active: row.active,
-        sku: row.sku,
-        skuId: row.sku_id,
-    }));
+        if (response) {
+            const formattedResponse = response.map((row) => ({
+                id: row.product_id,
+                epc: row.epc,
+                warehouseName: row.warehouse_name,
+                warehouseId: row.warehouse_id,
+                branchName: row.branch_name,
+                branchId: row.branch_id,
+                active: row.active,
+                sku: row.sku,
+                skuId: row.sku_id,
+            }));
 
-    res.status(200).json(formattedResponse);
+            sendSuccess(
+                res,
+                'Productos recuperados correctamente',
+                formattedResponse,
+            );
+        } else {
+            sendError(res, 'Productos no encontrados');
+        }
+    } catch (error) {
+        sendError(res, 'Error al comunicarse con la API', 500);
+    }
 });
 
 const getProductsQty = handleErrors(async (req, res) => {
@@ -117,9 +129,24 @@ const getProductBySku = handleErrors(async (req, res) => {
 });
 
 const createProduct = handleErrors(async (req, res) => {
-    const { fkSku, branchId, epc } = req.body;
-    const newProduct = await productService.createProduct(fkSku, branchId, epc);
-    res.status(201).json(newProduct);
+    const { skuId, warehouseId, epc } = req.body;
+
+    try {
+        const response = await productService.createProduct({
+            skuId,
+            warehouseId,
+            epc,
+        });
+
+        console.log(response);
+
+        if (response) {
+            console.log(response);
+            sendSuccess(res, 'Producto creado exitosamente', response);
+        }
+    } catch (error) {
+        sendError(res, 'No se pudo crear el producto', 500);
+    }
 });
 
 const updateProduct = handleErrors(async (req, res) => {

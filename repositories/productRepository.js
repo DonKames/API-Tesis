@@ -103,11 +103,13 @@ const getProductsByWarehouse = async (warehouseId) => {
     return response.rows;
 };
 
-const createProduct = async (fkSku, branchId, epc) => {
+const createProduct = async ({ skuId, warehouseId, epc }) => {
+    console.log(skuId, warehouseId, epc);
     const response = await db.query(
-        'INSERT INTO "public".products (epc, fk_warehouse_id, fk_sku_id) VALUES ($1, $2, $3) RETURNING *',
-        [epc, branchId, fkSku],
+        'INSERT INTO "public".products (epc, fk_warehouse_id, fk_sku_id, active) VALUES ($1, $2, $3, TRUE) RETURNING *',
+        [epc, warehouseId, skuId],
     );
+    console.log('response ', response);
     return response.rows[0];
 };
 
