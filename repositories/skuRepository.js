@@ -55,17 +55,27 @@ const getSkusQtyByWarehouseId = async (warehouseId) => {
 };
 
 const getSkuBySku = async (sku) => {
-    return await db.query('SELECT * FROM "public".skus WHERE sku = $1', [sku]);
+    return await db.query(
+        'SELECT * FROM "public".skus WHERE LOWER(sku) = LOWER($1)',
+        [sku],
+    );
 };
 
 const getSkusNames = async () => {
     return await db.query('SELECT sku_id, sku FROM "public".skus');
 };
 
-const createSku = async (name, price, description, sku, lote, order) => {
+const createSku = async ({
+    name,
+    description,
+    minimumAmount,
+    sku,
+    lote,
+    order,
+}) => {
     return await db.query(
-        'INSERT INTO "public".skus (name, price, description, sku, lote, product_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [name, price, description, sku, lote, order],
+        'INSERT INTO "public".skus (name, minimum_stock, description, sku, lote, product_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        [name, minimumAmount, description, sku, lote, order],
     );
 };
 

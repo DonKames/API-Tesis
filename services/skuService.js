@@ -29,15 +29,22 @@ const getSkusNames = async () => {
     return await skuRepository.getSkusNames();
 };
 
-const createSku = async (name, price, description, sku, lote, order) => {
-    const response = await skuRepository.createSku(
+const createSku = async ({
+    name,
+    description,
+    minimumAmount,
+    sku,
+    lote,
+    order,
+}) => {
+    const response = await skuRepository.createSku({
         name,
-        price,
         description,
+        minimumAmount,
         sku,
         lote,
         order,
-    );
+    });
     return response.rows[0];
 };
 

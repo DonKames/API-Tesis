@@ -42,6 +42,36 @@ const getProducts = handleErrors(async (req, res) => {
     }
 });
 
+const getProductByEPC = handleErrors(async (req, res) => {
+    const epc = req.params.epc;
+    console.log('epc', epc);
+    try {
+        const response = await productService.getProductByEPC(epc);
+
+        if (response) {
+            console.log('res', response);
+            const formattedResponse = {
+                id: response.product_id,
+                epc: response.epc,
+                warehouseId: response.fk_warehouse_id,
+                skuId: response.fk_sku_id,
+                active: response.active,
+            };
+
+            console.log('for', formattedResponse);
+            sendSuccess(
+                res,
+                'Producto recuperado correctamente',
+                formattedResponse,
+            );
+        } else {
+            sendError(res, 'Producto no encontrado', 404);
+        }
+    } catch (error) {
+        sendError(res, 'Error al comunicarse con la API', 500);
+    }
+});
+
 const getProductsQty = handleErrors(async (req, res) => {
     const warehouseId = req.query.warehouseId || null;
 
@@ -208,6 +238,7 @@ module.exports = {
     changeActiveStateProduct,
     getProducts,
     getProductsQty,
+    getProductByEPC,
     searchProducts,
     getProductCountByWarehouse,
     getProductById,

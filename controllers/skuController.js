@@ -97,16 +97,24 @@ const getSkusNames = handleErrors(async (req, res) => {
 });
 
 const createSku = handleErrors(async (req, res) => {
-    const { name, price, description, sku, lote, order } = req.body;
-    const newSku = await skuService.createSku(
-        name,
-        price,
-        description,
-        sku,
-        lote,
-        order,
-    );
-    res.status(201).json(newSku);
+    const { name, description, minimumAmount, sku, lote, order } = req.body;
+
+    try {
+        const response = await skuService.createSku({
+            name,
+            description,
+            minimumAmount,
+            sku,
+            lote,
+            order,
+        });
+
+        if (response) {
+            sendSuccess(res, 'SKU creado exitosamente', response);
+        }
+    } catch (error) {
+        sendError(res, error.message || 'Hubo un error al crear el SKU', 500);
+    }
 });
 
 const updateSku = handleErrors(async (req, res) => {

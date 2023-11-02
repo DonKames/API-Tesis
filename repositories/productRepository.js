@@ -95,6 +95,16 @@ const getProductBySku = async (sku) => {
     return response.rows[0];
 };
 
+const getProductByEPC = async (epc) => {
+    console.log('repo: ', epc);
+    const response = await db.query(
+        'SELECT * FROM "public".products WHERE LOWER(epc) = LOWER($1)',
+        [epc],
+    );
+    console.log(response.rows[0]);
+    return response.rows[0];
+};
+
 const getProductsByWarehouse = async (warehouseId) => {
     const response = await db.query(
         'SELECT * FROM "public".products WHERE fk_warehouse_id = $1',
@@ -140,6 +150,7 @@ module.exports = {
     getProductCountByWarehouse,
     getProductById,
     getProductBySku,
+    getProductByEPC,
     getProductsByWarehouse,
     createProduct,
     updateProduct,

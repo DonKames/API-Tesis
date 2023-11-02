@@ -36,6 +36,10 @@ const getProductBySku = async (sku) => {
     return await productRepository.getProductBySku(sku);
 };
 
+const getProductByEPC = async (epc) => {
+    return await productRepository.getProductByEPC(epc);
+};
+
 const createProduct = async ({ skuId, warehouseId, epc }) => {
     return await productRepository.createProduct({ skuId, warehouseId, epc });
 };
@@ -69,6 +73,7 @@ module.exports = {
     getProductCountByWarehouse,
     getProductById,
     getProductBySku,
+    getProductByEPC,
     createProduct,
     updateProduct,
     // deleteProduct,

@@ -64,6 +64,7 @@ router.get(
     productsController.getProductCountByWarehouse,
 );
 router.get('/products/:id', productsController.getProductById);
+router.get('/products/epc/:epc', productsController.getProductByEPC);
 router.post('/products', productsController.createProduct);
 router.put('/products/:id', productsController.updateProduct);
 // router.delete('/products/:id', productsController.deleteProduct);
