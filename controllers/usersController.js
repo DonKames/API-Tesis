@@ -11,7 +11,7 @@ const getUsers = handleErrors(async (req, res) => {
 
     const response = await userService.getUsers(limit, offset, showInactive);
 
-    console.log(response);
+    // console.log(response);
 
     const formattedResponse = response.map((row) => ({
         id: row.user_id,
@@ -27,11 +27,28 @@ const getUsers = handleErrors(async (req, res) => {
 });
 
 const getUsersQty = handleErrors(async (req, res) => {
-    const usersQty = await userService.getUsersQty();
-    if (!usersQty) {
-        sendError(res, 'Users quantity not found', 404);
-    } else {
-        sendSuccess(res, 'Users quantity retrieved successfully', usersQty);
+    const userId = req.query.warehouseId || null;
+
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    let qty;
+
+    try {
+        if (userId) {
+            qty = await userService.getUsersQtyByUserId(userId);
+        } else {
+            qty = await userService.getUsersQty(showInactive);
+        }
+
+        qty
+            ? sendSuccess(res, `Cantidad de usuarios: ${qty}`, qty)
+            : sendError(res, 'No se encontró la cantidad', 404);
+    } catch (error) {
+        sendError(
+            res,
+            'Error al obtener la cantidad de Usuarios' || error.message,
+            500,
+        );
     }
 });
 
@@ -89,14 +106,16 @@ const getUsersNames = handleErrors(async (req, res) => {
 });
 
 const createUser = handleErrors(async (req, res) => {
-    const { name, lastName, role, email } = req.body;
+    const { name, lastName, roleId, email } = req.body;
+    console.log(req.body);
     const response = await userService.createUser({
         name,
         lastName,
-        role,
+        roleId,
         email,
     });
-    res.status(201).json(response);
+
+    res.status(200).json(response);
 });
 
 const updateUserUid = handleErrors(async (req, res) => {

@@ -19,8 +19,13 @@ const getUsers = async (limit, offset, showInactive) => {
     return await db.query(query, params);
 };
 
-const getUsersQty = async () => {
-    const query = 'SELECT COUNT(*) FROM users';
+const getUsersQty = async (showInactive) => {
+    let query = 'SELECT COUNT(*) FROM users';
+
+    if (!showInactive) {
+        query += ' WHERE active = true';
+    }
+
     return await db.query(query);
 };
 
@@ -48,10 +53,10 @@ const getUsersNames = async () => {
     return await db.query('SELECT user_id, first_name, last_name FROM users');
 };
 
-const createUser = async ({ name, lastName, role, email }) => {
+const createUser = async ({ name, lastName, roleId, email }) => {
     const query =
-        'INSERT INTO users (first_name, last_name, email, fk_role_id) VALUES ($1, $2, $3, $4) RETURNING *';
-    return await db.query(query, [name, lastName, email, role]);
+        'INSERT INTO users (first_name, last_name, email, fk_role_id, active) VALUES ($1, $2, $3, $4, $5) RETURNING *';
+    return await db.query(query, [name, lastName, email, roleId, true]);
 };
 
 const updateUserUid = async (email, uid) => {

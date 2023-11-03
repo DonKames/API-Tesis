@@ -9,8 +9,8 @@ const getUsers = async (limit, offset, showInactive) => {
     return response.rows;
 };
 
-const getUsersQty = async () => {
-    const response = await usersRepository.getUsersQty();
+const getUsersQty = async (showInactive) => {
+    const response = await usersRepository.getUsersQty(showInactive);
     return parseInt(response.rows[0].count);
 };
 
