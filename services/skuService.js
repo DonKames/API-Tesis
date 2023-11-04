@@ -48,11 +48,10 @@ const createSku = async ({
     return response.rows[0];
 };
 
-const updateSku = async (id, name, price, description, minimumStock) => {
+const updateSku = async (id, name, description, minimumStock) => {
     const response = await skuRepository.updateSku(
         id,
         name,
-        price,
         description,
         minimumStock,
     );

@@ -13,9 +13,14 @@ const getSkus = async (limit, offset, showInactive) => {
 
     query += `
         GROUP BY Skus.sku_id
-        ORDER BY Skus.sku_id ASC
+        ORDER BY Skus.active ASC, Skus.sku_id ASC
         LIMIT $1 OFFSET $2
         `;
+    // query += `
+    //     GROUP BY Skus.sku_id
+    //     ORDER BY Skus.sku_id ASC
+    //     LIMIT $1 OFFSET $2
+    //     `;
 
     const params = [limit, offset];
 
@@ -79,10 +84,10 @@ const createSku = async ({
     );
 };
 
-const updateSku = async (id, name, price, description, minimumStock) => {
+const updateSku = async (id, name, description, minimumStock) => {
     return await db.query(
-        'UPDATE "public".skus SET name = $1, price = $2, description = $3, minimum_stock = $4 WHERE sku_id = $5 RETURNING *',
-        [name, price, description, minimumStock, id],
+        'UPDATE "public".skus SET name = $1, description = $2, minimum_stock = $3 WHERE sku_id = $4 RETURNING *',
+        [name, description, minimumStock, id],
     );
 };
 

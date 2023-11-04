@@ -119,11 +119,10 @@ const createSku = handleErrors(async (req, res) => {
 
 const updateSku = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { name, price, description, minimumStock } = req.body;
+    const { name, description, minimumStock } = req.body;
     const response = await skuService.updateSku(
         id,
         name,
-        price,
         description,
         minimumStock,
     );

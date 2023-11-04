@@ -17,7 +17,7 @@ const getProducts = async (limit, offset, showInactive) => {
     }
 
     query += `
-        ORDER BY p.product_id ASC
+        ORDER BY p.active ASC, p.product_id ASC
         LIMIT $1 OFFSET $2
         `;
 

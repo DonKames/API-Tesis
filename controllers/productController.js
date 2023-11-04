@@ -47,6 +47,7 @@ const getProductByEPC = handleErrors(async (req, res) => {
     console.log('epc', epc);
     try {
         const response = await productService.getProductByEPC(epc);
+        console.log('epc resp: ', response);
 
         if (response) {
             console.log('res', response);
