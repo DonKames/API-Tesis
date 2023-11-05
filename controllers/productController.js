@@ -127,7 +127,20 @@ const searchProducts = handleErrors(async (req, res) => {
 
 const getProductCountByWarehouse = handleErrors(async (req, res) => {
     const counts = await productService.getProductCountByWarehouse();
-    res.status(200).json(counts);
+
+    // console.log('product_count: ', counts);
+
+    const formattedResponse = counts.map((count) => {
+        return {
+            warehouseId: count.warehouse_id,
+            warehouseName: count.warehouse_name,
+            qty: count.product_count,
+        };
+    });
+
+    // console.log('product_formatted: ', formattedResponse);
+
+    res.status(200).json(formattedResponse);
 });
 
 const getProductById = handleErrors(async (req, res) => {

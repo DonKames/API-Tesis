@@ -1,69 +1,62 @@
-const db = require('../config/db');
+const movementService = require('../services/movementService');
+const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 
 const getMovements = async (req, res) => {
     try {
-        const response = await db.query('SELECT * FROM movements');
-        res.status(200).json(response.rows);
+        const movements = await movementService.getMovements();
+        sendSuccess(res, 'Movements retrieved successfully', movements);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        sendError(res, 'Internal server error', 500);
     }
 };
 
 const getMovementById = async (req, res) => {
     try {
         const { id } = req.params;
-        const response = await db.query(
-            'SELECT * FROM "public".movements WHERE movement_id = $1',
-            [id],
-        );
-        res.status(200).json(response.rows[0]);
+        const movement = await movementService.getMovementById(id);
+        if (movement) {
+            sendSuccess(res, 'Movement retrieved successfully', movement);
+        } else {
+            sendError(res, 'Movement not found', 404);
+        }
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        sendError(res, 'Internal server error', 500);
     }
 };
 
 const createMovement = async (req, res) => {
     try {
-        const { type, amount, fk_account_id } = req.body;
-        const response = await db.query(
-            'INSERT INTO "public".movements (type, amount, fk_account_id) VALUES ($1, $2, $3) RETURNING *',
-            [type, amount, fk_account_id],
-        );
-        res.status(201).json(response.rows[0]);
+        const newMovement = await movementService.createMovement(req.body);
+        sendSuccess(res, 'Movimiento creado con éxito', newMovement, 201);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        sendError(res, 'Internal server error', 500);
     }
 };
 
 const updateMovement = async (req, res) => {
     try {
         const { id } = req.params;
-        const { type, amount, fk_account_id } = req.body;
-        const response = await db.query(
-            'UPDATE "public".movements SET type = $1, amount = $2, fk_account_id = $3 WHERE movement_id = $4 RETURNING *',
-            [type, amount, fk_account_id, id],
+        const updatedMovement = await movementService.updateMovement(
+            id,
+            req.body,
         );
-        res.status(200).json(response.rows[0]);
+        if (updatedMovement) {
+            sendSuccess(res, 'Movement updated successfully', updatedMovement);
+        } else {
+            sendError(res, 'Movement not found', 404);
+        }
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        sendError(res, 'Internal server error', 500);
     }
 };
 
 const deleteMovement = async (req, res) => {
     try {
         const { id } = req.params;
-        await db.query(
-            'DELETE FROM "public".movements WHERE movement_id = $1',
-            [id],
-        );
-        res.status(204).send();
+        await movementService.deleteMovement(id);
+        sendSuccess(res, 'Movement deleted successfully', {}, 204);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        sendError(res, 'Internal server error', 500);
     }
 };
 
