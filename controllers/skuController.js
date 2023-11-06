@@ -35,11 +35,15 @@ const getSkusQty = handleErrors(async (req, res) => {
 
     let qty;
 
+    console.log('sku qty');
     try {
         if (warehouseId) {
             qty = await skuService.getSkusQtyByWarehouseId(warehouseId);
         } else {
+            console.log('skuQty entra else');
+
             qty = await skuService.getSkusQty(showInactive);
+            console.log(qty);
         }
 
         qty

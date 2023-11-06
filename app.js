@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 app.use('/api', routes); // Ahora colocado después del middleware de depuración
 
-app.use(express.json());
+// app.use(express.json());
 
 // Create an HTTP service.
 http.createServer(app).listen(3000);

@@ -34,7 +34,13 @@ const getSkusQty = async (showInactive) => {
         query += ' WHERE active = true';
     }
 
-    return await db.query(query);
+    // console.log(query);
+
+    const resp = await db.query(query);
+
+    // console.log(resp);
+
+    return resp;
 };
 
 const getSkuById = async (id) => {
@@ -79,7 +85,7 @@ const createSku = async ({
     order,
 }) => {
     return await db.query(
-        'INSERT INTO "public".skus (name, minimum_stock, description, sku, lote, product_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        'INSERT INTO "public".skus (name, minimum_stock, description, sku, lote, product_order, active) VALUES ($1, $2, $3, $4, $5, $6, TRUE) RETURNING *',
         [name, minimumStock, description, sku, lote, order],
     );
 };
