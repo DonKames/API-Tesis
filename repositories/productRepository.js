@@ -101,7 +101,7 @@ const getProductByEPC = async (epc) => {
         'SELECT * FROM "public".products WHERE LOWER(epc) = LOWER($1)',
         [epc],
     );
-    console.log(response.rows[0]);
+    // console.log(response.rows[0]);
     return response.rows[0];
 };
 
@@ -113,16 +113,26 @@ const getProductsByWarehouse = async (warehouseId) => {
     return response.rows;
 };
 
-const createProduct = async ({ skuId, warehouseId, epc }) => {
+// *Original, funciona.
+// const createProduct = async ({ skuId, warehouseId, epc }) => {
+//     console.log(skuId, warehouseId, epc);
+//     const response = await db.query(
+//         'INSERT INTO "public".products (epc, fk_warehouse_id, fk_sku_id, active) VALUES ($1, $2, $3, TRUE) RETURNING *',
+//         [epc, warehouseId, skuId],
+//     );
+//     console.log('response ', response);
+//     return response.rows[0];
+// };
+
+const createProduct = async (client, { skuId, warehouseId, epc }) => {
     console.log(skuId, warehouseId, epc);
-    const response = await db.query(
+    const response = await client.query(
         'INSERT INTO "public".products (epc, fk_warehouse_id, fk_sku_id, active) VALUES ($1, $2, $3, TRUE) RETURNING *',
         [epc, warehouseId, skuId],
     );
-    console.log('response ', response);
+    // console.log('response ', response);
     return response.rows[0];
 };
-
 const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {
     const response = await db.query(
         'UPDATE "public".products SET epc = $1, fk_warehouse_id = $2, fk_sku_id = $3, active = $4 WHERE product_id = $5 RETURNING *',

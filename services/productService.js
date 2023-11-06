@@ -1,4 +1,6 @@
 const productRepository = require('../repositories/productRepository');
+const movementRepository = require('../repositories/movementRepository');
+const db = require('../config/db');
 
 const getProducts = async (limit, offset, showInactive) => {
     const response = await productRepository.getProducts(
@@ -40,8 +42,49 @@ const getProductByEPC = async (epc) => {
     return await productRepository.getProductByEPC(epc);
 };
 
-const createProduct = async ({ skuId, warehouseId, epc }) => {
-    return await productRepository.createProduct({ skuId, warehouseId, epc });
+const createProduct = async ({ skuId, warehouseId, epc }, userId) => {
+    return db.transaction(async (client) => {
+        // Creando el producto
+        const product = await productRepository.createProduct(
+            client,
+            {
+                skuId,
+                warehouseId,
+                epc,
+            },
+            userId,
+        );
+
+        const initialMovement = {
+            movement_type: 1,
+            warehouse: warehouseId,
+        };
+
+        if (userId !== undefined) {
+            initialMovement.user = userId;
+        }
+
+        if (product && product.product_id !== undefined) {
+            initialMovement.product = product.product_id;
+        }
+
+        // const initialMovement = {
+        //     user: userId,
+        //     product: product.product_id,
+        //     movement_type: 1,
+        // };
+
+        await movementRepository.createMovement(client, initialMovement);
+
+        return product;
+    });
+
+    //     return await productRepository.createProduct({
+    //         skuId,
+    //         warehouseId,
+    //         epc,
+    //         userId,
+    //     });
 };
 
 const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {

@@ -8,6 +8,10 @@ const getMovementById = async (id) => {
     return await movementRepository.getMovementById(id);
 };
 
+const getLastAddedProducts = async (limit) => {
+    return await movementRepository.getLastAddedProducts(limit);
+};
+
 const createMovement = async (movementData) => {
     return await movementRepository.createMovement(movementData);
 };
@@ -23,6 +27,7 @@ const deleteMovement = async (id) => {
 module.exports = {
     getMovements,
     getMovementById,
+    getLastAddedProducts,
     createMovement,
     updateMovement,
     deleteMovement,

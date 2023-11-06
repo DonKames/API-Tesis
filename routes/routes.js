@@ -4,6 +4,7 @@ const router = express.Router();
 const branchController = require('../controllers/branchController');
 const branchLocationsController = require('../controllers/branchLocationController');
 const countriesController = require('../controllers/countriesController');
+const movementsController = require('../controllers/movementsController');
 const municipalityController = require('../controllers/municipalityController');
 const productsController = require('../controllers/productController');
 const regionsController = require('../controllers/regionsController');
@@ -51,6 +52,14 @@ router.get('/countries/:id', countriesController.getCountryById);
 router.post('/countries', countriesController.createCountry);
 router.put('/countries/:id', countriesController.updateCountry);
 router.delete('/countries/:id', countriesController.deleteCountry);
+
+// Movements
+router.get('/movements', movementsController.getMovements);
+router.get('/movements/:id', movementsController.getMovementById);
+router.post('/movements', movementsController.createMovement);
+router.put('/movements/:id', movementsController.updateMovement);
+router.delete('/movements/:id', movementsController.deleteMovement);
+router.get('/movements/last-added', movementsController.getLastAddedProducts);
 
 // Municipalities
 router.get('/municipalities', municipalityController.getMunicipalities);

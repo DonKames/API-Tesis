@@ -24,6 +24,22 @@ const getMovementById = async (req, res) => {
     }
 };
 
+const getLastAddedProducts = async (req, res) => {
+    try {
+        // Aquí puedes definir un valor por defecto o permitir que se establezca a través de una query string
+        const limit = req.query.limit || 10; // Por ejemplo, por defecto 10
+        const lastAddedProducts =
+            await movementService.getLastAddedProducts(limit);
+        sendSuccess(
+            res,
+            'Últimos productos agregados recuperados con éxito',
+            lastAddedProducts,
+        );
+    } catch (err) {
+        sendError(res, 'Error del servidor interno', 500);
+    }
+};
+
 const createMovement = async (req, res) => {
     try {
         const newMovement = await movementService.createMovement(req.body);
@@ -63,6 +79,7 @@ const deleteMovement = async (req, res) => {
 module.exports = {
     getMovements,
     getMovementById,
+    getLastAddedProducts,
     createMovement,
     updateMovement,
     deleteMovement,

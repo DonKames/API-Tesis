@@ -93,10 +93,13 @@ const getBranchById = handleErrors(async (req, res) => {
             address: response.rows[0].address,
             id: response.rows[0].branch_id,
             municipalityId: response.rows[0].fk_municipality_id,
+            municipalityName: response.rows[0].municipality_name,
             name: response.rows[0].name,
             regionId: response.rows[0].region_id,
             countryId: response.rows[0].country_id,
         };
+
+        console.log(formattedResponse);
         sendSuccess(res, 'Sucursal encontrada exitosamente', formattedResponse);
     } else {
         sendError(res, 'Sucursal no encontrada', 404);

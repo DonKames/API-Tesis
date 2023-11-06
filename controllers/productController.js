@@ -173,22 +173,26 @@ const getProductBySku = handleErrors(async (req, res) => {
 });
 
 const createProduct = handleErrors(async (req, res) => {
-    const { skuId, warehouseId, epc } = req.body;
+    const { skuId, warehouseId, epc, userId } = req.body;
 
     try {
-        const response = await productService.createProduct({
-            skuId,
-            warehouseId,
-            epc,
-        });
+        const response = await productService.createProduct(
+            {
+                skuId,
+                warehouseId,
+                epc,
+            },
+            userId,
+        );
 
-        console.log(response);
+        console.log('controller', response);
 
         if (response) {
-            console.log(response);
+            // console.log(response);
             sendSuccess(res, 'Producto creado exitosamente', response);
         }
     } catch (error) {
+        console.log('productError');
         sendError(res, 'No se pudo crear el producto', 500);
     }
 });

@@ -13,30 +13,69 @@ const getMovementById = async (id) => {
     return response.rows[0];
 };
 
-const createMovement = async (movementData) => {
-    const {
-        fk_product_id,
-        fk_user_id,
-        movement_timestamp,
-        fk_origin_warehouse_id,
-        fk_destination_warehouse_id,
-        fk_task_id,
-        fk_movement_type_id,
-    } = movementData;
+// * Original
+// const createMovement = async (client, movementData) => {
+//     const { productId, userId, warehouseId, taskId, movementTypeId } =
+//         movementData;
 
-    const response = await db.query(
-        'INSERT INTO "public".movements (fk_product_id, fk_user_id, movement_timestamp, fk_origin_warehouse_id, fk_destination_warehouse_id, fk_task_id, fk_movement_type_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-        [
-            fk_product_id,
-            fk_user_id,
-            movement_timestamp,
-            fk_origin_warehouse_id,
-            fk_destination_warehouse_id,
-            fk_task_id,
-            fk_movement_type_id,
-        ],
-    );
-    return response.rows[0];
+//     const response = await client.query(
+//         'INSERT INTO "public".movements (fk_product_id, fk_user_id, fk_warehouse_id, fk_task_id, fk_movement_type_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+//         [productId, userId, warehouseId, taskId, movementTypeId],
+//     );
+//     return response.rows[0];
+// };
+
+const getLastAddedProducts = async (limit = 5) => {
+    try {
+        // Asegúrate de que 'limit' sea un número y establece un valor por defecto si es necesario
+        const queryLimit = Number.isInteger(limit) ? limit : 5;
+        const response = await db.query(
+            'SELECT * FROM "public".movements ORDER BY movement_timestamp DESC LIMIT $1',
+            [queryLimit],
+        );
+        return response.rows;
+    } catch (error) {
+        console.error(
+            'Error al obtener los últimos productos agregados:',
+            error,
+        );
+        throw error; // Es importante propagar el error para que el controlador pueda manejarlo
+    }
+};
+
+const createMovement = async (client, movementData) => {
+    // Inicializa las partes de la consulta y los valores
+    let queryFields = [];
+    let queryValues = [];
+    let valuePlaceholders = [];
+    let counter = 1;
+
+    try {
+        // Recorre las claves del objeto movementData
+        for (const [key, value] of Object.entries(movementData)) {
+            if (value !== undefined) {
+                // Asegúrate de que el valor no sea undefined
+                queryFields.push(`fk_${key}_id`); // Asume que todos los campos en la base de datos comienzan con 'fk_' y terminan con '_id'
+                queryValues.push(value);
+                valuePlaceholders.push(`$${counter}`);
+                counter++;
+            }
+        }
+
+        // Construye la consulta SQL
+        const queryText = `INSERT INTO "public".movements (${queryFields.join(
+            ', ',
+        )}) VALUES (${valuePlaceholders.join(', ')}) RETURNING *`;
+
+        // console.log(queryText);
+        // Ejecuta la consulta con los valores
+        const response = await client.query(queryText, queryValues);
+
+        // console.log(response);
+        return response.rows[0];
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 const updateMovement = async (id, movementData) => {
@@ -75,6 +114,7 @@ const deleteMovement = async (id) => {
 module.exports = {
     getMovements,
     getMovementById,
+    getLastAddedProducts,
     createMovement,
     updateMovement,
     deleteMovement,
