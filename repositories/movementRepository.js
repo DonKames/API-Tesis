@@ -30,11 +30,17 @@ const getLastAddedProducts = async (limit = 5) => {
         // Asegúrate de que 'limit' sea un número y establece un valor por defecto si es necesario
         const queryLimit = Number.isInteger(limit) ? limit : 5;
         const response = await db.query(
-            'SELECT * FROM "public".movements ORDER BY movement_timestamp DESC LIMIT $1',
+            `SELECT mov.*, prod.product_id, sku.name AS product_name,
+             usr.first_name AS user_first_name, usr.last_name AS user_last_name
+             FROM "public".movements mov
+             JOIN "public".products prod ON mov.fk_product_id = prod.product_id
+             JOIN "public".skus sku ON prod.fk_sku_id = sku.sku_id
+             LEFT JOIN "public".users usr ON mov.fk_user_id = usr.user_id
+             ORDER BY mov.movement_timestamp DESC LIMIT $1`,
             [queryLimit],
         );
 
-        console.log('repository', response);
+        // console.log('repository', response);
 
         return response.rows;
     } catch (error) {
