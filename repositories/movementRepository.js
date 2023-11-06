@@ -33,6 +33,9 @@ const getLastAddedProducts = async (limit = 5) => {
             'SELECT * FROM "public".movements ORDER BY movement_timestamp DESC LIMIT $1',
             [queryLimit],
         );
+
+        console.log('repository', response);
+
         return response.rows;
     } catch (error) {
         console.error(

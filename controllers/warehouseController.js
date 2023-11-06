@@ -51,21 +51,21 @@ const getWarehousesQty = handleErrors(async (req, res) => {
 
     let qty;
 
-    console.log('getWarehousesQty query', req.query);
+    // console.log('getWarehousesQty query', req.query);
 
-    console.log('getWarehousesQty params', req.params);
+    // console.log('getWarehousesQty params', req.params);
 
-    console.log('getWarehousesQty params', req.params);
+    // console.log('getWarehousesQty params', req.params);
 
     try {
         if (branchId) {
             qty = await warehouseService.getWarehousesQtyByBranchId(branchId);
-            console.log(qty);
+            // console.log(qty);
         } else {
             qty = await warehouseService.getWarehousesQty(showInactive);
         }
 
-        console.log('qty: ', qty);
+        // console.log('qty: ', qty);
 
         qty
             ? sendSuccess(res, 'Warehouses qty recovered correctly', qty)

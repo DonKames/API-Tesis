@@ -25,17 +25,21 @@ const getMovementById = async (req, res) => {
 };
 
 const getLastAddedProducts = async (req, res) => {
+    console.log('query:', req.query.limit);
     try {
-        // Aquí puedes definir un valor por defecto o permitir que se establezca a través de una query string
         const limit = req.query.limit || 10; // Por ejemplo, por defecto 10
         const lastAddedProducts =
             await movementService.getLastAddedProducts(limit);
+
+        console.log('lastAddedProducts', lastAddedProducts);
+
         sendSuccess(
             res,
             'Últimos productos agregados recuperados con éxito',
             lastAddedProducts,
         );
     } catch (err) {
+        console.log('controllerError');
         sendError(res, 'Error del servidor interno', 500);
     }
 };

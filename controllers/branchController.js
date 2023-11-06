@@ -86,7 +86,7 @@ const getBranchesNames = handleErrors(async (req, res) => {
 const getBranchById = handleErrors(async (req, res) => {
     const { id } = req.params;
     const response = await branchService.getBranchById(id);
-    console.log(response.rows[0]);
+    // console.log(response.rows[0]);
 
     if (response) {
         const formattedResponse = {
@@ -99,7 +99,7 @@ const getBranchById = handleErrors(async (req, res) => {
             countryId: response.rows[0].country_id,
         };
 
-        console.log(formattedResponse);
+        // console.log(formattedResponse);
         sendSuccess(res, 'Sucursal encontrada exitosamente', formattedResponse);
     } else {
         sendError(res, 'Sucursal no encontrada', 404);
@@ -125,15 +125,15 @@ const updateBranch = handleErrors(async (req, res) => {
     const { id } = req.params;
     const { branchName, address, municipality } = req.body;
 
-    console.log('branchController', req.body, req.params);
+    // console.log('branchController', req.body, req.params);
 
-    console.log('branchController', branchName, address, municipality);
+    // console.log('branchController', branchName, address, municipality);
     const response = await branchService.updateBranch(id, {
         branchName,
         address,
         municipality,
     });
-    console.log('branchController response: ', response);
+    // console.log('branchController response: ', response);
 
     if (response) {
         const formattedResponse = {

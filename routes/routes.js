@@ -56,10 +56,10 @@ router.delete('/countries/:id', countriesController.deleteCountry);
 // Movements
 router.get('/movements', movementsController.getMovements);
 router.get('/movements/:id', movementsController.getMovementById);
+router.get('/movements/last-added', movementsController.getLastAddedProducts);
 router.post('/movements', movementsController.createMovement);
 router.put('/movements/:id', movementsController.updateMovement);
 router.delete('/movements/:id', movementsController.deleteMovement);
-router.get('/movements/last-added', movementsController.getLastAddedProducts);
 
 // Municipalities
 router.get('/municipalities', municipalityController.getMunicipalities);
