@@ -25,7 +25,7 @@ const getMovementById = async (req, res) => {
 };
 
 const getLastAddedProducts = async (req, res) => {
-    console.log('lastAddedProducts');
+    // console.log('lastAddedProducts');
 
     try {
         const limit = req.query.limit || 10;
@@ -35,10 +35,13 @@ const getLastAddedProducts = async (req, res) => {
         console.log('lastAddedProducts', lastAddedProducts[0]);
 
         const formattedResponse = lastAddedProducts.map((m) => ({
+            ...m,
             id: m.movement_id,
             productId: m.fk_product_id,
             productName: m.product_name,
             userId: m.fk_user_id,
+            userFirstName: m.user_first_name,
+            userLastName: m.user_last_name,
             timestamp: m.movement_timestamp,
             warehouseId: m?.fk_warehouse_id,
             taskId: m?.fk_task_id,
