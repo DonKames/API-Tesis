@@ -76,6 +76,23 @@ const getSkusNames = async () => {
     return await db.query('SELECT sku_id, sku FROM "public".skus');
 };
 
+const getSkusWithLowInventory = async () => {
+    const query = `
+        SELECT s.sku_id, s.sku, s.minimum_stock, s.name, s.description, COUNT(p.product_id) AS product_count
+        FROM skus s
+        LEFT JOIN products p ON s.sku_id = p.fk_sku_id
+        GROUP BY s.sku_id
+        HAVING COUNT(p.product_id) < s.minimum_stock;
+    `;
+
+    try {
+        return await db.query(query);
+    } catch (error) {
+        console.error('Error al obtener SKUs con inventario bajo:', error);
+        throw error;
+    }
+};
+
 const createSku = async ({
     name,
     description,
@@ -116,6 +133,7 @@ module.exports = {
     getSkuById,
     getSkuBySku,
     getSkusNames,
+    getSkusWithLowInventory,
     createSku,
     updateSku,
     changeActiveStateSku,

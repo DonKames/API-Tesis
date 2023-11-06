@@ -27,8 +27,12 @@ const getMovementById = async (id) => {
 
 const getLastAddedProducts = async (limit = 5) => {
     try {
+        console.log('limit', limit);
+
         // Asegúrate de que 'limit' sea un número y establece un valor por defecto si es necesario
-        const queryLimit = Number.isInteger(limit) ? limit : 5;
+        const numberLimit = parseInt(limit);
+        const queryLimit = Number.isInteger(numberLimit) ? numberLimit : 5;
+        console.log('queryLimit', queryLimit);
 
         const response = await db.query(
             `SELECT mov.*, prod.*, sku.*, 
@@ -40,6 +44,8 @@ const getLastAddedProducts = async (limit = 5) => {
              ORDER BY mov.movement_timestamp DESC LIMIT $1`,
             [queryLimit],
         );
+
+        console.log(response.rows);
 
         // const response = await db.query(
         //     `SELECT mov.*, prod.product_id, sku.name AS product_name,

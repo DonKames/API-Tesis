@@ -29,6 +29,11 @@ const getSkusNames = async () => {
     return await skuRepository.getSkusNames();
 };
 
+const getSkusWithLowInventory = async () => {
+    const response = await skuRepository.getSkusWithLowInventory();
+    return response.rows;
+};
+
 const createSku = async ({
     name,
     description,
@@ -75,6 +80,7 @@ module.exports = {
     getSkuById,
     getSkuBySku,
     getSkusNames,
+    getSkusWithLowInventory,
     createSku,
     updateSku,
     changeActiveStateSku,

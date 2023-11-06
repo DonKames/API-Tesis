@@ -95,6 +95,10 @@ router.put('/roles/:id', rolesController.updateRole);
 router.delete('/roles/:id', rolesController.deleteRole);
 
 // Skus
+router.get(
+    '/skus/getSkusWithLowInventory',
+    skusController.getSkusWithLowInventory,
+);
 router.get('/skus/qty', skusController.getSkusQty);
 router.get('/skus', skusController.getSkus);
 router.get('/skus/names', skusController.getSkusNames);

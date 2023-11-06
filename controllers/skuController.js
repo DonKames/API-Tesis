@@ -100,6 +100,22 @@ const getSkusNames = handleErrors(async (req, res) => {
     res.status(200).json(formattedResponse);
 });
 
+const getSkusWithLowInventory = handleErrors(async (req, res) => {
+    try {
+        const response = await skuService.getSkusWithLowInventory();
+
+        console.log(response);
+
+        if (response) {
+            sendSuccess(res, 'Recuperado', response);
+        } else {
+            sendError(res, 'No se encontraron resultados', 404);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 const createSku = handleErrors(async (req, res) => {
     const { name, description, minimumStock, sku, lote, order } = req.body;
 
@@ -191,6 +207,7 @@ module.exports = {
     getSkuById,
     getSkuBySku,
     getSkusNames,
+    getSkusWithLowInventory,
     createSku,
     updateSku,
     changeActiveStateSku,
