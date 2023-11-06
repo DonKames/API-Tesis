@@ -32,7 +32,7 @@ const getSkusNames = async () => {
 const createSku = async ({
     name,
     description,
-    minimumAmount,
+    minimumStock,
     sku,
     lote,
     order,
@@ -40,7 +40,7 @@ const createSku = async ({
     const response = await skuRepository.createSku({
         name,
         description,
-        minimumAmount,
+        minimumStock,
         sku,
         lote,
         order,

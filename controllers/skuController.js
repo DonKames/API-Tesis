@@ -97,13 +97,13 @@ const getSkusNames = handleErrors(async (req, res) => {
 });
 
 const createSku = handleErrors(async (req, res) => {
-    const { name, description, minimumAmount, sku, lote, order } = req.body;
+    const { name, description, minimumStock, sku, lote, order } = req.body;
 
     try {
         const response = await skuService.createSku({
             name,
             description,
-            minimumAmount,
+            minimumStock,
             sku,
             lote,
             order,

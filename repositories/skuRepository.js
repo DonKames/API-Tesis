@@ -73,14 +73,14 @@ const getSkusNames = async () => {
 const createSku = async ({
     name,
     description,
-    minimumAmount,
+    minimumStock,
     sku,
     lote,
     order,
 }) => {
     return await db.query(
         'INSERT INTO "public".skus (name, minimum_stock, description, sku, lote, product_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [name, minimumAmount, description, sku, lote, order],
+        [name, minimumStock, description, sku, lote, order],
     );
 };
 
