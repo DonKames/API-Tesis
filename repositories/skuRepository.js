@@ -93,6 +93,37 @@ const getSkusWithLowInventory = async () => {
     }
 };
 
+const getProductsCountInWarehouses = async (skuIds) => {
+    const query = `
+        SELECT 
+            w.warehouse_id,
+            w.name AS warehouse_name,
+            s.sku_id,
+            COUNT(p.product_id) AS product_count
+        FROM 
+            warehouses w
+        JOIN 
+            products p ON w.warehouse_id = p.fk_warehouse_id
+        JOIN 
+            skus s ON p.fk_sku_id = s.sku_id
+        WHERE 
+            s.sku_id = ANY($1)
+        GROUP BY 
+            w.warehouse_id, s.sku_id;
+    `;
+
+    try {
+        const res = await db.query(query, [skuIds]);
+        return res;
+    } catch (error) {
+        console.error(
+            'Error al obtener la cantidad de productos en bodegas:',
+            error,
+        );
+        throw error;
+    }
+};
+
 const createSku = async ({
     name,
     description,
@@ -134,6 +165,7 @@ module.exports = {
     getSkuBySku,
     getSkusNames,
     getSkusWithLowInventory,
+    getProductsCountInWarehouses,
     createSku,
     updateSku,
     changeActiveStateSku,

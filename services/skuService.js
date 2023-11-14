@@ -31,6 +31,12 @@ const getSkusNames = async () => {
 
 const getSkusWithLowInventory = async () => {
     const response = await skuRepository.getSkusWithLowInventory();
+    console.log('service lowInventory', response);
+    return response.rows;
+};
+
+const getProductsCountInWarehouses = async (skuIds) => {
+    const response = await skuRepository.getProductsCountInWarehouses(skuIds);
     return response.rows;
 };
 
@@ -81,6 +87,7 @@ module.exports = {
     getSkuBySku,
     getSkusNames,
     getSkusWithLowInventory,
+    getProductsCountInWarehouses,
     createSku,
     updateSku,
     changeActiveStateSku,

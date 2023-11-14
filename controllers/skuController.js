@@ -107,13 +107,42 @@ const getSkusWithLowInventory = handleErrors(async (req, res) => {
         console.log(response);
 
         if (response) {
-            sendSuccess(res, 'Recuperado', response);
+            const formattedResponse = response.map((row) => ({
+                id: row.sku_id,
+                name: row.name,
+                sku: row.sku,
+                description: row.description,
+                minimumStock: row.minimum_stock,
+                lote: row.lote,
+                order: row.product_order,
+                quantity: row.product_count,
+            }));
+            sendSuccess(res, 'Recuperado', formattedResponse);
         } else {
             sendError(res, 'No se encontraron resultados', 404);
         }
     } catch (error) {
         console.log(error);
     }
+});
+
+const getProductsCountInWarehouses = handleErrors(async (req, res) => {
+    // Extraemos los skuIds del cuerpo de la solicitud
+    const { skuIds } = req.body;
+
+    // Verificamos si skuIds es proporcionado y es un array
+    if (!Array.isArray(skuIds)) {
+        sendError(res, 'skuIds debe ser un array', 400);
+        // return res.status(400).json({ message: 'skuIds debe ser un array.' });
+    }
+
+    // Llamamos al servicio con los skuIds
+    const response = await skuService.getProductsCountInWarehouses(skuIds);
+
+    console.log(response);
+
+    // Enviamos la respuesta
+    sendSuccess(res, 'Recuperado', response);
 });
 
 const createSku = handleErrors(async (req, res) => {
@@ -208,6 +237,7 @@ module.exports = {
     getSkuBySku,
     getSkusNames,
     getSkusWithLowInventory,
+    getProductsCountInWarehouses,
     createSku,
     updateSku,
     changeActiveStateSku,

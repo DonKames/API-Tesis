@@ -99,6 +99,10 @@ router.get(
     '/skus/skusWithLowInventory',
     skusController.getSkusWithLowInventory,
 );
+router.post(
+    '/skus/getProductsCountInWarehouses',
+    skusController.getProductsCountInWarehouses,
+);
 router.get('/skus/qty', skusController.getSkusQty);
 router.get('/skus', skusController.getSkus);
 router.get('/skus/names', skusController.getSkusNames);
