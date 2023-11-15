@@ -82,7 +82,7 @@ const getSkusWithLowInventory = async () => {
         FROM skus s
         LEFT JOIN products p ON s.sku_id = p.fk_sku_id
         GROUP BY s.sku_id
-        HAVING COUNT(p.product_id) < s.minimum_stock;
+        HAVING COUNT(p.product_id) <= (s.minimum_stock * 1.20);
     `;
 
     try {
