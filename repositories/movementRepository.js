@@ -25,13 +25,13 @@ const getMovementById = async (id) => {
 //     return response.rows[0];
 // };
 
-const getLastAddedProducts = async (limit = 5) => {
+const getLastAddedProducts = async (limit) => {
     try {
         console.log('limit', limit);
 
         // Asegúrate de que 'limit' sea un número y establece un valor por defecto si es necesario
         const numberLimit = parseInt(limit);
-        const queryLimit = Number.isInteger(numberLimit) ? numberLimit : 5;
+        const queryLimit = Number.isInteger(numberLimit);
         console.log('queryLimit', queryLimit);
 
         const response = await db.query(
@@ -46,19 +46,6 @@ const getLastAddedProducts = async (limit = 5) => {
         );
 
         console.log(response.rows);
-
-        // const response = await db.query(
-        //     `SELECT mov.*, prod.product_id, sku.name AS product_name,
-        //      usr.first_name AS user_first_name, usr.last_name AS user_last_name
-        //      FROM "public".movements mov
-        //      JOIN "public".products prod ON mov.fk_product_id = prod.product_id
-        //      JOIN "public".skus sku ON prod.fk_sku_id = sku.sku_id
-        //      LEFT JOIN "public".users usr ON mov.fk_user_id = usr.user_id
-        //      ORDER BY mov.movement_timestamp DESC LIMIT $1`,
-        //     [queryLimit],
-        // );
-
-        // console.log('repository', response);
 
         return response.rows;
     } catch (error) {

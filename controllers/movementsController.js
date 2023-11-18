@@ -28,11 +28,11 @@ const getLastAddedProducts = async (req, res) => {
     // console.log('lastAddedProducts');
 
     try {
-        const limit = req.query.limit || 10;
+        const limit = req.query.limit;
         const lastAddedProducts =
             await movementService.getLastAddedProducts(limit);
 
-        console.log('lastAddedProducts', lastAddedProducts[0]);
+        // console.log('lastAddedProducts', lastAddedProducts[0]);
 
         const formattedResponse = lastAddedProducts.map((m) => ({
             ...m,
