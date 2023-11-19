@@ -44,12 +44,13 @@ const getLastAddedProducts = async (limit, startDate, endDate) => {
         JOIN "public".skus sku ON prod.fk_sku_id = sku.sku_id
         LEFT JOIN "public".users usr ON mov.fk_user_id = usr.user_id
         JOIN "public".warehouses w ON prod.fk_warehouse_id = w.warehouse_id
-        `;
+        WHERE mov.fk_movement_type_id = 1
+    `;
 
     const queryParams = [];
 
     if (startDate && endDate) {
-        query += ` WHERE mov.movement_timestamp BETWEEN $1 AND $2`;
+        query += ` AND mov.movement_timestamp BETWEEN $1 AND $2`;
         queryParams.push(startDate, endDate);
     }
 
@@ -62,6 +63,7 @@ const getLastAddedProducts = async (limit, startDate, endDate) => {
             queryParams.push(numberLimit);
         }
     }
+
     try {
         // Agrega la cláusula LIMIT si queryLimit está definido
         // if (queryLimit) {
