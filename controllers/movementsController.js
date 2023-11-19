@@ -29,23 +29,39 @@ const getLastAddedProducts = async (req, res) => {
 
     try {
         const limit = req.query.limit;
-        const lastAddedProducts =
-            await movementService.getLastAddedProducts(limit);
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
+
+        const lastAddedProducts = await movementService.getLastAddedProducts(
+            limit,
+            startDate,
+            endDate,
+        );
 
         // console.log('lastAddedProducts', lastAddedProducts[0]);
 
         const formattedResponse = lastAddedProducts.map((m) => ({
-            ...m,
+            // ...m,
+            active: m.active,
+            description: m.description,
+            epc: m.epc,
             id: m.movement_id,
+            minimumStock: m.minimum_stock,
+            movementId: m.movement_id,
+            // movementTimestamp: m.movement_timestamp,
+            movementTypeId: m.fk_movement_type_id,
+            name: m.name,
             productId: m.fk_product_id,
             productName: m.product_name,
-            userId: m.fk_user_id,
-            userFirstName: m.user_first_name,
-            userLastName: m.user_last_name,
-            timestamp: m.movement_timestamp,
-            warehouseId: m?.fk_warehouse_id,
+            sku: m.sku,
+            skuId: m.fk_sku_id,
             taskId: m?.fk_task_id,
-            movementTypeId: m.fk_movement_type_id,
+            timestamp: m.movement_timestamp,
+            userFirstName: m.user_first_name,
+            userId: m.fk_user_id,
+            userLastName: m.user_last_name,
+            warehouseId: m?.fk_warehouse_id,
+            warehouseName: m.warehouse_name,
         }));
 
         sendSuccess(

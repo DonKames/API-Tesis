@@ -8,8 +8,12 @@ const getMovementById = async (id) => {
     return await movementRepository.getMovementById(id);
 };
 
-const getLastAddedProducts = async (limit) => {
-    return await movementRepository.getLastAddedProducts(limit);
+const getLastAddedProducts = async (limit, startDate, endDate) => {
+    return await movementRepository.getLastAddedProducts(
+        limit,
+        startDate,
+        endDate,
+    );
 };
 
 const createMovement = async (movementData) => {
