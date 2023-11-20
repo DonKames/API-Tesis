@@ -73,7 +73,7 @@ const getLastAddedProducts = async (limit, startDate, endDate) => {
         // Ejecuta el query
         const response = await db.query(query, queryParams);
 
-        console.log(response.rows);
+        // console.log(response.rows);
 
         return response.rows;
     } catch (error) {
