@@ -32,6 +32,8 @@ const getLastAddedProducts = async (req, res) => {
         const startDate = req.query.startDate;
         const endDate = req.query.endDate;
 
+        console.log(limit, startDate, endDate);
+
         const lastAddedProducts = await movementService.getLastAddedProducts(
             limit,
             startDate,

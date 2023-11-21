@@ -125,12 +125,11 @@ const getProductsByWarehouse = async (warehouseId) => {
 // };
 
 const createProduct = async (client, { skuId, warehouseId, epc }) => {
-    console.log(skuId, warehouseId, epc);
+    console.log('product repo', skuId, warehouseId, epc);
     const response = await client.query(
         'INSERT INTO "public".products (epc, fk_warehouse_id, fk_sku_id, active) VALUES ($1, $2, $3, TRUE) RETURNING *',
         [epc, warehouseId, skuId],
     );
-    // console.log('response ', response);
     return response.rows[0];
 };
 const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {

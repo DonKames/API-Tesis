@@ -43,7 +43,9 @@ const getProductByEPC = async (epc) => {
 };
 
 const createProduct = async ({ skuId, warehouseId, epc }, userId) => {
+    console.log('service creando producto');
     return db.transaction(async (client) => {
+        console.log('creando producto');
         // Creando el producto
         const product = await productRepository.createProduct(
             client,

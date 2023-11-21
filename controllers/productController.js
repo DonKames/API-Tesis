@@ -192,7 +192,7 @@ const createProduct = handleErrors(async (req, res) => {
             sendSuccess(res, 'Producto creado exitosamente', response);
         }
     } catch (error) {
-        console.log('productError');
+        console.log('productError', error);
         sendError(res, 'No se pudo crear el producto', 500);
     }
 });

@@ -50,7 +50,7 @@ const getLastAddedProducts = async (limit, startDate, endDate) => {
     const queryParams = [];
 
     if (startDate && endDate) {
-        query += ` AND mov.movement_timestamp BETWEEN $1 AND $2`;
+        query += ` AND mov.movement_timestamp BETWEEN $1 AND $2::date + interval '1 day' - interval '1 second'`;
         queryParams.push(startDate, endDate);
     }
 
@@ -86,10 +86,11 @@ const getLastAddedProducts = async (limit, startDate, endDate) => {
 };
 
 const createMovement = async (client, movementData) => {
+    console.log('createMovement', movementData);
     // Inicializa las partes de la consulta y los valores
-    let queryFields = [];
-    let queryValues = [];
-    let valuePlaceholders = [];
+    const queryFields = [];
+    const queryValues = [];
+    const valuePlaceholders = [];
     let counter = 1;
 
     try {
