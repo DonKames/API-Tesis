@@ -1,8 +1,20 @@
 const db = require('../config/db');
 
-const getMovements = async () => {
-    const response = await db.query('SELECT * FROM "public".movements');
-    return response.rows;
+const getMovements = async (limit, offset, showInactive) => {
+    const query = `SELECT * FROM "public".movements ORDER BY movement_timestamp ASC LIMIT $1 OFFSET $2`;
+
+    const params = [limit, offset];
+
+    // console.log('query', query);
+
+    const response = await db.query(query, params);
+
+    // console.log('movRepo: ', response);
+    return response;
+};
+
+const getMovementsQty = async () => {
+    return await db.query('SELECT COUNT(*) FROM "public".movements');
 };
 
 const getMovementById = async (id) => {
@@ -156,6 +168,7 @@ const deleteMovement = async (id) => {
 
 module.exports = {
     getMovements,
+    getMovementsQty,
     getMovementById,
     getLastAddedProducts,
     createMovement,

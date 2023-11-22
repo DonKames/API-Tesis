@@ -1,7 +1,21 @@
 const movementRepository = require('../repositories/movementRepository');
 
-const getMovements = async () => {
-    return await movementRepository.getMovements();
+const getMovements = async (limit, offset, showInactive) => {
+    const response = await movementRepository.getMovements(
+        limit,
+        offset,
+        showInactive,
+    );
+
+    // console.log('mov Serv: ', response);
+
+    return response.rows;
+};
+
+const getMovementsQty = async () => {
+    const response = await movementRepository.getMovementsQty();
+
+    return parseInt(response.rows[0].count);
 };
 
 const getMovementById = async (id) => {
@@ -30,6 +44,7 @@ const deleteMovement = async (id) => {
 
 module.exports = {
     getMovements,
+    getMovementsQty,
     getMovementById,
     getLastAddedProducts,
     createMovement,

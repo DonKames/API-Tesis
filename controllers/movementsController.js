@@ -1,13 +1,52 @@
 const movementService = require('../services/movementService');
 const { sendSuccess, sendError } = require('../middlewares/responseHandler');
+const handleErrors = require('../middlewares/errorHandler');
 
-const getMovements = async (req, res) => {
-    try {
-        const movements = await movementService.getMovements();
-        sendSuccess(res, 'Movements retrieved successfully', movements);
-    } catch (err) {
+const getMovements = handleErrors(async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const showInactive = req.query.showInactive === 'true' || false;
+
+    const offset = (page - 1) * limit;
+
+    const response = await movementService.getMovements(
+        limit,
+        offset,
+        showInactive,
+    );
+
+    console.log('movements:', response);
+
+    if (response) {
+        const formattedResponse = response.map((row) => ({
+            id: row.movement_id,
+            productId: row.fk_product_id,
+            userId: row.fk_user_id,
+            timestamp: row.movement_timestamp,
+            warehouseId: row.fk_warehouse_id,
+            taskId: row.fk_task_id,
+            movementTypeId: row.fk_movement_type_id,
+        }));
+        sendSuccess(res, 'Movements retrieved successfully', formattedResponse);
+    } else {
         sendError(res, 'Internal server error', 500);
     }
+});
+
+const getMovementsQty = async (req, res) => {
+    const movementId = req.query.movementId;
+
+    let qty;
+
+    if (movementId) {
+        qty = await movementService.getMovementsQtyByMovementId(movementId);
+    } else {
+        qty = await movementService.getMovementsQty();
+    }
+
+    qty
+        ? sendSuccess(res, `Cantidad de movimientos: ${qty}`, qty)
+        : sendError(res, 'No se encontró la cantidad', 404);
 };
 
 const getMovementById = async (req, res) => {
@@ -115,6 +154,7 @@ const deleteMovement = async (req, res) => {
 
 module.exports = {
     getMovements,
+    getMovementsQty,
     getMovementById,
     getLastAddedProducts,
     createMovement,

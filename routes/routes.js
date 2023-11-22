@@ -55,6 +55,7 @@ router.delete('/countries/:id', countriesController.deleteCountry);
 
 // Movements
 router.get('/movements/last-added', movementsController.getLastAddedProducts);
+router.get('/movements/qty', movementsController.getMovementsQty);
 router.get('/movements', movementsController.getMovements);
 router.get('/movements/:id', movementsController.getMovementById);
 router.post('/movements', movementsController.createMovement);
