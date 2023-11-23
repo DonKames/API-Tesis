@@ -1,16 +1,89 @@
 const db = require('../config/db');
 
-const getMovements = async (limit, offset, showInactive) => {
-    const query = `SELECT * FROM "public".movements ORDER BY movement_timestamp ASC LIMIT $1 OFFSET $2`;
+const getMovements = async (limit, offset, showInactive, searchTerm) => {
+    let query = `
+        SELECT 
+            m.*, 
+            u.first_name AS user_first_name, 
+            u.last_name AS user_last_name, 
+            t.description AS task_description, 
+            mt.name AS movement_type_name, 
+            p.epc AS product_epc,
+            p.fk_sku_id AS sku_id,
+            w.name AS warehouse_name,
+            w.fk_branch_id AS branch_id,
+            b.name AS branch_name,
+            sk.name AS sku_name
+        FROM 
+            "public".movements m
+        LEFT JOIN "public".users u ON m.fk_user_id = u.user_id
+        LEFT JOIN "public".tasks t ON m.fk_task_id = t.task_id
+        LEFT JOIN "public".movement_types mt ON m.fk_movement_type_id = mt.movement_type_id
+        LEFT JOIN "public".products p ON m.fk_product_id = p.product_id
+        LEFT JOIN "public".warehouses w ON m.fk_warehouse_id = w.warehouse_id
+        LEFT JOIN "public".branches b ON w.fk_branch_id = b.branch_id
+        LEFT JOIN "public".skus sk ON p.fk_sku_id = sk.sku_id
+    `;
+
+    let countQuery = `
+        SELECT COUNT(*) FROM "public".movements m
+        LEFT JOIN "public".users u ON m.fk_user_id = u.user_id
+        LEFT JOIN "public".tasks t ON m.fk_task_id = t.task_id
+        LEFT JOIN "public".movement_types mt ON m.fk_movement_type_id = mt.movement_type_id
+        LEFT JOIN "public".products p ON m.fk_product_id = p.product_id
+        LEFT JOIN "public".warehouses w ON m.fk_warehouse_id = w.warehouse_id
+        LEFT JOIN "public".branches b ON w.fk_branch_id = b.branch_id
+        LEFT JOIN "public".skus sk ON p.fk_sku_id = sk.sku_id
+    `;
 
     const params = [limit, offset];
+    const countParams = [];
+
+    if (searchTerm) {
+        const whereClause = `
+            WHERE 
+                LOWER(sk.name) LIKE LOWER($3) OR
+                LOWER(u.first_name || ' ' || u.last_name) LIKE LOWER($3) OR
+                LOWER(w.name) LIKE LOWER($3) OR
+                LOWER(mt.name) LIKE LOWER($3) OR
+                TO_CHAR(m.movement_timestamp, 'YYYY-MM-DD HH24:MI:SS') LIKE LOWER($3)
+        `;
+
+        const countWhereClause = `
+            WHERE 
+                LOWER(sk.name) LIKE LOWER($1) OR
+                LOWER(u.first_name || ' ' || u.last_name) LIKE LOWER($1) OR
+                LOWER(w.name) LIKE LOWER($1) OR
+                LOWER(mt.name) LIKE LOWER($1) OR
+                TO_CHAR(m.movement_timestamp, 'YYYY-MM-DD HH24:MI:SS') LIKE LOWER($1)
+        `;
+
+        query += whereClause;
+        countQuery += countWhereClause;
+
+        params.push(`%${searchTerm}%`);
+        countParams.push(`%${searchTerm}%`);
+    }
+
+    query += `
+        ORDER BY 
+            m.movement_timestamp DESC
+        LIMIT $1 OFFSET $2
+    `;
 
     // console.log('query', query);
 
+    console.log('params', params);
+    console.log('countParams', countParams);
+
     const response = await db.query(query, params);
+    const countResponse = await db.query(countQuery, countParams);
 
     // console.log('movRepo: ', response);
-    return response;
+    return {
+        movements: response.rows,
+        movementsQty: parseInt(countResponse.rows[0].count, 10),
+    };
 };
 
 const getMovementsQty = async () => {

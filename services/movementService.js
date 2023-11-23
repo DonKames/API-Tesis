@@ -1,15 +1,16 @@
 const movementRepository = require('../repositories/movementRepository');
 
-const getMovements = async (limit, offset, showInactive) => {
+const getMovements = async (limit, offset, showInactive, searchTerm) => {
     const response = await movementRepository.getMovements(
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
 
     // console.log('mov Serv: ', response);
 
-    return response.rows;
+    return response;
 };
 
 const getMovementsQty = async () => {

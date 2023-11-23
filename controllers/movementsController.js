@@ -6,6 +6,9 @@ const getMovements = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+    const searchTerm = req.query.searchTerm;
+
+    console.log(searchTerm);
 
     const offset = (page - 1) * limit;
 
@@ -13,12 +16,15 @@ const getMovements = handleErrors(async (req, res) => {
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
 
     console.log('movements:', response);
 
-    if (response) {
-        const formattedResponse = response.map((row) => ({
+    const { movements, movementsQty } = response;
+
+    if (movements) {
+        const formattedMovements = movements.map((row) => ({
             id: row.movement_id,
             productId: row.fk_product_id,
             userId: row.fk_user_id,
@@ -26,8 +32,20 @@ const getMovements = handleErrors(async (req, res) => {
             warehouseId: row.fk_warehouse_id,
             taskId: row.fk_task_id,
             movementTypeId: row.fk_movement_type_id,
+            userFirstName: row.user_first_name,
+            userLastName: row.user_last_name,
+            movementTypeName: row.movement_type_name,
+            productEPC: row.product_epc,
+            productName: row.product_name,
+            warehouseName: row.warehouse_name,
+            branchName: row.branch_name,
+            skuName: row.sku_name,
         }));
-        sendSuccess(res, 'Movements retrieved successfully', formattedResponse);
+
+        sendSuccess(res, 'Movements retrieved successfully', {
+            data: formattedMovements,
+            qty: movementsQty,
+        });
     } else {
         sendError(res, 'Internal server error', 500);
     }
