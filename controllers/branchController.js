@@ -6,6 +6,7 @@ const getBranches = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+    const searchTerm = req.query.searchTerm;
 
     const offset = (page - 1) * limit;
 
@@ -13,12 +14,15 @@ const getBranches = handleErrors(async (req, res) => {
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
+
+    const { data, qty } = response;
 
     // console.log(response);
 
-    if (response) {
-        const formattedResponse = response.map((row) => ({
+    if (data) {
+        const formattedData = data.map((row) => ({
             active: row.active,
             id: row.branch_id,
             name: row.name,
@@ -31,7 +35,10 @@ const getBranches = handleErrors(async (req, res) => {
             municipalityId: row.fk_municipality_id,
         }));
 
-        sendSuccess(res, 'Sucursales recuperadas con éxito', formattedResponse);
+        sendSuccess(res, 'Sucursales recuperadas con éxito', {
+            data: formattedData,
+            qty,
+        });
     } else {
         sendError(res, 'Sucursales no encontradas', 404);
     }
@@ -100,7 +107,9 @@ const getBranchById = handleErrors(async (req, res) => {
         };
 
         // console.log(formattedResponse);
-        sendSuccess(res, 'Sucursal encontrada exitosamente', formattedResponse);
+        sendSuccess(res, 'Sucursal encontrada exitosamente', {
+            data: formattedResponse,
+        });
     } else {
         sendError(res, 'Sucursal no encontrada', 404);
     }

@@ -6,6 +6,7 @@ const getProducts = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+    const searchTerm = req.query.searchTerm;
 
     const offset = (page - 1) * limit;
 
@@ -14,10 +15,13 @@ const getProducts = handleErrors(async (req, res) => {
             limit,
             offset,
             showInactive,
+            searchTerm,
         );
 
-        if (response) {
-            const formattedResponse = response.map((row) => ({
+        const { data, qty } = response;
+
+        if (data) {
+            const formattedResponse = data.map((row) => ({
                 id: row.product_id,
                 epc: row.epc,
                 warehouseName: row.warehouse_name,
@@ -29,11 +33,10 @@ const getProducts = handleErrors(async (req, res) => {
                 skuId: row.sku_id,
             }));
 
-            sendSuccess(
-                res,
-                'Productos recuperados correctamente',
-                formattedResponse,
-            );
+            sendSuccess(res, 'Productos recuperados correctamente', {
+                data: formattedResponse,
+                qty,
+            });
         } else {
             sendError(res, 'Productos no encontrados');
         }

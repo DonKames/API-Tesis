@@ -1,30 +1,61 @@
 const db = require('../config/db');
 
-const getBranches = async (limit, offset, showInactive) => {
-    let query = `
-        SELECT 
-            branches.branch_id, branches.name, branches.address, branches.active, 
-            municipalities.municipality_id AS fk_municipality_id, municipalities.name AS municipality_name,
-            regions.region_id, regions.name AS region_name, 
-            countries.country_id, countries.name AS country_name
+const getBranches = async (limit, offset, showInactive, searchTerm) => {
+    let baseQuery = `
         FROM branches
         LEFT JOIN municipalities ON branches.fk_municipality_id = municipalities.municipality_id
         LEFT JOIN regions ON municipalities.fk_region_id = regions.region_id
         LEFT JOIN countries ON regions.fk_country_id = countries.country_id
     `;
 
+    const whereConditions = [];
+    const params = [];
+
     if (!showInactive) {
-        query += ' WHERE branches.active = true';
+        whereConditions.push('branches.active = true');
     }
 
-    query += `
-        ORDER BY branches.active ASC, branches.branch_id ASC
-        LIMIT $1 OFFSET $2
+    if (searchTerm) {
+        const searchTermCondition = `
+            (branches.name ILIKE $${params.length + 1} OR 
+            countries.name ILIKE $${params.length + 1} OR 
+            regions.name ILIKE $${params.length + 1} OR 
+            municipalities.name ILIKE $${params.length + 1} OR 
+            branches.address ILIKE $${params.length + 1})
         `;
+        whereConditions.push(searchTermCondition);
+        params.push(`%${searchTerm}%`);
+    }
 
-    const params = [limit, offset];
+    if (whereConditions.length) {
+        baseQuery += ' WHERE ' + whereConditions.join(' AND ');
+    }
 
-    return await db.query(query, params);
+    // Query para obtener los datos
+    const dataQuery =
+        `
+        SELECT 
+            branches.branch_id, branches.name, branches.address, branches.active, 
+            municipalities.municipality_id AS fk_municipality_id, municipalities.name AS municipality_name,
+            regions.region_id, regions.name AS region_name, 
+            countries.country_id, countries.name AS country_name
+    ` +
+        baseQuery +
+        `
+        ORDER BY branches.active ASC, branches.branch_id ASC
+        LIMIT $${params.length + 1} OFFSET $${params.length + 2}
+    `;
+
+    // Query para contar el total de registros
+    const countQuery = `SELECT COUNT(*) ` + baseQuery;
+
+    params.push(limit, offset);
+
+    const data = await db.query(dataQuery, params);
+    const totalResult = await db.query(countQuery, params.slice(0, -2)); // Excluye limit y offset para el conteo
+    const qty = parseInt(totalResult.rows[0].count, 10);
+
+    return { data: data.rows, qty };
 };
 
 const getBranchesQty = async (showInactive) => {

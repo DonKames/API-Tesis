@@ -1,12 +1,13 @@
 const usersRepository = require('../repositories/userRepository');
 
-const getUsers = async (limit, offset, showInactive) => {
+const getUsers = async (limit, offset, showInactive, searchTerm) => {
     const response = await usersRepository.getUsers(
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
-    return response.rows;
+    return response;
 };
 
 const getUsersQty = async (showInactive) => {

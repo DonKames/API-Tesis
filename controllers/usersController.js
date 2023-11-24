@@ -6,14 +6,22 @@ const getUsers = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+    const searchTerm = req.query.searchTerm;
 
     const offset = (page - 1) * limit;
 
-    const response = await userService.getUsers(limit, offset, showInactive);
+    const response = await userService.getUsers(
+        limit,
+        offset,
+        showInactive,
+        searchTerm,
+    );
+
+    const { data, qty } = response;
 
     // console.log(response);
 
-    const formattedResponse = response.map((row) => ({
+    const formattedResponse = data.map((row) => ({
         id: row.user_id,
         name: row.first_name,
         lastName: row.last_name,
@@ -23,7 +31,10 @@ const getUsers = handleErrors(async (req, res) => {
         roleName: row.role_name,
     }));
 
-    sendSuccess(res, 'Users retrieved successfully', formattedResponse);
+    sendSuccess(res, 'Users retrieved successfully', {
+        data: formattedResponse,
+        qty,
+    });
 });
 
 const getUsersQty = handleErrors(async (req, res) => {

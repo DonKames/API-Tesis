@@ -1,30 +1,53 @@
 const db = require('../config/db');
 
-const getSkus = async (limit, offset, showInactive) => {
-    let query = `
-        SELECT Skus.*, COUNT(products.product_id) AS product_count
+const getSkus = async (limit, offset, showInactive, searchTerm) => {
+    let baseQuery = `
         FROM Skus
         LEFT JOIN products ON Skus.sku_id = products.fk_sku_id
     `;
 
+    const whereConditions = [];
+    const params = [];
+
     if (!showInactive) {
-        query += ' WHERE Skus.active = true';
+        whereConditions.push('Skus.active = true');
     }
 
-    query += `
+    if (searchTerm) {
+        const searchTermCondition = `
+            (Skus.name ILIKE $${params.length + 1} OR 
+            Skus.description ILIKE $${params.length + 1})
+        `;
+        whereConditions.push(searchTermCondition);
+        params.push(`%${searchTerm}%`);
+    }
+
+    if (whereConditions.length) {
+        baseQuery += ' WHERE ' + whereConditions.join(' AND ');
+    }
+
+    // Query para obtener los datos
+    const dataQuery =
+        `
+        SELECT Skus.*, COUNT(products.product_id) AS product_count
+    ` +
+        baseQuery +
+        `
         GROUP BY Skus.sku_id
         ORDER BY Skus.active ASC, Skus.sku_id ASC
-        LIMIT $1 OFFSET $2
-        `;
-    // query += `
-    //     GROUP BY Skus.sku_id
-    //     ORDER BY Skus.sku_id ASC
-    //     LIMIT $1 OFFSET $2
-    //     `;
+        LIMIT $${params.length + 1} OFFSET $${params.length + 2}
+    `;
 
-    const params = [limit, offset];
+    // Query para contar el total de registros
+    const countQuery = `SELECT COUNT(DISTINCT Skus.sku_id) ` + baseQuery;
 
-    return await db.query(query, params);
+    params.push(limit, offset);
+
+    const data = await db.query(dataQuery, params);
+    const totalResult = await db.query(countQuery, params.slice(0, -2)); // Excluye limit y offset para el conteo
+    const qty = parseInt(totalResult.rows[0].count, 10);
+
+    return { data: data.rows, qty };
 };
 
 const getSkusQty = async (showInactive) => {

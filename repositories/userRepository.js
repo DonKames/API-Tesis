@@ -1,22 +1,56 @@
 const db = require('../config/db');
 
-const getUsers = async (limit, offset, showInactive) => {
-    let query = `
-        SELECT
-            u.user_id, u.first_name, u.last_name, u.fk_role_id, u.email, u.active,
-            r.name AS role_name
+const getUsers = async (limit, offset, showInactive, searchTerm) => {
+    let baseQuery = `
         FROM users AS u
         LEFT JOIN roles AS r ON u.fk_role_id = r.role_id
     `;
 
+    const whereConditions = [];
+    const params = [];
+
     if (!showInactive) {
-        query += ' WHERE u.active = true';
+        whereConditions.push('u.active = true');
     }
 
-    query += ' ORDER BY u.active ASC, u.user_id ASC LIMIT $1 OFFSET $2';
+    if (searchTerm) {
+        const searchTermCondition = `
+            (u.first_name ILIKE $${params.length + 1} OR 
+            u.last_name ILIKE $${params.length + 1} OR 
+            u.email ILIKE $${params.length + 1} OR 
+            r.name ILIKE $${params.length + 1})
+        `;
+        whereConditions.push(searchTermCondition);
+        params.push(`%${searchTerm}%`);
+    }
 
-    const params = [limit, offset];
-    return await db.query(query, params);
+    if (whereConditions.length) {
+        baseQuery += ' WHERE ' + whereConditions.join(' AND ');
+    }
+
+    // Query para obtener los datos
+    const dataQuery =
+        `
+        SELECT
+            u.user_id, u.first_name, u.last_name, u.fk_role_id, u.email, u.active,
+            r.name AS role_name
+    ` +
+        baseQuery +
+        `
+        ORDER BY u.active ASC, u.user_id ASC
+        LIMIT $${params.length + 1} OFFSET $${params.length + 2}
+    `;
+
+    // Query para contar el total de registros
+    const countQuery = `SELECT COUNT(*) ` + baseQuery;
+
+    params.push(limit, offset);
+
+    const data = await db.query(dataQuery, params);
+    const totalResult = await db.query(countQuery, params.slice(0, -2)); // Excluye limit y offset para el conteo
+    const qty = parseInt(totalResult.rows[0].count, 10);
+
+    return { data: data.rows, qty };
 };
 
 const getUsersQty = async (showInactive) => {

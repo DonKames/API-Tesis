@@ -1,12 +1,13 @@
 const branchLocationsRepository = require('../repositories/branchLocationsRepository');
 
-const getBranchLocations = async (limit, offset, showInactive) => {
+const getBranchLocations = async (limit, offset, showInactive, searchTerm) => {
     const response = await branchLocationsRepository.getBranchLocations(
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
-    return response.rows;
+    return response;
 };
 
 const getBranchLocationsQty = async () => {
@@ -19,13 +20,9 @@ const getBranchLocationById = async (id) => {
     return response.rows[0];
 };
 
-const createBranchLocation = async ({
-    branchLocationName,
-    description,
-    branchId,
-}) => {
+const createBranchLocation = async ({ name, description, branchId }) => {
     const response = await branchLocationsRepository.createBranchLocation({
-        branchLocationName,
+        name,
         description,
         branchId,
     });

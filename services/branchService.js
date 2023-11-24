@@ -1,12 +1,13 @@
 const branchRepository = require('../repositories/branchRepository');
 
-const getBranches = async (limit, offset, showInactive) => {
+const getBranches = async (limit, offset, showInactive, searchTerm) => {
     const response = await branchRepository.getBranches(
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
-    return response.rows;
+    return response;
 };
 
 const getBranchesQty = async (showInactive) => {

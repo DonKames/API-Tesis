@@ -1,22 +1,52 @@
 const db = require('../config/db');
 
-const getBranchLocations = async (limit, offset, showInactive) => {
-    let query = `
-        SELECT bl.*, b.name AS branch_name
+const getBranchLocations = async (limit, offset, showInactive, searchTerm) => {
+    let baseQuery = `
         FROM branch_locations AS bl
         JOIN branches AS b ON bl.fk_branch_id = b.branch_id
     `;
 
+    const whereConditions = [];
+    const params = [];
+
     if (!showInactive) {
-        query += ' WHERE bl.active = true';
+        whereConditions.push('bl.active = true');
     }
 
-    query += ` ORDER BY bl.active ASC,
-        branch_location_id ASC LIMIT $1 OFFSET $2`;
+    if (searchTerm) {
+        const searchTermCondition = `
+            (bl.name ILIKE $${params.length + 1} OR 
+            b.name ILIKE $${params.length + 1})
+        `;
+        whereConditions.push(searchTermCondition);
+        params.push(`%${searchTerm}%`);
+    }
 
-    const params = [limit, offset];
+    if (whereConditions.length) {
+        baseQuery += ' WHERE ' + whereConditions.join(' AND ');
+    }
 
-    return await db.query(query, params);
+    // Query para obtener los datos
+    const dataQuery =
+        `
+        SELECT bl.*, b.name AS branch_name
+    ` +
+        baseQuery +
+        `
+        ORDER BY bl.active ASC, bl.branch_location_id ASC
+        LIMIT $${params.length + 1} OFFSET $${params.length + 2}
+    `;
+
+    // Query para contar el total de registros
+    const countQuery = `SELECT COUNT(*) ` + baseQuery;
+
+    params.push(limit, offset);
+
+    const data = await db.query(dataQuery, params);
+    const totalResult = await db.query(countQuery, params.slice(0, -2)); // Excluye limit y offset para el conteo
+    const qty = parseInt(totalResult.rows[0].count, 10);
+
+    return { data: data.rows, qty };
 };
 
 const getBranchLocationsQty = async () => {
@@ -32,16 +62,12 @@ const getBranchLocationById = async (id) => {
     return await db.query(query, [id]);
 };
 
-const createBranchLocation = async ({
-    branchLocationName,
-    description,
-    branchId,
-}) => {
+const createBranchLocation = async ({ name, description, branchId }) => {
     const query = `
-        INSERT INTO "public".branch_locations (name, description, fk_branch_id)
-        VALUES ($1, $2, $3) RETURNING *
+        INSERT INTO "public".branch_locations (name, description, fk_branch_id, active)
+        VALUES ($1, $2, $3, TRUE) RETURNING *
     `;
-    return await db.query(query, [branchLocationName, description, branchId]);
+    return await db.query(query, [name, description, branchId]);
 };
 
 const updateBranchLocation = async (id, { name, description, branchId }) => {

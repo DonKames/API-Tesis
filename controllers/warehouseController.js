@@ -17,6 +17,7 @@ const getWarehouses = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+    const searchTerm = req.query.searchTerm;
 
     const offset = (page - 1) * limit;
 
@@ -24,12 +25,15 @@ const getWarehouses = handleErrors(async (req, res) => {
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
 
-    // console.log(response);
+    console.log(response);
 
-    if (response) {
-        const formattedResponse = response.map((row) => ({
+    const { data, qty } = response;
+
+    if (data) {
+        const formattedResponse = data.map((row) => ({
             id: row.warehouse_id,
             name: row.warehouse_name,
             capacity: row.capacity,
@@ -38,7 +42,10 @@ const getWarehouses = handleErrors(async (req, res) => {
             branchName: row.branch_name,
         }));
 
-        sendSuccess(res, 'Bodegas recuperadas exitosamente', formattedResponse);
+        sendSuccess(res, 'Bodegas recuperadas exitosamente', {
+            data: formattedResponse,
+            qty,
+        });
     } else {
         sendError(res, 'Bodegas no encontradas', 404);
     }

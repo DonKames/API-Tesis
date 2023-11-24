@@ -6,13 +6,21 @@ const getSkus = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+    const searchTerm = req.query.searchTerm;
 
     const offset = (page - 1) * limit;
 
-    const response = await skuService.getSkus(limit, offset, showInactive);
+    const response = await skuService.getSkus(
+        limit,
+        offset,
+        showInactive,
+        searchTerm,
+    );
 
-    if (response) {
-        const formattedResponse = response.map((row) => ({
+    const { data, qty } = response;
+
+    if (data) {
+        const formattedResponse = data.map((row) => ({
             id: row.sku_id,
             name: row.name,
             description: row.description,
@@ -24,7 +32,10 @@ const getSkus = handleErrors(async (req, res) => {
             stock: row.product_count,
         }));
 
-        sendSuccess(res, 'Skus recuperadas exitosamente', formattedResponse);
+        sendSuccess(res, 'Skus recuperadas exitosamente', {
+            data: formattedResponse,
+            qty,
+        });
     }
 });
 

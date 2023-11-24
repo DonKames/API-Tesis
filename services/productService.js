@@ -2,14 +2,15 @@ const productRepository = require('../repositories/productRepository');
 const movementRepository = require('../repositories/movementRepository');
 const db = require('../config/db');
 
-const getProducts = async (limit, offset, showInactive) => {
+const getProducts = async (limit, offset, showInactive, searchTerm) => {
     const response = await productRepository.getProducts(
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
 
-    return response.rows;
+    return response;
 };
 
 const getProductsQty = async (showInactive) => {

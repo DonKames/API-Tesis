@@ -1,8 +1,14 @@
 const skuRepository = require('../repositories/skuRepository');
 
-const getSkus = async (limit, offset, showInactive) => {
-    const response = await skuRepository.getSkus(limit, offset, showInactive);
-    return response.rows;
+const getSkus = async (limit, offset, showInactive, searchTerm) => {
+    const response = await skuRepository.getSkus(
+        limit,
+        offset,
+        showInactive,
+        searchTerm,
+    );
+
+    return response;
 };
 
 const getSkusQty = async (showInactive) => {

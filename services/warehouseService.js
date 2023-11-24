@@ -1,12 +1,13 @@
 const warehouseRepository = require('../repositories/warehouseRepository');
 
-const getWarehouses = async (limit, offset, showInactive) => {
+const getWarehouses = async (limit, offset, showInactive, searchTerm) => {
     const response = await warehouseRepository.getWarehouses(
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
-    return response.rows;
+    return response;
 };
 
 const getWarehousesQty = async (showInactive) => {

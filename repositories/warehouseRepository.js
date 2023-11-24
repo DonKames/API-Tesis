@@ -1,23 +1,52 @@
 const db = require('../config/db');
 
-const getWarehouses = async (limit, offset, showInactive) => {
-    let query = `
-        SELECT w.warehouse_id, w.name AS warehouse_name, w.capacity, w.fk_branch_id, w.active, b.name AS branch_name
+const getWarehouses = async (limit, offset, showInactive, searchTerm) => {
+    let baseQuery = `
         FROM "public".warehouses AS w
-        JOIN "public".branches AS b ON w.fk_branch_id = b.branch_id`;
+        JOIN "public".branches AS b ON w.fk_branch_id = b.branch_id
+    `;
+
+    const whereConditions = [];
+    const params = [];
 
     if (!showInactive) {
-        query += ' WHERE w.active = true';
+        whereConditions.push('w.active = true');
     }
 
-    query += `
-        ORDER BY w.active ASC, w.warehouse_id ASC
-        LIMIT $1 OFFSET $2
+    if (searchTerm) {
+        const searchTermCondition = `
+            (w.name ILIKE $${params.length + 1} OR 
+            b.name ILIKE $${params.length + 1})
         `;
+        whereConditions.push(searchTermCondition);
+        params.push(`%${searchTerm}%`);
+    }
 
-    const params = [limit, offset];
+    if (whereConditions.length) {
+        baseQuery += ' WHERE ' + whereConditions.join(' AND ');
+    }
 
-    return await db.query(query, params);
+    // Query para obtener los datos
+    const dataQuery =
+        `
+        SELECT w.warehouse_id, w.name AS warehouse_name, w.capacity, w.fk_branch_id, w.active, b.name AS branch_name
+    ` +
+        baseQuery +
+        `
+        ORDER BY w.active ASC, w.warehouse_id ASC
+        LIMIT $${params.length + 1} OFFSET $${params.length + 2}
+    `;
+
+    // Query para contar el total de registros
+    const countQuery = `SELECT COUNT(*) ` + baseQuery;
+
+    params.push(limit, offset);
+
+    const data = await db.query(dataQuery, params);
+    const totalResult = await db.query(countQuery, params.slice(0, -2)); // Excluye limit y offset para el conteo
+    const qty = parseInt(totalResult.rows[0].count, 10);
+
+    return { data: data.rows, qty };
 };
 
 const getWarehousesQty = async (showInactive) => {

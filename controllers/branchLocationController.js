@@ -6,6 +6,7 @@ const getBranchLocations = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const showInactive = req.query.showInactive === 'true' || false;
+    const searchTerm = req.query.searchTerm;
 
     const offset = (page - 1) * limit;
 
@@ -13,9 +14,12 @@ const getBranchLocations = handleErrors(async (req, res) => {
         limit,
         offset,
         showInactive,
+        searchTerm,
     );
 
-    const formattedResponse = response.map((row) => ({
+    const { data, qty } = response;
+
+    const formattedResponse = data.map((row) => ({
         id: row.branch_location_id,
         name: row.name,
         description: row.description,
@@ -24,11 +28,10 @@ const getBranchLocations = handleErrors(async (req, res) => {
         branchName: row.branch_name,
     }));
 
-    sendSuccess(
-        res,
-        'Branch locations retrieved successfully',
-        formattedResponse,
-    );
+    sendSuccess(res, 'Branch locations retrieved successfully', {
+        data: formattedResponse,
+        qty,
+    });
 });
 
 const getBranchLocationsQty = handleErrors(async (req, res) => {
@@ -63,17 +66,6 @@ const getBranchLocationsQty = handleErrors(async (req, res) => {
     } catch (error) {
         sendError(res, 'Error al obtener la cantidad', 500);
     }
-    // const branchLocationsQty =
-    //     await branchLocationService.getBranchLocationsQty();
-    // if (!branchLocationsQty) {
-    //     sendError(res, 'Branch locations quantity not found', 404);
-    // } else {
-    //     sendSuccess(
-    //         res,
-    //         'Branch locations quantity retrieved successfully',
-    //         branchLocationsQty,
-    //     );
-    // }
 });
 
 const getBranchLocationById = handleErrors(async (req, res) => {
@@ -100,9 +92,9 @@ const getBranchLocationById = handleErrors(async (req, res) => {
 });
 
 const createBranchLocation = handleErrors(async (req, res) => {
-    const { branchLocationName, description, branchId } = req.body;
+    const { name, description, branchId } = req.body;
     const response = await branchLocationService.createBranchLocation({
-        branchLocationName,
+        name,
         description,
         branchId,
     });
