@@ -54,12 +54,16 @@ const getBranchesQty = handleErrors(async (req, res) => {
     try {
         if (warehouseId) {
             qty = await branchService.getBranchesQtyByWarehouseId(warehouseId);
+
+            console.log('del if', qty);
         } else {
             qty = await branchService.getBranchesQty(showInactive);
         }
 
+        console.log(qty);
+
         /* eslint-disable indent */
-        qty
+        qty >= 0
             ? sendSuccess(
                   res,
                   'Cantidad de sucursales recuperadas correctamente',
@@ -70,14 +74,6 @@ const getBranchesQty = handleErrors(async (req, res) => {
     } catch (error) {
         sendError(res, 'Error al obtener la cantidad de sucursales', 500);
     }
-
-    // console.log(req.query.showInactive);
-    // console.log(req.body);
-    // const showInactive = req.query.showInactive === 'true' || false;
-
-    // console.log(showInactive);
-    // const branchesQty = await branchService.getBranchesQty(showInactive);
-    // res.status(200).json(branchesQty);
 });
 
 const getBranchesNames = handleErrors(async (req, res) => {
