@@ -79,6 +79,10 @@ router.post('/products', productsController.createProduct);
 router.put('/products/:id', productsController.updateProduct);
 // router.delete('/products/:id', productsController.deleteProduct);
 router.patch('/products/:id', productsController.changeActiveStateProduct);
+router.patch(
+    '/products/warehouse/:epc',
+    productsController.updateProductWarehouse,
+);
 
 // Regions
 router.get('/regions', regionsController.getRegions);

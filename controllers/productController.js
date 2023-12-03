@@ -255,6 +255,39 @@ const changeActiveStateProduct = handleErrors(async (req, res) => {
     }
 });
 
+const updateProductWarehouse = handleErrors(async (req, res) => {
+    const { epc } = req.params;
+    const { warehouseId } = req.body;
+
+    console.log(epc, warehouseId);
+
+    // Llama al servicio para actualizar la bodega del producto
+    const response = await productService.updateProductWarehouse(
+        epc,
+        warehouseId,
+    );
+
+    console.log('updateProductWarehouse response: ', response);
+
+    if (response) {
+        const formattedResponse = {
+            id: response.product_id,
+            epc: response.epc,
+            warehouseId: response.fk_warehouse_id,
+            skuId: response.fk_sku_id,
+            active: response.active,
+        };
+
+        sendSuccess(
+            res,
+            'Bodega del Producto actualizada exitosamente.',
+            formattedResponse,
+        );
+    } else {
+        sendError(res, 'Error al actualizar la bodega del Producto.', 500);
+    }
+});
+
 module.exports = {
     changeActiveStateProduct,
     getProducts,
@@ -266,4 +299,5 @@ module.exports = {
     getProductBySku,
     createProduct,
     updateProduct,
+    updateProductWarehouse,
 };

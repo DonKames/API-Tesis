@@ -111,6 +111,15 @@ const changeActiveStateProduct = async (id, isActive) => {
     return response.rows[0];
 };
 
+const updateProductWarehouse = async (epc, warehouseId) => {
+    const response = await productRepository.updateProductWarehouse(
+        epc,
+        warehouseId,
+    );
+
+    return response.rows[0];
+};
+
 module.exports = {
     getProducts,
     getProductsQty,
@@ -124,4 +133,5 @@ module.exports = {
     updateProduct,
     // deleteProduct,
     changeActiveStateProduct,
+    updateProductWarehouse,
 };
