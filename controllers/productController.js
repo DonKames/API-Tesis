@@ -1,7 +1,7 @@
 const handleErrors = require('../middlewares/errorHandler');
 const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 const productService = require('../services/productService');
-const { io } = require('../config/socket');
+const { io } = require('../app');
 
 const getProducts = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
