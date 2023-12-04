@@ -5,7 +5,7 @@ const routes = require('./routes/routes');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
-const socketIo = require('socket.io');
+const io = require('./config/socket');
 
 const app = express();
 
@@ -14,7 +14,15 @@ const options = {
     cert: fs.readFileSync('./certs/localhost.pem'),
 };
 
-app.use(cors());
+// Configurar CORS
+const corsOptions = {
+    origin: 'http://localhost:5173', // URL de tu cliente React
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -44,7 +52,7 @@ httpsServer.listen(3001, () => {
 });
 
 // Configurar socket.io para ambos servidores
-const io = new socketIo.Server();
+// const io = new socketIo.Server();
 io.attach(httpServer);
 io.attach(httpsServer);
 
