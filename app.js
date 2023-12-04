@@ -66,4 +66,4 @@ io.on('connection', (socket) => {
     // Aquí puedes agregar más manejadores de eventos según sea necesario
 });
 
-module.exports = { io };
+module.exports = { app };
