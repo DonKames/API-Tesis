@@ -5,7 +5,7 @@ const routes = require('./routes/routes');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
-const io = require('./config/socket');
+const initIo = require('./config/socket');
 
 const app = express();
 
@@ -52,9 +52,9 @@ httpsServer.listen(3001, () => {
 });
 
 // Configurar socket.io para ambos servidores
-// const io = new socketIo.Server();
-io.attach(httpServer);
-io.attach(httpsServer);
+const io = initIo(httpServer, httpsServer);
+// io.attach(httpServer);
+// io.attach(httpsServer);
 
 io.on('connection', (socket) => {
     console.log('Nuevo cliente conectado');
