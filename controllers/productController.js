@@ -1,6 +1,7 @@
 const handleErrors = require('../middlewares/errorHandler');
 const { sendSuccess, sendError } = require('../middlewares/responseHandler');
 const productService = require('../services/productService');
+const { io } = require('../app');
 
 const getProducts = handleErrors(async (req, res) => {
     const page = parseInt(req.query.page) || 1;
@@ -277,6 +278,8 @@ const updateProductWarehouse = handleErrors(async (req, res) => {
             skuId: response.fk_sku_id,
             active: response.active,
         };
+
+        io.emit('dataUpdated', formattedResponse.epc);
 
         sendSuccess(
             res,

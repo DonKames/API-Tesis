@@ -5,6 +5,7 @@ const routes = require('./routes/routes');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
+const socketIo = require('socket.io');
 
 const app = express();
 
@@ -31,9 +32,30 @@ app.use('/api', routes); // Ahora colocado después del middleware de depuració
 // app.use(express.json());
 
 // Create an HTTP service.
-http.createServer(app).listen(3000);
-console.log('HTTP Server is running on port 3000');
+const httpServer = http.createServer(app);
+httpServer.listen(3000, () => {
+    console.log('HTTP Server is running on port 3000');
+});
 
 // Create an HTTPS service identical to the HTTP service.
-https.createServer(options, app).listen(3001);
-console.log('HTTPS Server is running on port 3001');
+const httpsServer = https.createServer(options, app);
+httpsServer.listen(3001, () => {
+    console.log('HTTPS Server is running on port 3001');
+});
+
+// Configurar socket.io para ambos servidores
+const io = new socketIo.Server();
+io.attach(httpServer);
+io.attach(httpsServer);
+
+io.on('connection', (socket) => {
+    console.log('Nuevo cliente conectado');
+
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+    });
+
+    // Aquí puedes agregar más manejadores de eventos según sea necesario
+});
+
+module.exports = { io };
