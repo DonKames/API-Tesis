@@ -5,7 +5,7 @@ const routes = require('./routes/routes');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
-const initIo = require('./config/socket');
+const { initIo } = require('./config/socket');
 
 const app = express();
 
@@ -56,14 +56,14 @@ const io = initIo(httpServer, httpsServer);
 // io.attach(httpServer);
 // io.attach(httpsServer);
 
-io.on('connection', (socket) => {
-    console.log('Nuevo cliente conectado');
+// io.on('connection', (socket) => {
+//     console.log('Nuevo cliente conectado');
 
-    socket.on('disconnect', () => {
-        console.log('Cliente desconectado');
-    });
+//     socket.on('disconnect', () => {
+//         console.log('Cliente desconectado');
+//     });
 
-    // Aquí puedes agregar más manejadores de eventos según sea necesario
-});
+//     // Aquí puedes agregar más manejadores de eventos según sea necesario
+// });
 
 module.exports = { app, io };
