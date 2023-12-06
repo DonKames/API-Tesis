@@ -116,11 +116,15 @@ const searchProducts = handleErrors(async (req, res) => {
 
     const response = await productService.searchProducts(query, limit);
 
+    console.log('searchProduct: ', response);
+
     if (response) {
         // Formatear la respuesta
         const formattedResponse = response.map((row) => ({
             id: row.product_id,
-            name: row.sku,
+            skuName: row.name,
+            skuId: row.fk_sku_id,
+            epc: row.epc,
         }));
 
         sendSuccess(res, 'Búsqueda Exitosa', formattedResponse);
