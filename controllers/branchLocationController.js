@@ -98,7 +98,12 @@ const createBranchLocation = handleErrors(async (req, res) => {
         description,
         branchId,
     });
-    res.status(201).json(response);
+
+    if (response) {
+        sendSuccess(res, 'Lugar de Sucursal creado con éxito', response);
+    } else {
+        sendError(res, 'Error al crear Lugar de Sucursal', 404);
+    }
 });
 
 const updateBranchLocation = handleErrors(async (req, res) => {

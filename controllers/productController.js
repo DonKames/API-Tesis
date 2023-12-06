@@ -116,13 +116,13 @@ const searchProducts = handleErrors(async (req, res) => {
 
     const response = await productService.searchProducts(query, limit);
 
-    console.log('searchProduct: ', response);
+    // console.log('searchProduct: ', response);
 
     if (response) {
         // Formatear la respuesta
         const formattedResponse = response.map((row) => ({
             id: row.product_id,
-            skuName: row.name,
+            skuName: row.sku_name,
             skuId: row.fk_sku_id,
             epc: row.epc,
         }));

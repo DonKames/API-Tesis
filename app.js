@@ -17,7 +17,7 @@ const options = {
 // Configurar CORS
 const corsOptions = {
     origin: 'http://localhost:5173', // URL de tu cliente React
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
 

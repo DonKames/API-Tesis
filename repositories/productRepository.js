@@ -75,7 +75,7 @@ const getProductsQtyByWarehouseId = async (warehouseId) => {
 const searchProducts = async (query, limit) => {
     const searchTerm = `%${query}%`;
     const queryStr = `
-        SELECT p.*, s.sku AS name
+        SELECT p.*, s.name AS sku_name
         FROM products p
         JOIN skus s ON p.fk_sku_id = s.sku_id
         WHERE (s.sku LIKE $1 OR p.epc LIKE $1 OR s.name LIKE $1)
