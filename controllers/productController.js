@@ -208,8 +208,6 @@ const createProduct = handleErrors(async (req, res) => {
 const updateProduct = handleErrors(async (req, res) => {
     const { id } = req.params;
     const { active, warehouseId, epc, skuId } = req.body;
-    console.log(req.params);
-    console.log('body: ', req.body);
 
     const updatedProduct = await productService.updateProduct(id, {
         active,
@@ -217,6 +215,9 @@ const updateProduct = handleErrors(async (req, res) => {
         epc,
         skuId,
     });
+
+    console.log(updatedProduct);
+
     res.status(200).json(updatedProduct);
 });
 
