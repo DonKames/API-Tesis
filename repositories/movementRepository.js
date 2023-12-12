@@ -178,6 +178,8 @@ const createMovement = async (client, movementData) => {
     const valuePlaceholders = [];
     let counter = 1;
 
+    console.log('movementData: ', movementData);
+
     try {
         // Recorre las claves del objeto movementData
         for (const [key, value] of Object.entries(movementData)) {

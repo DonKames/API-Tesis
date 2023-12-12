@@ -44,7 +44,8 @@ const getProductByEPC = async (epc) => {
 };
 
 const createProduct = async ({ skuId, warehouseId, epc }, userId) => {
-    console.log('service creando producto');
+    // console.log('service creando producto');
+
     return db.transaction(async (client) => {
         console.log('creando producto');
         // Creando el producto
@@ -111,13 +112,39 @@ const changeActiveStateProduct = async (id, isActive) => {
     return response.rows[0];
 };
 
-const updateProductWarehouse = async (epc, warehouseId) => {
-    const response = await productRepository.updateProductWarehouse(
-        epc,
-        warehouseId,
-    );
+const updateProductWarehouse = async (epc, warehouseId, antenna) => {
+    console.log('iniciando la creación de movimientos al actualizar');
 
-    return response.rows[0];
+    return db.transaction(async (client) => {
+        const updatedData = await productRepository.updateProductWarehouse(
+            client,
+            {
+                epc,
+                warehouseId,
+            },
+        );
+
+        console.log('updatedData: ', updatedData);
+
+        const movement = {
+            movement_type: 2,
+            warehouse: warehouseId,
+        };
+
+        if (antenna !== undefined) {
+            movement.antenna = antenna;
+        }
+
+        if (updatedData && updatedData.product_id !== undefined) {
+            movement.product = updatedData.product_id;
+        }
+
+        await movementRepository.createMovement(client, movement);
+
+        return updatedData;
+    });
+
+    // return response.rows[0];
 };
 
 module.exports = {

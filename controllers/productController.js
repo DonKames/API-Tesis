@@ -264,6 +264,7 @@ const changeActiveStateProduct = handleErrors(async (req, res) => {
 const updateProductWarehouse = handleErrors(async (req, res) => {
     const { epc } = req.params;
     const { warehouseId } = req.body;
+    const { antenna } = req.body;
 
     console.log(epc, warehouseId);
 
@@ -271,6 +272,7 @@ const updateProductWarehouse = handleErrors(async (req, res) => {
     const response = await productService.updateProductWarehouse(
         epc,
         warehouseId,
+        antenna,
     );
 
     console.log('updateProductWarehouse response: ', response);

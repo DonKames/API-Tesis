@@ -183,12 +183,12 @@ const changeActiveStateProduct = async (id, isActive) => {
     );
 };
 
-const updateProductWarehouse = async (epc, warehouseId) => {
-    const response = await db.query(
+const updateProductWarehouse = async (client, { epc, warehouseId }) => {
+    const response = await client.query(
         'UPDATE "public".products SET fk_warehouse_id = $1 WHERE LOWER(epc) = LOWER($2) RETURNING *',
         [warehouseId, epc],
     );
-    return response;
+    return response.rows[0];
 };
 
 module.exports = {
