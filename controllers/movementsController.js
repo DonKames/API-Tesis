@@ -26,6 +26,7 @@ const getMovements = handleErrors(async (req, res) => {
     if (movements) {
         const formattedMovements = movements.map((row) => ({
             id: row.movement_id,
+            antenna: row.fk_antenna_id,
             productId: row.fk_product_id,
             userId: row.fk_user_id,
             timestamp: row.movement_timestamp,
@@ -102,6 +103,7 @@ const getLastAddedProducts = async (req, res) => {
         const formattedResponse = lastAddedProducts.map((m) => ({
             // ...m,
             active: m.active,
+            antenna: m.fk_antenna_id,
             description: m.description,
             epc: m.epc,
             id: m.movement_id,

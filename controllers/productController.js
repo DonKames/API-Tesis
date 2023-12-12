@@ -207,18 +207,29 @@ const createProduct = handleErrors(async (req, res) => {
 
 const updateProduct = handleErrors(async (req, res) => {
     const { id } = req.params;
-    const { active, warehouseId, epc, skuId } = req.body;
+    const { active, warehouseId, epc, skuId, userId } = req.body;
 
-    const updatedProduct = await productService.updateProduct(id, {
-        active,
-        warehouseId,
-        epc,
-        skuId,
-    });
+    console.log('usuario: ', userId);
 
-    console.log(updatedProduct);
+    try {
+        const updatedProduct = await productService.updateProduct(
+            id,
+            {
+                active,
+                warehouseId,
+                epc,
+                skuId,
+            },
+            userId,
+        );
 
-    res.status(200).json(updatedProduct);
+        console.log('updatedProduct', updatedProduct);
+
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        console.log(error);
+        sendError(res, 'Error al actualizar el producto.', 500);
+    }
 });
 
 // const deleteProduct = handleErrors(async (req, res) => {
@@ -266,7 +277,7 @@ const updateProductWarehouse = handleErrors(async (req, res) => {
     const { warehouseId } = req.body;
     const { antenna } = req.body;
 
-    console.log(epc, warehouseId);
+    console.log('datos de actualización: ', epc, warehouseId, antenna);
 
     // Llama al servicio para actualizar la bodega del producto
     const response = await productService.updateProductWarehouse(

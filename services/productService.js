@@ -91,13 +91,55 @@ const createProduct = async ({ skuId, warehouseId, epc }, userId) => {
     //     });
 };
 
-const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {
-    return await productRepository.updateProduct(id, {
-        active,
-        warehouseId,
-        epc,
-        skuId,
+const updateProduct = async (
+    id,
+    { active, warehouseId, epc, skuId },
+    userId,
+) => {
+    return db.transaction(async (client) => {
+        const product = await getProductById(id);
+
+        const updatedProduct = await productRepository.updateProduct(
+            client,
+            id,
+            {
+                active,
+                warehouseId,
+                epc,
+                skuId,
+            },
+        );
+
+        console.log('productService updateProduct: ', product, warehouseId);
+        if (product.fk_warehouse_id !== warehouseId) {
+            const movement = {
+                movement_type: 3,
+                warehouse: warehouseId,
+            };
+
+            if (product.product_id !== undefined) {
+                movement.product = product.product_id;
+            }
+
+            movement.user = userId;
+
+            await movementRepository.createMovement(client, movement);
+        }
+
+        return updatedProduct;
     });
+
+    // console.log('updateProduct: ', product);
+
+    // if (product.fk_warehouse_id !== warehouseId) {
+    // }
+
+    // return await productRepository.updateProduct(id, {
+    //     active,
+    //     warehouseId,
+    //     epc,
+    //     skuId,
+    // });
 };
 
 // const deleteProduct = async (id) => {

@@ -161,8 +161,12 @@ const createProduct = async (client, { skuId, warehouseId, epc }) => {
     );
     return response.rows[0];
 };
-const updateProduct = async (id, { active, warehouseId, epc, skuId }) => {
-    const response = await db.query(
+const updateProduct = async (
+    client,
+    id,
+    { active, warehouseId, epc, skuId },
+) => {
+    const response = await client.query(
         `UPDATE "public".products
          SET epc = $1, fk_warehouse_id = $2, fk_sku_id = $3, active = $4
          WHERE product_id = $5

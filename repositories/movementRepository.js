@@ -171,7 +171,6 @@ const getLastAddedProducts = async (limit, startDate, endDate) => {
 };
 
 const createMovement = async (client, movementData) => {
-    console.log('createMovement', movementData);
     // Inicializa las partes de la consulta y los valores
     const queryFields = [];
     const queryValues = [];
